@@ -9,7 +9,6 @@
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     application
-    jacoco
 }
 
 repositories {
@@ -23,17 +22,9 @@ dependencies {
 
     // This dependency is used by the application.
     implementation("com.google.guava:guava:29.0-jre")
-
-    //ADDED ----------------------------------------------------
-    // https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient
-    implementation("org.apache.httpcomponents:httpclient:4.5.13")
-    //JSON
-    // https://mvnrepository.com/artifact/org.json/json
-    implementation("org.json:json:20201115" )
 }
 
 application {
     // Define the main class for the application.
-    mainClass.set("it.unibo.wenvusage.MoveVirtualRobot")     //CHANGED
-    //mainClass.set("it.unibo.wenvusage.App")                //ORIGINAL
+    mainClass.set("it.unibo.boundaryWalk.App")
 }
