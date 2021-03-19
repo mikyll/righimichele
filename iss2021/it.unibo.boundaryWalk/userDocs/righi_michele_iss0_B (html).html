@@ -1,0 +1,498 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- saved from url=(0128)https://htmlpreview.github.io/?https://github.com/anatali/issLab2021/blob/master/it.unibo.issLabStart/userDocs/template2021.html -->
+<html><!--
+<link rel="stylesheet" type="text/css" href="../css/issStyle1.css">
+<script type="text/htmlpreview" src="../css/issStyle.js"></script>
+--><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style type="text/css">
+body
+{
+    margin-left:  30px;
+    margin-right: 30px;
+};
+
+P
+{
+    font-family: Tahoma;
+    font-size: 10pt;
+};
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+	font-size: 93%;
+}
+
+a:hover {
+    background-color: #cccccc;
+}
+
+
+hr {
+    clear: both;
+    height: 1px;
+    color: #242424;
+    background-color: transparent;
+}
+
+h1, h2, h3 {
+    color: #242424;
+    clear: left;
+    font: 100% Tahoma, Helvetica, Arial, sans-serif;
+    margin-bottom: 0.5em;
+    padding-top: 0.5em;
+	border-radius: 10px;
+	padding: 5px;
+}
+
+top {
+	width: 100%;
+}
+
+
+#i {
+    color: #ff1010;
+}
+tt{
+	font-family: "Arial";
+    font-size: 90%;
+	color: #006600;
+}
+em{
+	font-family: "Arial";
+    font-size: 80%;
+	font-weight: bold;
+	border-style:solid;
+	border-color: #abe876;
+    color: #1632cc;
+}
+bc{
+	font-family: "Arial";
+	font-size: 90%;
+	font-weight: bold;
+    color: #990000;
+	background-color: #fcf8c7;
+}
+ks{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #0000CD	;
+	font-size: 90%;
+}
+kc{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #008000	;
+	font-size: 90%;
+}
+pre{
+	font-family: "Consolas";
+	font-size: 85%;
+	background-color: #f5f5f5;
+	border: 1.5px solid silver;
+	padding: 5px;
+}
+m{
+	font-family: "Helvetica";
+	line-height: 100%;
+ 	font-size: 75%;
+}
+div.body{
+	 
+    font-size: 18px;
+}
+k{
+    color: #990000;
+	font-weight: bold;
+	font-size: 90%;
+}
+h1 {
+    font-size: 150%;
+    background-color: #b2c0ff;
+	padding: 10px;
+}
+
+h2 {
+    background-color: #9ed8ff;
+    font-size: 130%;
+}
+
+h3 {
+	background-color: #e6ccff;
+    font-size: 100%;
+}
+h4 {
+    background-color: #ccffcc;
+    font-size: 100%;
+	width: 95%;
+	border-radius: 5px;
+	padding: 2px;
+}
+h5 {
+    background-color: #d5ffb0;
+    font-size: 100%;
+
+}
+div.req{
+	background-color: #d9ffb3;
+    font-size: 18px;
+	width: 700px;
+    border: 3px solid green;
+    padding: 15px;
+    margin: 10px;
+}
+div.remark{
+	background-color: #E3F2FD;
+    border: 1.5px solid #d5f2ed;
+    padding: 15px;
+    margin: 10px;
+	border-radius: 25px;
+}
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+ol, ul, li {
+  margin: 0;
+  margin-left: 10px;
+  padding: 0;
+  padding-bottom: 5px;
+}
+
+table, th, td {
+	border: 1px solid black;
+}
+
+img {
+	border: 1.5px solid #d5f2ed
+
+}
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+}
+
+div.wrapdesc{
+	width: 90%;
+	margin: auto;
+}
+
+div.imagedesc{
+	width: 85%;
+	margin: auto;
+}
+span.mark {
+	background-color: yellow;
+	color: black;
+}
+span#pensiero {
+	background-color: white;
+}
+div.code {
+	padding: 10px;
+	border: 1px solid silver;
+	background-color: whitesmoke;
+	font-family: monospace;
+	font-size: 14px;
+}
+span.command {
+	color: green;
+	font-weight: 900;
+}
+a#github {
+	color: white;
+}
+a#github:visited {
+	color: white;
+}
+a#github:hover {
+	color: white;
+	background-color: black;
+}
+div#footer:hover {
+
+}
+
+</style>
+    
+<!--<base href="https://raw.githubusercontent.com/anatali/issLab2021/master/it.unibo.issLabStart/userDocs/template2021.html">--><base href=".">
+   
+<title>Michele Righi ISS0_B 2021</title></head>
+    
+<body>
+<div id="top">
+	<h1>LABORATORIO DI INGEGNERIA DEI SISTEMI SOFTWARE <font size="5"></font> </h1>
+</div>  
+
+<div class="body"> 
+<!-- ========================================================================= -->
+	<h2>Introduction</h2>
+	<div class="remark">
+		Our motto:<br/>
+		<k>there is no code without a project, no project
+		without problem analysis and no problem without requirements</k>.
+	</div>
+	
+<!-- ------------------------------------------------------------------------- -->
+	<h2>Requirements</h2>
+	<div class="remark">
+		Design and build a software system that makes a robot is able to walk along
+		the boundary of a rectangular, empty room.
+	</div>
+	 
+<!-- ------------------------------------------------------------------------- -->
+	<h2>Requirement analysis</h2>
+	<div>
+		The interview with the client has outlined the following meanings for the 
+		initial requirements:
+		<ul>
+			<li><b>robot</b> - a device that can at least move forward and rotate. 
+			It must be able to receive command through the network</li>
+			<li><b>room</b> - a normal, conventional room, the same that any building 
+			has. The room is rectangular and has no obstacles inside of it</li>
+			<li><b>boundary</b> - the room perimeter that represent the path along 
+			which the robot must move. It is delimited by solid <b>walls</b> and has 
+			the shape of a rectangle (4 straight sides and 4 right angles). 
+		</ul>
+		About actions:
+		<ul>
+			<li><b>walk</b> - the action that the robot must perform: it must move 
+			the	closest possible to the walls (i.e. the boundary) of the room.
+			</li>
+		</ul>	
+		
+		<h3>User story</h3>
+		<table style="width: 98%">
+			<tr>
+				<td style="width: 60%">As a user I put the robot in the starting 
+				position <b>HOME</b> (facing south), then I enable a system that 
+				sends movement commands to the robot through the network.<br/>
+				As a user I can't stop the execution of the action performed by the 
+				robot: the system must end by itself.<br/>
+				<br/>
+				When the system execution ends, I expect that the robot has completed
+				the movement through the path (delimited by the boundary of the room)
+				just once, as shown in the picture on the right.</td>
+				<td style="text-align: center"><img src="./TestPlan0.png" alt="TestPlan0" width="60%"></td>
+			</tr>
+		</table>
+		<h4>Informal first set of functional test plans</h4>
+		<table style="width: 98%">
+			<tr>
+				<td style="width: 60%">We must test that the path along which the 
+				robot has traveled is the one we expected.</td>
+				<td style="text-align: center">
+				<div class="remark">The test must be done via software, without any 
+				help from a human user.</div></td>
+			</tr>
+		</table>	
+	</div>
+<!-- ------------------------------------------------------------------------- -->
+	<h2>Problem analysis</h2>
+	<div>
+		<h3>Relevant aspects</h3>
+		<ol>
+			<li>
+				The system will be distributed and composed by 2 macro-components:
+				<ul>
+					<li>The virtual robot provided by the client</li>
+					<li>our application (<b>boundaryWalk</b>) that sens commands to 
+					the robot in order to fulfil the requirements</li>
+				</ul>
+			</li>
+			<li>
+				The robot can be controlled through the network in two different 
+				ways:
+				<ul>
+					<li>sending POST messages on port 8090 with the HTTP protocol</li>
+					<li>sending messages on port 8091 through a web socket</li>
+				</ul>
+			</li>
+			<li>
+				Since there are numerous libraries in many programming languages that
+				allow the sending of commands like those, there is <b>no operative 
+				abstraction-gap</b>.<br/>
+				However, there is a conceptual abstraction-gap as the there are two 
+				possible technologies to implement the comunication with the robot, 
+				each one with appropriate support requirements. Anyway conceptually 
+				the interaction model is request-response in both cases.
+			</li>
+			<li>
+				We estimate that a prototype for the application could be made in at 
+				most one working day.
+			</li>
+		</ol>
+		
+		<h3>Logical architecture</h3>
+		<table style="width: 98%">
+			<tr>
+				<td style="width: 60%; text-align: center">Legend:<img src="./Legenda.png" alt="Legend" width="95%"></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td style="width: 60%; text-align: center"><img src="./architettura logica.png" alt="Logical Architecture" width="95%"></td>
+				<td style="padding: 10px">
+					The exact nature of boundaryWalk component will be defined during
+					the project phase.
+				</td>
+			</tr>
+		</table>
+		
+		<h3>Main problems</h3>
+		<ol>
+			<li>
+				<h4>Interaction abstraction</h4>
+				The software system should be made as independent as possible from
+				the communication protocol used for the interaction with WEnv.<br/>
+				The designer could use some design pattern to make the application
+				layer as invariant as possible from the communication
+				protocol, which could be selected during the system configuration 
+				phase.
+			</li>
+			<li>
+				<h4>Testing</h4>
+				The goal of defining an automatable TestPlan introduces a new 
+				requirement: to make the application monitorable by a machine.<br/>
+				In particular, it's not enought to just make the robot move: in 
+				absence	of cameras and or specific environmental sensor, a way to 
+				proceed is to <b>infer knowledge</b> from the commands and responses 
+				obtained from WENV and <b>explicitly represent</b> this knowledge.<br/>
+				<br/>
+				We could implement a <i>'mental map'</i> within the application, that is 
+				capable of providing a model of the robot's actions and then make a 
+				program that can test those to carry out the proper verifications.
+				A solution like this doesn't ensure that the map corresponds to the
+				reals situation, but it's just what the system needs to perform its
+				actions and tests.<br/>
+				<br/>
+				Given the cril (conrete-robot interaction language), we can assume
+				the solution to the problem could be an algorithm that looks like
+				this:<br/>
+				<div class="code">
+					The robot start its movement from HOME position, facing south (down).<br/>
+					4 times:
+						<ol style="margin-left: 5%">
+							<li>the application sends <span class="command">moveForward</span> 
+							command until the robot hits the front wall;</li>
+							<li>then the application sends <span class="command">turnLeft</span> 
+							command.</li>
+						</ol>
+				</div>
+			</li>
+			<li>
+				<h4>Strategy for the test plan, to 'infer knowledge' from commands</h4>
+				We introduce the following abbreviations relative to the robot instructions:
+				<div class="code">
+					<b>w</b> : indicates the move command <span class="command">{"robotmove":"moveForward", "time": 600}</span><br/>
+					<b>s</b> : indicates the move command <span class="command">{"robotmove":"moveForward", "time ":600}</span><br/>
+					<b>h</b> : indicates the move command <span class="command">{"robotmove":"moveForward", "time ":100}</span><br/>
+					<b>l</b> : indicates the move command <span class="command">{"robotmove":"turnLeft ",   "time ":300}</span><br/>
+					<b>r</b> : indicates the move command <span class="command">{"robotmove":"turnRight",   "time ":300}</span><br/>
+				</div>
+				<br/>
+				The application initalizes a string <b>'moves'</b> as empty.<br/>
+				For each move executed successfully, we add an identifier for the 
+				move to that string.<br/>
+				We set the value of <b>time</b> for <b>'w'</b> and <b>'s'</b> 
+				commands, in order to move the robot with 'small steps', so the wall 
+				will be reached with N>1 move commands.<br/>
+				At the end of the application, the string must take the following
+				form:
+				<div class="code">
+					<span class="command">moves:</span> "w*lw*lw*lw*l" &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					* : number of zero or more repetitions of the move command before it.
+				</div>
+				<br/>
+				<br/>
+				Another solution to the problem could have been made by building an
+				incremental map of the room surrounding the robot, tracking down
+				every move made and calculating the perimeter of the boundary. The
+				map could be useful for testing and statistical or other purposes.<br/>
+				The motivation behind the choice of the first solution, rather than 
+				the incremental map, is that the client didn't specify that he wanted
+				the robot to have a knowledge of the surrounding environment, and
+				this could add overhead of resources and more time to be made.
+				build an incremental map of the surrounding room to track down the
+				movements, is that th
+				Moreover, using a string (or a simpler, more lightweight array of 
+				characters) could be much more scalable than using a two dimensional 
+				array that grows incrementally, expecially if the room can be very
+				large in size.
+			</li>
+		</ol>
+	</div>
+
+<!-- ------------------------------------------------------------------------- -->
+	<h2>Test plans</h2> 
+	<div>
+		The test plan must verify that the robot can perform the application fundamental
+		actions/commands:<br/>
+		<ol>
+			<li>moving forward (<b>w</b>) for a certain amount of time (small step);</li>
+			<li>detecting collision;</li>
+			<li>turning left (<b>l</b>)</li>
+		</ol>
+		Moreover, the application could verify that the robot start position is actually
+		HOME-DOWN, but given the robot cril there's no function that can be used to get
+		the orientation of the robot, so we need to assume it starts in the right one.
+	</div>
+
+<!-- ------------------------------------------------------------------------- -->
+	<h2>Project</h2>
+	<div>
+		The main class of the component are:
+		<ul>
+			<li>MoveRobot, that provides the methods for the sending of the commands request 
+			through HTTP post, and receiving the response. In particular, the class exposes 
+			the methods that implements the cril interface.</li>
+			<li>BoundaryWalk, that uses the methods provided by MoveRobot, and implements the
+			algorithm needed to implement the project requirement.
+			</li>
+		</ul>
+	</div>
+<!-- ------------------------------------------------------------------------- -->
+	<h2>Testing</h2> 
+ 
+<!-- ------------------------------------------------------------------------- -->
+	<h2>Deployment</h2> 
+
+<!-- ------------------------------------------------------------------------- -->
+	<h2>Maintenance</h2> 
+ 
+<!-- USEFUL
+<table style="width:100%" border="1">
+<tr>
+<td style="width:50%">
+</td>
+<td></td>
+</tr>
+</table>
+-->
+
+
+<!-- ========================================================================= -->
+
+	<table class="separator" style="width:100%" border="1">
+		<tr>
+			<td style="width:50%"/>
+			<td/>
+		</tr>
+	</table>
+				
+	<br/>
+</div>
+
+<div id="footer" style="background-color:rgba(86, 56, 253, 0.9); width:60%; text-align:left;color:white">
+	<p style="float: left; padding: 10px">
+		By <b>Michele Righi</b><br/><br/>
+		email: michele.righi5@studio.unibo.it<br/>
+		github: <a id="github" href="https://github.com/mikyll">mikyll</a><br/>
+		ISS repo: <a id="github" href="https://github.com/mikyll/righimichele">mikyll/righimichele</a>
+	</p>
+	<img src="./Michele.png" alt="Michele Righi" width="120px" height="159px"/>
+</div>
+
+</body></html>
