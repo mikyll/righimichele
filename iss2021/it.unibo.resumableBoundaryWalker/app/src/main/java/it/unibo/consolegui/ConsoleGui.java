@@ -25,9 +25,9 @@ private IssObserver controller ;
 
 	public void update( Observable o , Object arg ) {	//Observable deprecated WHY?
 		String move = arg.toString();
-		//System.out.println("GUI input move=" + move);
+		System.out.println("GUI input move=" + move);
 		String robotCmd = (move == "STOP") ? "{\"robotcmd\":\"STOP\" }" : "{\"robotcmd\":\"RESUME\" }";
-		//System.out.println("GUI input robotCmd=" + robotCmd );
+		System.out.println("GUI input robotCmd=" + robotCmd );
 		controller.handleInfo( robotCmd );
 	}
 	
