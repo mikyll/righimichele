@@ -1,0 +1,1006 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <!--
+<link rel="stylesheet" type="text/css" href="../css/issStyle1.css">
+<script type="text/javascript" src="../css/issStyle.js"></script>
+-->
+<style type="text/css">
+body
+{
+    margin-left:  30px;
+    margin-right: 30px;
+};
+
+P
+{
+    font-family: Tahoma;
+    font-size: 10pt;
+};
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+	font-size: 93%;
+}
+
+a:hover {
+    background-color: #cccccc;
+}
+
+
+hr {
+    clear: both;
+    height: 1px;
+    color: #242424;
+    background-color: transparent;
+}
+
+h1, h2, h3 {
+    color: #242424;
+    clear: left;
+    font: 100% Tahoma, Helvetica, Arial, sans-serif;
+    margin-bottom: 0.5em;
+    padding-top: 0.5em;
+	border-radius: 10px;
+	padding: 5px;
+}
+
+top {
+	width: 100%;
+}
+
+
+#i {
+    color: #ff1010;
+}
+tt{
+	font-family: "Arial";
+    font-size: 90%;
+	color: #006600;
+}
+em{
+	font-family: "Arial";
+    font-size: 80%;
+	font-weight: bold;
+	border-style:solid;
+	border-color: #abe876;
+    color: #1632cc;
+}
+bc{
+	font-family: "Arial";
+	font-size: 90%;
+	font-weight: bold;
+    color: #990000;
+	background-color: #fcf8c7;
+}
+ks{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #0000CD	;
+	font-size: 90%;
+}
+kc{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #008000	;
+	font-size: 90%;
+}
+pre{
+	font-family: "Consolas";
+	font-size: 85%;
+	background-color: #f5f5f5;
+	border: 1.5px solid silver;
+	padding: 5px;
+}
+m{
+	font-family: "Helvetica";
+	line-height: 100%;
+ 	font-size: 75%;
+}
+div.body{
+	 
+    font-size: 18px;
+}
+k{
+    color: #990000;
+	font-weight: bold;
+	font-size: 90%;
+}
+h1 {
+    font-size: 150%;
+    background-color: #b2c0ff;
+	padding: 10px;
+}
+
+h2 {
+    background-color: #9ed8ff;
+    font-size: 150%;
+}
+
+h3 {
+	background-color: #e6ccff;
+    font-size: 100%;
+}
+h4 {
+    background-color: #ccffcc;
+    font-size: 100%;
+	width: 95%;
+	border-radius: 5px;
+	padding: 2px;
+}
+h5 {
+    background-color: #d5ffb0;
+    font-size: 100%;
+
+}
+div.req{
+	background-color: #d9ffb3;
+    font-size: 18px;
+	width: 700px;
+    border: 3px solid green;
+    padding: 15px;
+    margin: 10px;
+}
+div.remark{
+	background-color: #E3F2FD;
+    border: 1.5px solid #d5f2ed;
+    padding: 15px;
+    margin: 10px;
+	border-radius: 25px;
+}
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+ol, ul, li {
+  margin: 0;
+  margin-left: 10px;
+  padding: 0;
+  padding-bottom: 5px;
+}
+
+table, th, td {
+	border: 1px solid black;
+}
+
+img {
+	border: 1.5px solid #d5f2ed
+
+}
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+}
+
+div.wrapdesc{
+	width: 90%;
+	margin: auto;
+}
+
+div.imagedesc{
+	width: 85%;
+	margin: auto;
+}
+</style>
+
+<style>
+/* Popup container - can be anything you want */
+.popup {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* The actual popup */
+.popup .popuptext {
+  visibility: hidden;
+  width: 260px;
+  background-color: #F3F781;
+  color: black;
+  text-align: center;
+  border-radius: 6px;
+  padding: 8px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -80px;
+}
+
+/* Popup arrow */
+.popup .popuptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+/* Toggle this class - hide and show the popup */
+.popup .show {
+  visibility: visible;
+  -webkit-animation: fadeIn 1s;
+  animation: fadeIn 1s;
+}
+
+/* Add animation (fade in the popup) */
+@-webkit-keyframes fadeIn {
+  from {opacity: 0;} 
+  to {opacity: 1;}
+}
+
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity:1 ;}
+}
+</style>
+
+<script>
+// When the user clicks on <div>, open the popup
+function myFunction() {
+  var popup = document.getElementById("myPopup");
+  popup.classList.toggle("show");
+}
+</script>
+    
+<head>
+   
+<title>VRClients</title></head>
+    
+<body>
+<div id="top">
+<h1>LabIss2021 |  Towards concrete project archtectures - Virtualrobot clients<font size="5"></font> </h1>
+</div>  
+
+
+<div class="body"> 
+<h2>Introduction</h2>
+
+The goal of this section is to present a sequence of software systems that require the asynchronous interaction 
+(see <a href="../../it.unibo.issLabStart/NatMolBook/content/book/sistemi/interazioneSistemi.html" target="book">
+Interazione</a>) between an application (client) and the
+<a href="../../issLab2021/blob/master/it.unibo.virtualRobot2020/userDocs/VirtualRobot2021.html" target="lab"><em>VirtualRobot2021.html</em></a>.
+
+<br/><br/>
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:50%" >
+The attention is focussed on the three main dimensions (
+see  <a href="../../it.unibo.issLabStart/NatMolBook/content/book/sistemi/dimensioniSistemi.html" target="book">
+Dimensioni principali di un sistema software</a>) of a software system
+(see <a href="../../it.unibo.issLabStart/NatMolBook/content/book/introduzione/dimSistemistica.html" target="book">
+La dimensione sistemistica</a>)
+<br/> 
+ <m>The references cited in the oneline-book are reported in 
+<a href="../../it.unibo.issLabStart/NatMolBook/content/biblio/bibliografia.html" target="book">
+bibliografia.html</a>.</m>
+<hr/>
+The (nowadays fundamental) dimension of 
+<a href="https://www.sciencedirect.com/topics/computer-science/software-security" target="web"><k>software security</k></a>
+is a hot topic that requires it owns in-depth analysis . At the moment, we will consider this topic
+as 'spread' allong each of three dimensions above.
+
+
+
+</td>
+<td><center><img src="./img/dimensions.png" alt="dimensions" width="80%" ></center>
+</td>
+</tr>
+ </tbody>
+</table>
+
+
+
+
+<div class="remark">
+Our goal is to start from the logical architecture defined after the analysis phase
+ and perform a project activity 
+ (see <a href="../../it.unibo.issLabStart/NatMolBook/content/book/modelBased/fasi/progettazione.html" target="book">Progettazione</a>)
+  that incrementally leads
+ (see <a href="../../it.unibo.issLabStart/NatMolBook/content/book/pattern/projectByPattern.html" target="book">Progetti a crescita incrementale</a>)
+  
+   to the definition of  a concrete architecture of the system.
+</div>
+
+
+<hr/>
+
+The sequence of examples is organized as follows:
+<table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:33%" >
+<m>
+<h3>Applications structured in 'naive' way</h3>
+<ol>
+<li><ks>Synchronous REQUEST-RESPONSE | </ks> <br/> 
+<k>application as a 'flat' program</k>: <br/>
+<em><a href="#rrjs1">axiosclientToWenv.js</a></em>, &nbsp; <em><a href="#rrjs2">httpClientToWenv.js</a></em>&nbsp; <br/>
+<em><a href="#rrjava1">ClientNaiveUsingPost.java</a></em>
+ <br/> <br/>
+</li>
+<li><ks>Asynchronous interaction | </ks><br/>  
+<k>application structured by the support </k>: <br/>
+<em><a href="#asynchjs1">wsclientToWenv.js</a></em>&nbsp; <br/>
+<em><a href="#asynchjava1">ClientNaiveUsingWs.java</a></em>
+ <br/> <br/>
+</li>
+<li><ks>Asynchronous interaction | </ks><br/>  
+<k>a module for the business logic </k>: <br/>
+<em><a href="#asynchjs2">wsclientBoundaryToWenv.js</a></em> 
+</li>
+
+
+</ol> 
+</m>
+</td>
+
+<td style="width:33%" >
+<m>
+<h3>Java <tt>boundaryWalker</tt> with basic communication supports</h3>
+<ol> 
+ 
+<li><ks>Synchronous REQUEST-RESPONSE |</ks> <br/> 
+<k>structured by support & business as recursive function</k>: <br/>
+<em><a href="#rrjava2">ClientBoundaryUsingPostBasic.java</a></em> (cril) , &nbsp; 
+<em><a href="#rrjava3">ClientBoundaryUsingPost.java</a></em> (aril)
+<br/><br/>
+</li>
+<li><ks>Synchronous interaction upon websockets | </ks><br/>  
+<k>structured by support & business as recursive function</k>: <br/>
+<em><a href="#rrjava4">ClientBoundaryWebsockBasicSynch.java</a></em> (cril)
+</li>
+
+</ol>
+</m>
+<br/><br/><br/> 
+</td>
+
+<td>
+<m>
+<h3>Java <tt>boundaryWalker</tt> with observable supports</h3>
+<ol> 
+<li><ks>Asynchronous REQUEST and observed REPLY | </ks><br/>  
+<k>business logic in an observer component </k>: <br/>
+<em><a href="#asynchbwjava1">ClientBoundaryWebsockBasicAsynch.java</a></em> (cril)
+<br/><br/>
+
+</li>
+<li><ks>Proactive and Reactive behaviour | </ks><br/>  
+<k>structured according the
+<a href="https://stackify.com/solid-design-principles/" target="web">Single Responsibility Principle</a></k><br/>
+<em><a href="#asynchbwjava2">ClientBoundaryWebsockArilAsynch.java</a></em> (aril)
+
+</li>
+
+</ol>
+<br/><br/><br/><br/>
+</m>
+</td>
+
+</tr>
+ </tbody>
+</table>
+
+
+
+
+
+
+ 
+
+
+<h2>Clients written in Node.js </h2>
+These examples of clients are reported in the project <a href="../" target="code">it.unibo.virtualrobotclient</a>.<br/>
+Each of the following programs (<ks>prog.js</ks>) can be executed by writing:  
+<pre>node <ks>prog</ks></pre>
+<hr/>
+
+<center><table style="width:95%">
+<tbody>	
+
+<tr>
+<td style="width:50%">
+<a href="../app/src/main/js/http/axiosclientToWenv.js" target="code">axiosclientToWenv.js</a>
+<hr/>
+<m>The client  <i>walks along the boundary</i> of the room.
+<br/>The client interacts via <em> HTTP</em>  with the WEnv by using the  
+<a href="https://www.npmjs.com/package/axios" target="web">axios</a>  library for Node.js. </m>
+
+
+</td>
+<td>
+<div class="remark" id="rrjs1">
+<k>Key point</k>: <tt>Synchronous REQUEST-RESPONSE</tt> and  <i>functional style based on recursive callback functions</i>
+</div>
+
+</td>
+</tr>
+
+
+<tr>
+<td style="width:50%"><a href="../app/src/main/js/http/httpClientToWenv.js" target="code">httpClientToWenv.js</a>
+
+<hr/>
+<m>The client  <i>walks along the boundary</i> of the room.
+<br/>The client interacts via <em> HTTP</em>  with the WEnv by using the  
+<a href="https://www.npmjs.com/package/axios" target="web">axios</a>  library for Node.js. 
+</m>
+
+</td>
+<td>
+<div class="remark" id="rrjs2">
+<k>Key point</k>: <tt>Synchronous REQUEST-RESPONSE</tt> and 
+<i>use of state variables and an (user-defined) <ks>doBoundary</ks> operation that embeds the business logic</i>
+</div>
+</td>
+</tr>
+
+<tr>
+<td style="width:50%">
+<a href="../app/src/main/js/wsclient/wsclientToWenv.js" target="code">wsclientToWenv.js</a>
+<hr/>
+<m>The client first <i>moves forward and backward</i>. Afterwards, it works as an <em>observer</em> that:
+<ul>
+<li>show information emitted by some sonar</li>
+<li>rings a bell if the virtual robot collides with some virtual obstacle </li>
+</ul>
+The client interacts with the WEnv via <em>web-scokets</em>, by using the  
+<a href="https://www.npmjs.com/package/websocket" target="web">WebSocket</a>  library for Node.js. 
+</m>
+</td>
+<td> 
+<div class="remark" id="asynchjs1">
+<k>Key point</k>: <tt>Asynchronous interaction.</tt> <i>Example of Node/Javascript programming</i><br/>
+<m>sequence of asynchronous commands sent with <ks>setTimeout</ks> and input messages handled
+by a callback related to <ks>connection.on('message', function(msg){ ... })</ks> 
+</m>
+</div>
+</td>
+</tr>
+
+
+
+
+<tr>
+<td style="width:50%">
+<a href="../app/src/main/js/wsclient/wsclientBoundaryToWenv.js" target="code">wsclientBoundaryToWenv.js</a>
+<hr/>
+<m>The client  <i>walks along the boundary</i> of the room. Afterwards, it closes the connection with <tt>WEnv</tt>.
+<br/>The client interacts with the <tt>WEnv</tt> via <em>web-scokets</em>, by using the  
+<a href="https://www.npmjs.com/package/websocket" target="web">WebSocket</a>  library for Node.js. 
+</td>
+<td> 
+ <div class="remark" id="asynchjs2">
+<k>Key point</k>: <tt>Asynchronous interaction.</tt> 
+<i>Modular Node program that separates the business logic from the low-level ws-socket interaction.</i><br/>
+<m>The business logic is defined in the operation  <ks>walkBoundary</ks> of the module 
+<a href="../app/src/main/js/wsclient/wsclientBoundaryLogic.js" target="code"><ks>wsclientBoundaryLogic.js</ks></a>.<br/>
+This module is used also in the <tt>HTML</tt> page 
+<a href="../app/src/main/js/wsclient/wsclientToWenv.html" target="webcode"><ks>wsclientToWenv.html</ks></a>
+</m>
+</div>
+</td>
+</tr>
+ 
+</tbody>	
+</table></center>
+
+<h2>Clients written from scratch in Java </h2>
+<center><table style="width:95%">
+<tbody>	
+
+<tr>
+<td style="width:50%">
+<a href="../app/src/main/java/it/unibo/wenv/ClientNaiveUsingPost.java" target="code">ClientNaiveUsingPost.java</a>
+<hr/>
+
+The client <i>executes the basic robot-moves by sending commands wriiten in <tt>cril</tt>.</i>
+<br/> <br/> 
+<m>The application exploits the library 
+<a href="https://hc.apache.org/httpcomponents-client-ga/tutorial/html/index.html " target="web">org.apache.http.client</a> (see also 
+<a href="https://www.vogella.com/tutorials/ApacheHttpClient/article.html" target="web">HttpClient - Tutorial</a>)
+to implement <em> HTTP</em>  requests.
+
+</m>
+</td>
+<td>
+ <div class="remark" id="rrjava1">
+<k>Key point</k>: <tt>Synchronous REQUEST-RESPONSE</tt> <br/>
+<i>The communication code is completely written by the application designer</i>. 
+<m>
+<br/> 
+The handling of <em>JSON</em> answers is done using  the library 
+<a href="https://javaee.github.io/javaee-spec/javadocs/javax/json/stream/JsonParser.html" target="web">javax.json.stream.JsonParser</a>
+or the library 
+<a href="https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple" target="web">org.json.simple.parser</a>
+(see also <a href="https://www.tutorialspoint.com/json_simple/json_simple_quick_guide.htm" target="web">JSON.simple - Quick Guide</a>)  
+<a href="https://mvnrepository.com/artifact/org.json/json/20201115" target="web">org.json</a> 
+(see also <a href="https://www.baeldung.com/java-org-json" target="web">Introduction to JSON-Java</a>)
+
+<hr/>
+Requires just 1 Thread.</m>
+</div>
+</td>
+</tr>
+
+
+<tr>
+<td style="width:50%">
+<a href="../app/src/main/java/it/unibo/wenv/ClientNaiveUsingWs.java" target="code">ClientNaiveUsingWs.java</a>
+<hr/>
+
+The client <i>executes the basic robot-moves by sending commands wriiten in <tt>cril</tt>.</i>
+<br/> <br/> 
+<m>The application exploits the library 
+<a href="https://www.oracle.com/technical-resources/articles/java/jsr356.html" target="web">javax.websocket</a>
+(see aloso 
+<a href="http://losviluppatore.it/i-websocket-comunicazione-asincrona-full-duplex-per-il-web/" target="web">I WebSocket : Comunicazione Asincrona Full-Duplex per il Web</a>)
+that works in a 'event-driven' way: the information sent over the websocket 
+is 'injected' into the application by a call to the method annotated with <k>@OnMessage</k>.
+
+</m>
+</td>
+<td>
+ <div class="remark" id="asynchjava1">
+<m>Class annotated with <a href="https://docs.oracle.com/javaee/7/api/javax/websocket/ClientEndpoint.html" target="code">@ClientEndpoint</a>.
+</m><br/>
+<k>Key point</k>: <tt>Asynchronous REQUEST </tt> <br/>
+<i>The communication code is completely written by the application designer, which must take care to execute allowable moves only.</i><br/>
+<m>The operation <ks>doBasicMoves</ks> is able to corretly execute only the first move, while <ks>doBasicMovesDelayed()</ks>
+does execute all the moves, since it inserts a proper delay after each move.
+<br/> 
+ 
+<hr/>
+Requires 4 Thread, because of the library
+<a href="https://www.oracle.com/technical-resources/articles/java/jsr356.html" target="web">javax.websocket</a>.</m>
+</div>
+</td>
+</tr>
+
+
+ </tbody>
+</table>
+</center>
+
+
+<h2>Clients written in Java using basic communication supports</h2>
+
+As already discussed in <a href="../../it.unibo.boundaryWalk/userdocs/BoundaryWalk.html#project" target="lab">LabIss2021 | BoundaryWalk</a>,
+the application designer should not be involved into the technological details related to low-level communications.
+<br/>
+Thus, in this section, we will develop examples of clients that exploit the supports written by our system designers 
+<a href="../app/src/main/java/it/unibo/supports/IssHttpSupport.java" target="web"><em>IssHttpSupport.java</em></a> and
+<a href="../app/src/main/java/it/unibo/supports/IssWsSupport.java" target="web"><em>IssWsSupport.java</em></a>.
+<br/><br/>
+<center><img src="./img/issCommsLayers.png" alt="issCommsLayers" width="40%" ></center>
+
+<br/> 
+The careful reader will note that our supports now implement the interface 
+<a href="../app/src/main/java/it/unibo/supports/IssCommSupport.java" target="web"><em>IssCommSupport</em></a>
+that extends our previous
+<a href="../app/src/main/java/it/unibo/interaction/IssOperations.java" target="web"><em>IssOperations</em></a>.
+In this section, we will continue to use the <a href="../app/src/main/java/it/unibo/interaction/IssOperations.java" target="web">IssOperations</a> 
+interface only; the reason of the extension is given in the
+<a href="#IssCommSupport">next section</a>.
+<br/><br/>
+<center><table style="width:95%">
+<tbody>	
+
+
+<tr>
+<td style="width:50%">
+<a href="../app/src/main/java/it/unibo/wenv/ClientBoundaryUsingPostBasic.java" target="code">ClientBoundaryUsingPostBasic.java</a>
+<hr/>
+<m>
+The client <i>walks along the boundary</i> of the room, by sending commands wriiten in <ks>cril</ks>. 
+<br/> 
+It exploits the library 
+<a href="https://hc.apache.org/httpcomponents-client-ga/tutorial/html/index.html " target="web">org.apache.http.client</a> (see also 
+<a href="https://www.vogella.com/tutorials/ApacheHttpClient/article.html" target="web">HttpClient - Tutorial</a>)
+to implement <em> HTTP</em>  requests.
+<br/> 
+The handling of <em>JSON</em> answers is done using  the library 
+<a href="https://javaee.github.io/javaee-spec/javadocs/javax/json/stream/JsonParser.html" target="web">javax.json.stream.JsonParser</a>
+or the library 
+<a href="https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple" target="web">org.json.simple.parser</a>
+(see also <a href="https://www.tutorialspoint.com/json_simple/json_simple_quick_guide.htm" target="web">JSON.simple - Quick Guide</a>)  
+<a href="https://mvnrepository.com/artifact/org.json/json/20201115" target="web">org.json</a> 
+(see also <a href="https://www.baeldung.com/java-org-json" target="web">Introduction to JSON-Java</a>)
+
+</m>
+</td>
+<td>
+ <div class="remark" id="rrjava2">
+ <m>Class annotated with <a href="../app/src/main/java/it/unibo/annotations/IssProtocolSpec.java" target="code">IssProtocolSpec</a>.
+The communication support is created by the user-defined constructor using the
+ <a href="../app/src/main/java/it/unibo/supports/IssCommsSupportFactory.java" target="code">IssCommsSupportFactory</a>.
+<pre>@IssProtocolSpec(configFile ="<a href="../HttpBasicConfig.txt" target="code">HttpBasicConfig.txt</a>")</pre></m>
+
+<k>Key point</k>: <tt>Synchronous REQUEST-RESPONSE</tt> used in a <ks>doBoundary</ks> operation 
+that implements the business logic in a functional style based on recursive functions. 
+<hr/>
+<m>Requires just 1 Thread.</m>
+</div>
+</td>
+</tr>
+
+
+<tr>
+<td style="width:50%">
+<a href="../app/src/main/java/it/unibo/wenv/ClientBoundaryUsingPost.java" target="code">ClientBoundaryUsingPost.java</a>
+<hr/>
+<m>
+The client <i>walks along the boundary</i> of the room, by sending commands wriiten in <ks>cril</ks>. 
+<br/> 
+It exploits the library 
+<a href="https://hc.apache.org/httpcomponents-client-ga/tutorial/html/index.html " target="web">org.apache.http.client</a>
+to implement <em> HTTP</em>  requests.
+<br/> 
+The handling of <em>JSON</em> answers is done using  the library 
+<a href="https://javaee.github.io/javaee-spec/javadocs/javax/json/stream/JsonParser.html" target="web">javax.json.stream.JsonParser</a>
+or the library 
+<a href="https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple" target="web">org.json.simple.parser</a>
+(see also <a href="https://www.tutorialspoint.com/json_simple/json_simple_quick_guide.htm" target="web">JSON.simple - Quick Guide</a>)  
+<a href="https://mvnrepository.com/artifact/org.json/json/20201115" target="web">org.json</a> 
+(see also <a href="https://www.baeldung.com/java-org-json" target="web">Introduction to JSON-Java</a>)
+
+</m>
+</td>
+<td>
+ <div class="remark"  id="rrjava3">
+ <m>Class annotated with <a href="../app/src/main/java/it/unibo/annotations/ArilRobotSpec.java" target="code">ArilRobotSpec</a>,
+managed by <a href="../app/src/main/java/it/unibo/supports/RobotApplicationStarter.java" target="code">RobotApplicationStarter</a>
+<pre>@ArilRobotSpec   <kc>//configFiles: IssProtoclConfig.txt - IssRobotConfig.txt</kc></pre></m>
+
+<k>Key point</k>: <tt>Synchronous REQUEST-RESPONSE</tt> used in a <ks>doBoundary</ks> operation 
+that implements the business logic in a functional style based on recursive functions. 
+<hr/>
+<m>Requires just 1 Thread.</m>
+</div>
+</td>
+</tr>
+
+<tr>
+<td><a href="../app/src/main/java/it/unibo/wenv/ClientBoundaryWebsockBasicSynch.java" target="code">ClientBoundaryWebsockBasicSynch.java</a><br/>
+<hr/>
+<m>The client  <i>walks along the boundary</i> of the room, by sending commands wriiten in <ks>cril</ks>.
+<br/>
+It exploits the  
+<a href="../app/src/main/java/it/unibo/supports/IssWsSupport.java" target="code">IssWsSupport</a>
+by means of the
+<a href="../app/src/main/java/it/unibo/supports/IssCommsSupportFactory.java" target="code">IssCommsSupportFactory</a>, given the
+configuration file <a href="../WebsocketBasicConfig.txt" target="code">WebsocketBasicConfig.txt</a>.<br/>
+
+The <a href="../app/src/main/java/it/unibo/supports/IssWsSupport.java" target="code">IssWsSupport</a> exploits the
+<a href="http://losviluppatore.it/i-websocket-comunicazione-asincrona-full-duplex-per-il-web/" target="web">javax.websocket</a>  library
+that works in a 'event-driven' way: the information sent over the websocket 
+is 'injected' into the application by a call to the method annotated with <k>@OnMessage</k>.
+
+
+</m>
+</td>
+<td> <div class="remark" id="rrjava4">
+<m>Class annotated with <a href="../app/src/main/java/it/unibo/annotations/IssProtocolSpec.java" target="code">IssProtocolSpec</a>.
+The communication support is created by the user-defined constructor using the
+ <a href="../app/src/main/java/it/unibo/supports/IssCommsSupportFactory.java" target="code">IssCommsSupportFactory</a>.
+<pre>@IssProtocolSpec( configFile ="<a href="../WebsocketBasicConfig.txt" target="code">WebsocketBasicConfig.txt</a>" )</pre></m>
+<k>Key point</k>: <tt>Synchronous REQUEST-RESPONSE</tt> built by the <ks>requestSynch</ks> operation of the 
+<a href="../app/src/main/java/it/unibo/supports/IssWsSupport.java" target="code">IssWsSupport</a>.<br/>
+<m>The business logic can be defined into the <ks>doBoundary</ks> operation already introduced in the
+<a href="../app/src/main/java/it/unibo/wenv/ClientBoundaryUsingPost.java" target="code">ClientBoundaryUsingPost.java</a>.</m>
+<hr/>
+<m>Requires 4 Thread, because of the <a href="../app/src/main/java/it/unibo/supports/IssWsSupport.java" target="code">IssWsSupport</a>. </m>
+</div>
+</td>
+</tr>
+
+
+ </tbody>
+</table>
+</center>
+
+<h2 id="IssCommSupport">Clients written in Java using observable supports</h2>
+<div class="remark" >
+The usage of a websocket library <ks>breaks</ks> the unique flow of control of the application into several threads.<br/>
+In order to exploit in a structured way the asynchronicity of the interaction, the reference design pattern
+is the <a href="https://en.wikipedia.org/wiki/Observer_pattern"  target="web"><k>Observer pattern</k></a>.
+</div>
+To facilitate the work of the application designer, we will introduce new resources, including the idea of a <i>support
+for (high-level) communications that provides operation to add/remove observers</i>, by implementing a proper interface.
+<!--
+<br/>From now on, the layer underlying our robot-based application could be the 
+<a href="../app/src/main/java/it/unibo/supports/RobotSupport.java" target="code">RobotSupport</a>, that will hide
+any detail related to low-level communications. -->
+
+<center><img src="./img/issCommsLayers.png" alt="issCommsLayers" width="40%" ></center>
+
+<!--
+<h3>The <a href="../app/src/main/java/it/unibo/supports/RobotSupport.java" target="code">RobotSupport</a> layer</h3>
+In our (current) design, the <a href="../app/src/main/java/it/unibo/supports/RobotSupport.java" target="code">RobotSupport</a>:
+<ul>
+<li>provides a new layer, composed of 1 communication support;</li>
+<li>implements the <a href="../app/src/main/java/it/unibo/interaction/IssOperations.java" target="web"><em>IssOperations</em></a>
+in asynchronous way, by using a local operation <ks>doRobotMoveAndDelay</ks> in order to avoid the  <ks>notallowed</ks> answer</li>
+<li></li>
+</ul>
+-->
+<br/><br/>
+<center><table style="width:95%">
+<tbody>	
+
+<tr>
+<td>
+
+
+<h4>The <a href="../app/src/main/java/it/unibo/interaction/IssObserver.java" target="code"><ks>IssObserver</ks></a> interface</h4>
+At the moment, this interface defines a method <tt>handleInfo</tt> that accepts two types of arguments
+<pre>
+public interface IssObserver {
+    public void handleInfo(String info);
+    public void handleInfo(JSONObject info);
+}
+</pre>
+
+Our <k>observable supports</k> must implement an interface that adds new operations to our high-level communication interface:
+<h3>The <a href="../app/src/main/java/it/unibo/supports/IssCommSupport.java" target="code"><ks>IssCommSupport</ks></a> interface</h3>
+<pre>
+public interface <ks>IssCommSupport</ks> <k>extends <a href="../app/src/main/java/it/unibo/interaction/IssOperations.java" target="code"><ks>IssOperations</ks></a></k> {
+    void registerObserver( IssObserver obs );
+    void removeObserver( IssObserver obs );
+    void close();
+}
+</pre>
+
+</td>
+<td>
+<h4>The (new) <a href="../app/src/main/java/it/unibo/supports/IssWsSupport.java" target="code"><ks>IssWsSupport</ks></a></h4>
+The new version of the <ks>IssWsSupport</ks> must implement all the operations specified by the 
+<a href="../app/src/main/java/it/unibo/supports/IssCommSupport.java" target="code"><ks>IssCommSupport</ks></a> interface and by the annotations:
+<pre>
+<k>@ClientEndpoint</k>     <kc>//javax.websocket annotation</kc>
+public class IssWsSupport <k>implements</k> <ks>IssCommSupport</ks> {
+
+   <kc>//Callback for <ks>websockets events</ks></kc>
+   ...
+   <kc>//Implementation of <ks>IssOperations</ks></kc>   
+   ...
+   <kc>//Implementation of <ks>IssCommSupport-specific</ks> operations</kc>   
+}	
+</pre>
+
+<h4>The (new) <a href="../app/src/main/java/it/unibo/supports/IssCommsSupportFactory.java" target="code"><ks>IssCommsSupportFactory</ks></a></h4>
+Since we aim at using the new concept of observable supports for communication, our <tt>IssCommsSupportFactory</tt> must now
+provide factory methods that return an object of type
+ <a href="../app/src/main/java/it/unibo/supports/IssCommSupport.java" target="code"><ks>IssCommSupport</ks></a>:
+<pre>
+public class <a href="../app/src/main/java/it/unibo/supports/IssCommsSupportFactory.java" target="code"><ks>IssCommsSupportFactory</ks></a> {
+ <kc>//Factory Method</kc>
+ public static <ks>IssCommSupport</ks> create(Object obj ){ 
+  <kc>//obj must be properly annotated</kc>
+		...
+ }
+	
+ public static <ks>IssCommSupport</ks> create(
+                       String protocol,String url){
+  switch( protocol ){
+   case "HTTP"  : {  return new IssHttpSupport(  url );}
+   case "WS"    : {  return new IssWsSupport( url );   }
+   default: return new IssHttpSupport(url); <m><kc>//TODO Exception</kc></m>
+  }
+ }
+</pre>
+</td>
+</tr>
+</tbody>	
+</table></center>
+
+<h3>Embedding the business logic within an observer</h3>
+<center><table style="width:95%">
+<tbody>	
+
+<tr>
+<td><a href="../app/src/main/java/it/unibo/wenv/ClientBoundaryWebsockBasicAsynch.java" target="code">ClientBoundaryWebsockBasicAsynch.java</a><br/>
+<hr/>
+<m>The client  <i>walks along the boundary</i> of the room, by sending commands wriiten in <ks>cril</ks>.
+<br/>
+It does not use any more the <tt>requestSynch</tt> operation of the  
+<a href="../app/src/main/java/it/unibo/supports/IssWsSupport.java" target="code">IssWsSupport</a>
+createsd by the
+<a href="../app/src/main/java/it/unibo/supports/IssCommsSupportFactory.java" target="code">IssCommsSupportFactory</a>, given the
+configuration file <a href="../WebsocketBasicConfig.txt" target="code">WebsocketBasicConfig.txt</a> 
+<br/><br/>
+The business logic returns a string that represents the robot path expressed as a sequence of moves. For example:
+<pre>wwwlwwwlwwwlwwwl</pre>
+</m>
+</td>
+<td> <div class="remark" id="asynchbwjava1">
+<m>Class annotated with <a href="../app/src/main/java/it/unibo/annotations/IssProtocolSpec.java" target="code">IssProtocolSpec</a>,
+created with <a href="../app/src/main/java/it/unibo/supports/IssCommsSupportFactory.java" target="code">IssCommsSupportFactory</a> 
+and injected by the user-defined constructor.
+<pre>@IssProtocolSpec( configFile ="WebsocketBasicConfig.txt" )</pre></m>
+
+<k>Key point</k>: <tt>Asynchronous REQUEST and observed REPLY</tt>. <br/> <br/>
+<m>The business logic is defined by a 
+<a href="../app/src/main/java/it/unibo/wenv/RobotControllerBoundary.java" target="code"><ks>RobotControllerBoundary</ks></a> working
+as an <em>observer</em> of the <tt>cmdsocket-8091</tt> and initialized to use the  <ks>cril</ks> command-move language.</m>
+
+<h4>Zoomimg into the application </h3>
+<hr/>
+<center><img src="./img/RobotBoundaryZooming.png" alt="RobotBoundaryZooming" width="85%" ></center>
+<br/>
+<m>
+The <tt>handleInfo</tt> operation 
+of <a href="../app/src/main/java/it/unibo/wenv/RobotControllerBoundary.java" target="code">RobotControllerBoundary</a>
+works as an handler of the dispatches sent by WEnv over the <tt>cmdsocket-8091</tt> to notify:
+<ul>
+<li>the answer to a robot-command move <tt>{"endmove":"RESULT", "move":MOVE}</tt></li>
+<li>the information emitted by a sonar <tt>{ "sonarName": "sonarName", "distance": 1, "axis": "x" }</tt></li>
+<li>a collision between the robot and an obstacle <tt>{ "collision" : "false", "move": "moveForward"}</tt></li>
+</ul>
+
+ <!-- The controller exploits the <ks>doRobotAsynchMove</ks> operation defined in the utility
+<a href="../app/src/main/java/it/unibo/supports/RobotSupport.java" target="code">RobotSupport</a>,
+properly wrapped in a  high-level <ks>request</ks> operation. -->
+<hr/>
+Requires 4 Thread, because of the <a href="../app/src/main/java/it/unibo/supports/IssWsSupport.java" target="code">IssWsSupport</a>. </m>
+</div>
+
+</td>
+</tr>
+</tbody>	
+</table></center>
+
+<h3>Isolating the business logic (that builds a map)</h3>
+<center><table style="width:95%">
+<tbody>	
+
+<tr>
+<td style="width:45%"><a href="../app/src/main/java/it/unibo/wenv/ClientBoundaryWebsockArilAsynch.java" target="code">ClientBoundaryWebsockArilAsynch.java</a><br/>
+<hr/>
+<m>The client  <i>walks along the boundary</i> of the room, by sending commands wriiten in <ks>aril</ks>. 
+<br/><br/>
+The business logic is able to build two different types of robot-moves history:
+<ul>
+<li>a string that represents the robot path expressed as a sequence of moves. For example:
+<pre>wwwlwwwlwwwlwwwl</pre>  </li>
+<li>the places that the robot has explored, represented within a map of the room. For example
+
+<pre>
+|r, 1, 1, 1, 1, 
+|1, 0, 0, 0, 1, 
+|1, 0, 0, 0, 1, 
+|1, 1, 1, 1, 1, 
+</pre>
+
+ In this representation, we suppose that:
+
+<ol>
+<li><bc>r</bc> means: cell occupied by the robot</li>
+<li><bc>0</bc> means: cell not explored</li>
+<li><bc>1</bc> means: cell explored</li>
+<li><bc>X</bc> means: cell occupied by an obstacle</li>
+</ol>
+</li>
+</ul>
+</td>
+<td> <div class="remark" id="asynchbwjava2">
+<m>Class annotated with <a href="../app/src/main/java/it/unibo/annotations/ArilRobotSpec.java" target="code">ArilRobotSpec</a>,
+</m>
+<br/>
+<k>Key point</k>: <tt>Proactive and Reactive behaviour</tt> and  
+<a href="https://stackify.com/solid-design-principles/" target="web"><k>Single Responsibility Principle</k></a>.
+<br/><br/><m>
+<ul>
+<li>The business logic is defined in an object of class 
+<a href="../app/src/main/java/it/unibo/wenv/RobotBoundaryLogic.java" target="code"><ks>RobotBoundaryLogic</ks></a>
+that is called by the observer
+<a href="../app/src/main/java/it/unibo/wenv/RobotInputController.java" target="code"><ks>RobotInputController</ks></a>
+initialized to use the <ks>aril</ks> command-move language. </li>
+ 
+<li>
+In this way, we have further removed any detail related to the interaction with WEnv
+from the <a href="../app/src/main/java/it/unibo/wenv/RobotBoundaryLogic.java" target="code"><ks>RobotBoundaryLogic</ks></a>. 
+</li>
+<li>
+Moreover, the details related to the construction of the robot-moves history are embedded in
+the class <a href="../app/src/main/java/it/unibo/wenv/RobotMovesInfo.java" target="code"><ks>RobotMovesInfo</ks></a>.</a>.
+</li>
+</ul>
+</div>
+
+<h4>Zoomimg into the application </h3><hr/>
+ <center><img src="./img/RobotBoundaryArilZooming.png" alt="RobotBoundaryArilZooming" width="100%"></center>
+<m>
+ <hr/>
+Requires 4 Thread, because of the <a href="../app/src/main/java/it/unibo/supports/IssWsSupport.java" target="code">IssWsSupport</a>. 
+</m>
+</div>
+
+</td>
+</tr>
+ 
+</tbody>	
+</table></center>
+
+<h3>A <a href="../app/src/main/kotlin/mapRoomKotlin/mapUtil.kt" target="code"><ks>mapUtil</ks></a></h3>
+
+ 
+
+<table style="width:100%" border="1">
+<tr>
+<td style="width:50%">
+<table style="width:100%" border="1">
+<tr>
+<td style="width:50%">
+ <!--<center><img src="./img/gridSpaceFree.png" alt="gridSpaceFree" width="80%"></center>A free space.-->
+<m>We can  build a map of the space, by exploting the fact that a <ks>aril</ks> forward/backward move 
+covers a length equals to the length <tt>DR</tt> of the robot.
+<br/> <br/> 
+Thus, we imagine to subdivide the available space into a grid of <tt>nr * nc</tt> squares of side <tt>DR</tt>.
+</m>
+</td>
+<td style="width:50%">
+  <center><img src="./img/gridSpaceObstacles.png" alt="gridSpaceObstacles" width="80%"></center>
+  A  space with obstacles.
+</td>
+
+</tr>
+</table>
+
+ 
+</td>
+<td>
+A support for the room-map is given by the following utility (written in <a href="https://kotlinlang.org/" target="web">Kotlin</a> ): 
+<a href="../app/src/main/kotlin/mapRoomKotlin/mapUtil.kt" target="code">mapUtil.kt</a> : 
+<br/>
+
+<ol>
+<li>creates a room map as a singleton;</li>
+<li>provides the operation <bc>doMove(move: String )</bc> that updates the map according to the given <ks>aril</ks> robot move
+(<tt>w | s | r | l | h </tt>)
+</li>
+<li>provides the operation <bc>getMapAndClean( ): String</bc> that returns a String-representation of the current map and
+resets the map to the empty map;
+</li>
+<li>provides the operation <bc>showMap( )</bc> that prints on the standard output the String-representation of the current map.
+</li>
+</ol>
+ <br/>
+ A demo is available in: 
+<a href="../app/src/main/kotlin/mapRoomKotlin/MainMapUsage.kt" target="code">MainMapUsage.kt</a> 
+
+</td>
+</tr>
+</table>   
+
+<br/><br/>
+
+<h2>Some new case-study</h2>
+
+<ol>
+<li>The <a href="../../it.unibo.issLabStart/userDocs/resumableBoundaryWalker.html" target="code">resumableBoundaryWalker</a>  </li>
+<li>The  <a href="../../it.unibo.issLabStart/userDocs/cautiousExplorer.html" target="code">cautiousExplorer</a> </li>
+</ol>
+
+
+<br/><br/>
+</div>
+ 
+<div style="background-color:rgba(86, 56, 253, 0.9); width:100%;text-align:center;font-size:small;color:white">
+By AN Unibo-DISI  
+</div> 
+</body>
+</html>

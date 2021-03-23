@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="e5177d72-776e-4f8d-b3c7-e279b379b284" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/../../../../../../../it.unibo.usingKotlin/.idea/codeStyles/Project.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../../../../it.unibo.usingKotlin/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../../../../it.unibo.usingKotlin/app/src/main/java/ActorRobotObserver.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../../../../it.unibo.usingKotlin/app/src/main/java/it/unibo/annotations/AppRobotSpec.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../../../../it.unibo.usingKotlin/app/src/main/java/it/unibo/annotations/ArilRobotSpec.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../../../../it.unibo.usingKotlin/app/src/main/java/it/unibo/annotations/InjectSupportSpec.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../../../../it.unibo.usingKotlin/app/src/main/java/it/unibo/annotations/IssAnnotationUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../../../../it.unibo.usingKotlin/app/src/main/java/it/unibo/annotations/IssProtocolSpec.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../../../../it.unibo.usingKotlin/app/src/main/java/it/unibo/annotations/ProtocolInfo.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../../../../it.unibo.usingKotlin/app/src/main/java/it/unibo/annotations/RobotMoveTimeSpec.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../../../../it.unibo.usingKotlin/app/src/main/java/it/unibo/annotations/VirtualRobotSpec.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../../../../it.unibo.usingKotlin/app/src/main/java/it/unibo/supports/IssCommSupport.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../../../../it.unibo.usingKotlin/app/src/main/java/it/unibo/supports/RobotApplicationStarter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../../../../it.unibo.usingKotlin/app/src/main/java/wenv/ClientBoundaryWebsockArilAsynch.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../../../../it.unibo.usingKotlin/app/src/main/kotlin/it/unibo/interaction/IssObserver.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../../../../it.unibo.usingKotlin/app/src/main/kotlin/it/unibo/interaction/IssOperations.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/unibo.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../../../../it.unibo.issLabStart/userDocs/LabIss2021Bo.html" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../../../../it.unibo.issLabStart/userDocs/LabIss2021Bo.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../../../../it.unibo.usingKotlin/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../../../../it.unibo.usingKotlin/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../../../../it.unibo.usingKotlin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../../../../it.unibo.usingKotlin/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../../../../it.unibo.usingKotlin/app/src/main/kotlin/it/unibo/fsm/Stepper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../../../../it.unibo.usingKotlin/app/src/main/kotlin/it/unibo/fsm/Stepper.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../../../../it.unibo.usingKotlin/app/src/main/kotlin/it/unibo/fsm/Walker.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../../../../it.unibo.usingKotlin/app/src/main/kotlin/it/unibo/fsm/Walker.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../../../../it.unibo.usingKotlin/app/src/main/kotlin/it/unibo/fsm/WalkerHttpCaller.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../../../../it.unibo.usingKotlin/app/src/main/kotlin/it/unibo/fsm/WalkerHttpCaller.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../../../../it.unibo.usingKotlin/app/src/main/kotlin/it/unibo/interaction/UseWEnvConnSupport.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../../../../it.unibo.usingKotlin/app/src/main/kotlin/it/unibo/interactionKotlin/UseWEnvConnSupport.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../../../../it.unibo.usingKotlin/app/src/main/kotlin/it/unibo/interaction/UseWEnvHTTPSupport.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../../../../it.unibo.usingKotlin/app/src/main/kotlin/it/unibo/interactionKotlin/UseWEnvHTTPSupport.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../../../../it.unibo.usingKotlin/app/src/main/kotlin/it/unibo/interaction/WEnvConnSupport.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../../../../it.unibo.usingKotlin/app/src/main/kotlin/it/unibo/interactionKotlin/WEnvConnSupport.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../../../../it.unibo.usingKotlin/app/src/main/kotlin/it/unibo/interaction/WEnvConnSupportNoChannel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../../../../it.unibo.usingKotlin/app/src/main/kotlin/it/unibo/interactionKotlin/WEnvConnSupportNoChannel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../../../../it.unibo.usingKotlin/app/src/main/kotlin/it/unibo/interaction/WEnvHTTPSupport.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../../../../it.unibo.usingKotlin/app/src/main/kotlin/it/unibo/interactionKotlin/WEnvHTTPSupport.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../../../../it.unibo.usingKotlin/app/src/main/kotlin/it/unibo/interaction/clientsFsmNaive/robotActorAppMsg.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../../../../it.unibo.usingKotlin/app/src/main/kotlin/it/unibo/interactionKotlin/clientsFsmNaive/robotActorAppMsg.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../../../../it.unibo.usingKotlin/app/src/main/kotlin/it/unibo/interaction/clientsFsmNaive/robotActorAppMsgUsage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../../../../it.unibo.usingKotlin/app/src/main/kotlin/it/unibo/interactionKotlin/clientsFsmNaive/robotActorAppMsgUsage.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../../../../it.unibo.usingKotlin/app/src/main/kotlin/it/unibo/interaction/clientsFsmNaive/robotActorTry.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../../../../it.unibo.usingKotlin/app/src/main/kotlin/it/unibo/interactionKotlin/clientsFsmNaive/robotActorTry.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../../../../it.unibo.usingKotlin/app/src/main/kotlin/it/unibo/interaction/clientsFsmNaive/robotActorTryUsage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../../../../it.unibo.usingKotlin/app/src/main/kotlin/it/unibo/interactionKotlin/clientsFsmNaive/robotActorTryUsage.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../../../../it.unibo.usingKotlin/app/src/main/kotlin/myactors/ActorNaive.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../../../../it.unibo.usingKotlin/app/src/main/kotlin/wenv/ActorNaive.kt" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CodeStyleSettingsInfer">
+    <option name="done" value="true" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../../../../../.." />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHome" value="C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2020.2.4\plugins\maven\lib\maven3" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectCodeStyleSettingsMigration">
+    <option name="version" value="1" />
+  </component>
+  <component name="ProjectId" id="1pyuDrfij7OgGPgaI7dAqrHIYhK" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="e5177d72-776e-4f8d-b3c7-e279b379b284" name="Default Changelist" comment="" />
+      <created>1616167534819</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1616167534819</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

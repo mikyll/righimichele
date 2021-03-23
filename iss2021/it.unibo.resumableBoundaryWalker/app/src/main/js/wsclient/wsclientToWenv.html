@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<meta charset = "utf-8" />
+<title>wsclientToWenv</title>
+<body>
+<script src="./wsclientBoundaryLogic.js"></script>
+<script>
+const wspath    = ("ws://localhost:8091" )
+const conn8091  = new WebSocket(wspath);
+
+conn8091.addEventListener('open', (conn) => {
+  console.log('webSocketUtils | connected ' + conn);
+  cmdRobot( "moveForward", 400, conn8091 )   //in wsclientBoundaryLogic
+});
+conn8091.addEventListener('close', () => {
+  document.getElementById("display").innerHTML += "CONNECTION 8091 CLOSED <br/>"
+});
+conn8091.addEventListener('message', event => {
+  document.getElementById("display").innerHTML += event.data +"<br/>"
+  var message = JSON.parse(event.data)
+  if(message.endmove){
+    var path = walkBoundary( message, conn8091) //in wsclientBoundaryLogic
+    document.getElementById("display").innerHTML += path +"<br/>"
+  }
+});
+</script>
+
+<h3>DISPLAY AREA</h3>
+<div id = "display"></div>
+</body>
+</html>
