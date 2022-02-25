@@ -1,0 +1,535 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- saved from url=(0128)https://htmlpreview.github.io/?https://github.com/anatali/issLab2021/blob/master/it.unibo.issLabStart/userDocs/template2021.html -->
+<html><!--
+<link rel="stylesheet" type="text/css" href="../css/issStyle1.css">
+<script type="text/htmlpreview" src="../css/issStyle.js"></script>
+--><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style type="text/css">
+body
+{
+    margin-left:  30px;
+    margin-right: 30px;
+};
+
+P
+{
+    font-family: Tahoma;
+    font-size: 10pt;
+};
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+	font-size: 93%;
+}
+
+a:hover {
+    background-color: #cccccc;
+}
+
+
+hr {
+    clear: both;
+    height: 1px;
+    color: #242424;
+    background-color: transparent;
+}
+
+h1, h2, h3 {
+    color: #242424;
+    clear: left;
+    font: 100% Tahoma, Helvetica, Arial, sans-serif;
+    margin-bottom: 0.5em;
+    padding-top: 0.5em;
+	border-radius: 10px;
+	padding: 5px;
+}
+
+top {
+	width: 100%;
+}
+
+
+#i {
+    color: #ff1010;
+}
+tt{
+	font-family: "Arial";
+    font-size: 90%;
+	color: #006600;
+}
+em{
+	font-family: "Arial";
+    font-size: 80%;
+	font-weight: bold;
+	border-style:solid;
+	border-color: #abe876;
+    color: #1632cc;
+}
+bc{
+	font-family: "Arial";
+	font-size: 90%;
+	font-weight: bold;
+    color: #990000;
+	background-color: #fcf8c7;
+}
+ks{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #0000CD	;
+	font-size: 90%;
+}
+kc{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #008000	;
+	font-size: 90%;
+}
+pre{
+	font-family: "Consolas";
+	font-size: 85%;
+	background-color: #f5f5f5;
+	border: 1.5px solid silver;
+	padding: 5px;
+}
+m{
+	font-family: "Helvetica";
+	line-height: 100%;
+ 	font-size: 75%;
+}
+div.body{
+	 
+    font-size: 18px;
+}
+k{
+    color: #990000;
+	font-weight: bold;
+	font-size: 90%;
+}
+h1 {
+    font-size: 150%;
+    background-color: #b2c0ff;
+	padding: 10px;
+}
+
+h2 {
+    background-color: #9ed8ff;
+    font-size: 130%;
+}
+
+h3 {
+	background-color: #e6ccff;
+    font-size: 100%;
+}
+h4 {
+    background-color: #ccffcc;
+    font-size: 100%;
+	width: 95%;
+	border-radius: 5px;
+	padding: 2px;
+}
+h5 {
+    background-color: #d5ffb0;
+    font-size: 100%;
+
+}
+div.req{
+	background-color: #d9ffb3;
+    font-size: 18px;
+	width: 700px;
+    border: 3px solid green;
+    padding: 15px;
+    margin: 10px;
+}
+div.remark{
+	background-color: #E3F2FD;
+    border: 1.5px solid #d5f2ed;
+    padding: 15px;
+    margin: 10px;
+	border-radius: 25px;
+}
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+ol, ul, li {
+  margin: 0;
+  margin-left: 10px;
+  padding: 0;
+  padding-bottom: 5px;
+}
+
+table, th, td {
+	border: 1px solid black;
+}
+
+img {
+	border: 1.5px solid #d5f2ed
+
+}
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+}
+
+div.wrapdesc{
+	width: 90%;
+	margin: auto;
+}
+
+div.imagedesc{
+	width: 85%;
+	margin: auto;
+}
+span.mark {
+	background-color: yellow;
+	color: black;
+}
+span#pensiero {
+	background-color: white;
+}
+div.code {
+	padding: 10px;
+	border: 1px solid silver;
+	background-color: whitesmoke;
+	font-family: monospace;
+	font-size: 14px;
+}
+span.command {
+	color: green;
+	font-weight: 900;
+}
+a#github {
+	color: white;
+}
+a#github:visited {
+	color: white;
+}
+a#github:hover {
+	color: white;
+	background-color: black;
+}
+div#footer:hover {
+
+}
+
+</style>
+    
+<!--<base href="https://raw.githubusercontent.com/anatali/issLab2021/master/it.unibo.issLabStart/userDocs/template2021.html">--><base href=".">
+   
+<title>Michele Righi resumableBW 2021</title></head>
+    
+<body>
+<div id="top">
+	<h1>Lab ISS | the project resumableBoundaryWalker<font size="5"></font> </h1>
+</div>  
+
+<div class="body"> 
+<!-- ========================================================================= -->
+	<h2>Introduction</h2>
+	<div class="remark">
+		This case-study starts to deal with the design and development of proactive/reactive software 
+		systems which work under user-control.
+	</div>
+	
+<!-- ------------------------------------------------------------------------- -->
+	<h2>Requirements</h2>
+	<div class="remark">
+ 
+		Design and build a software system (named from now on 'the application') that leads the robot described in 
+		<a href="https://htmlpreview.github.io/?https://github.com/anatali/issLab2021/blob/master/it.unibo.virtualRobot2020/userDocs/VirtualRobot2021.html" target="lab"><em>VirtualRobot2021.html</em></a> 
+		to walk along the boundary of a empty, rectangular room under user control. 
+		<br/>
+		More specifically, the <ks>user story</ks> can be summarized as follows:
+		<br/>
+		<table style="width:98%">
+		<tbody>	
+			<tr>
+				<td style="width:65%">the robot is initially located at the <ks>HOME</ks> position, as shown 
+				in the picture on the rigth</td>
+				<td><center><img src="./img/emptyGridWithHome.png" alt="emptyGridWithHome" width="35%"></center></td>
+			</tr>
+			<tr>
+				<td style="width:65%">the application presents to the user a <ks>consoleGui</ks> similar 
+				to that shown in the picture on the rigth</td>
+				<td><center><img src="./img/stopResumeConsole.png" alt="stopResumeConsole" width="35%"></center></td>
+			</tr>
+			<tr>
+				<td style="width:65%">when the user hits the button <k>RESUME</k> the robot <ks>starts or 
+				continue to walk</ks> along the boundary, while	updating a <ks>robot-moves history</ks>;</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td style="width:65%">when the user hits the button <k>STOP</k> the robot stop its journey, 
+				waiting for another <k>RESUME</k>;</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td style="width:65%">when the robot reachs its <ks>HOME</ks> again, the application 
+				<i>shows the robot-moves history</i> on the standard output device.</td>
+				<td></td>
+			</tr>
+		</tbody>
+		</table>
+	</div>
+	
+	<h3>Delivery</h3>
+	The customer <ks>hopes to receive</ks> a working prototype (written in Java ) of the application by <k>Monady 22 March</k>. 
+	The name of this file (in pdf) should be:
+	<pre>
+		cognome_nome_resumablebw.pdf
+	</pre>
+
+	 
+<!-- ------------------------------------------------------------------------- -->
+	<h2>Requirement analysis</h2>
+	<div>
+		The interview with the client has outlined the following meanings for the 
+		initial requirements:
+		<ul>
+			<li><ks>robot</ks> - a device that can at least move forward and rotate. 
+			It must be able to receive command through the network</li>
+			<li><ks>room</ks> - a normal, conventional room, the same that any building 
+			has. The room is rectangular and has no obstacles inside of it</li>
+			<li><ks>boundary</ks> - the room perimeter that represent the path along 
+			which the robot must move. It is delimited by solid <b>walls</b> and has 
+			the shape of a rectangle (4 straight sides and 4 right angles).</li>
+			<li><ks>HOME</ks> - it's the position from where the robot starts moving and
+			to where it must return. The robot must be turned toward the same direction as it
+			started.</li>
+			<li><ks>journey</ks> - the sequence of moves the robot has done until a particular
+			execution time.</li>
+			<li><ks>move history</ks> - the sequence of moves the robot has done before ending
+			the execution.</li>
+		</ul>
+		About actions:
+		<ul>
+			<li><ks>walk</ks> - the action that the robot must perform: it must move 
+			the	closest possible to the walls (i.e. the boundary) of the room.
+			</li>
+		</ul>
+		
+		<h3 id="userStory1">User story</h3>
+		The user story has been already defined by the client.
+		
+		<h4>Informal first set of functional test plans</h4>
+		<div>
+			The TestPlan must verify the base movement the robot needs to perform to execute the 
+			boundary walk command, in particular <b>moveForward</b> and <b>turnLeft</b>.
+			Then the TestPlan must check that the robot correctly detect when it collides with an obstacle.
+			Finally it's necessary to check that the move history the application generates is the one that 
+			we would expect, by knowing the boundary path.
+		</div>
+	</div>
+<!-- ------------------------------------------------------------------------- -->
+	<h2>Problem analysis</h2>
+	<div>
+		<h3>Relevant aspects</h3>
+		<div>
+			As stated in <a href="https://htmlpreview.github.io/?https://github.com/anatali/issLab2021/blob/master/it.unibo.virtualRobot2020/userDocs/VirtualRobot2021.html" target="lab"><em>VirtualRobot2021</em></a>,
+			the robot can communicate with the system in two different ways:
+			<ol>
+				<li><ks>HTTP POST</ks> - the application sends a POST request message on the port 
+				<b>8090</b> and receive a response from the robot.</li>
+				<li><ks>websocket</ks> - the application sends asynchronous message through the socket 
+				associated with the port <b>8091</b>, and the robot responds sending back informations.</li>
+			</ol>
+			For both of the communication protocols there are plenty of libraries in the most used
+			programming languages, which includes Java and Node.<br/>
+			
+			Given that the application will receive asynchronous messages, the best solution is to use the
+			websocket support, otherwise we would need to implement a polling algorithm, which generates
+			overhead.
+			<br/>
+			<br/>
+			The application performs two fundamental activities: the first is proactive, as we send the
+			command that makes the robot start doing the boundary walk; the second one is reactive, as the
+			application must react and handle the stop and resume commands from the GUI.
+			<br/>
+			<br/>
+			As there will be a GUI, the application could be implemented using the <a href="https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller"><ks>MVC pattern</ks></a> for the
+			project architecture: the view is the GUI with the buttons; the controller represent the dynamic
+			part of the application, which handles the input from the GUI and calls the methods of the
+			business logic; the model is represented by data (e.g. the move history) and informations.
+			The button handler could be implemented using the <a href="https://en.wikipedia.org/wiki/Observer_pattern"><ks>Observer Pattern</ks></a>, 
+			detecting when the user press a button and then calling a callback for the resume or stop 
+			commands.
+		</div>
+		
+		<h3>Main problems</h3>
+		<ul>
+			<li><ks>Handle Stop/Resume</ks> - This is the fundamental part of the application. We must make
+			the application call a function to start sending the commands of the boundary walk, by pressing
+			the resume button. The button stop, if pressed interrupts the execution of the boundary walk,
+			waiting the current move to end. If the button resume is pressed, the executions resume from the
+			following move command of the boundary routine.
+			</li>
+		</ul>
+		
+		<h3>Logical architecture</h3>
+		<table style="width: 98%">
+			<tr>
+				<td>
+				</td>
+				<td style="width: 60%; text-align: center">Legend:<img src="./img/Legenda.png" alt="Legend" width="95%"></td>
+			</tr>
+			<tr>
+				<td style="width: 60%; padding: 10px;">
+					The system we must design has two software macro-components:
+					<ol>
+						<li>the <a href="https://htmlpreview.github.io/?https://github.com/anatali/issLab2021/blob/master/it.unibo.virtualRobot2020/userDocs/VirtualRobot2021.html" target="lab"><ks>VirtualRobot</ks></a>, given by the customer.</li>
+						<li>the <ks>reasumableBW</ks> application that we have to write, which interacts 
+						with the robot using asynchronous messages. This application will be composed by 
+						sub-components and different classes.</li>
+					</ol>
+				</td>
+				<td style="text-align: center"><img src="./img/resumableBW.png" alt="Logical Architecture" width="95%"/></td>
+			</tr>
+		</table>
+		<br/>
+		
+		The following resources are provided by the software house and could be usefully exploited to reduce 
+		the development time of a first prototype of the application:
+
+		<ol>
+		<li>The  <a href="../../it.unibo.virtualrobotclient/app/src/main/java/it/unibo/consolegui/Consolegui.java" target="code">Consolegui.java</a>  
+		(in project <a href="../../it.unibo.virtualrobotclient/app/src/main/java/it/unibo/consolegui" target="code">it.unibo.virtualrobotclient</a>) </li>
+
+		<li>The  <a href="../../it.unibo.virtualrobotclient/app/src/main/java/it/unibo/wenv/RobotMovesInfo.java" target="code">RobotMovesInfo.java</a>  
+		(in project <a href="../../it.unibo.virtualrobotclient/app/src/main/java/it/unibo/wenv" target="code">it.unibo.virtualrobotclient</a>) </li>
+
+
+		<li>The  <a href="../../it.unibo.virtualrobotclient/app/src/main/java/it/unibo/wenv/RobotInputController.java" target="code">RobotInputController.java</a>  
+		(in project <a href="../../it.unibo.virtualrobotclient/app/src/main/java/it/unibo/wenv" target="code">it.unibo.virtualrobotclient</a>) </li>
+		</ol>
+
+		The expected time required for the development of the application is (no more than) 6 hours.
+	</div>
+
+<!-- ------------------------------------------------------------------------- -->
+	<h2>Test plans</h2> 
+	<div>
+		The test plan must verify that the robot can perform the fundamental boundaryWalk actions/commands,
+		that are the following:<br/>
+		<ol>
+			<li>moving forward (<b>w</b>) for a certain amount of time (small step);</li>
+			<li>detecting collision;</li>
+			<li>turning left (<b>l</b>)</li>
+		</ol>
+		JUnit pseudocode:
+<pre>
+private robotController;
+
+@Before
+public void init()
+{
+	this.robotController.create();
+	this.robotController.setHome(); // it already is in the home position
+}
+
+@Test
+public void checkBoundaryFundamentals()
+{
+	do
+	{
+		collision = this.robotController.sendCmd(moveForward);
+	}
+	while( !collision );
+	
+	this.robotController.sendCmd(rotateLeft);
+	assertTrue(!collisione);
+}
+</pre>
+		
+		Then the robotController must verify that the move history or the generated map correspond to the one we
+		expect.
+		JUnit pseudocode:
+		
+<pre>
+private robotController;
+private expectedMoveHistory;
+
+@Before
+public void init()
+{
+	this.robotController.create();
+	this.robotController.setHome(); // it already is in the home position
+	this.expectedMoveHistory = "wwwl";
+}
+
+@Test
+public void checkMoveHistory()
+{
+	this.robotController.sendCmd(moveForward);
+	this.robotController.sendCmd(moveForward);
+	this.robotController.sendCmd(moveForward);
+	this.robotController.sendCmd(rotateLeft);
+	assertTrue(compare(this.expectedMoveHistory, this.robotController.getMoveHistory()));
+}
+</pre>
+		
+	</div>
+
+<!-- ------------------------------------------------------------------------- -->
+	<h2 id="project">Project</h2>
+	<div>
+	
+	</div>
+<!-- ------------------------------------------------------------------------- -->
+	<h2>Testing</h2>
+	<div>
+		
+	</div>
+ 
+<!-- ------------------------------------------------------------------------- -->
+	<h2>Deployment</h2>
+	<div>
+		The deployment consists in the commit of the application on a project named <ks>iss2021_resumablebw</ks> of the MY GIT repository ( <k>RRR</k> ).
+		<br/><br/>
+		The final commit commit has done after <k>XXX</k> hours of work.
+	</div>
+
+<!-- ------------------------------------------------------------------------- -->
+	<h2>Maintenance</h2>
+	<div>
+		
+	</div>
+ 
+<!-- USEFUL
+<table style="width:100%" border="1">
+<tr>
+<td style="width:50%">
+</td>
+<td></td>
+</tr>
+</table>
+-->
+
+
+<!-- ========================================================================= -->
+
+	<table class="separator" style="width:100%" border="1">
+		<tr>
+			<td style="width:50%"/>
+			<td/>
+		</tr>
+	</table>
+				
+	<br/>
+</div>
+
+<div id="footer" style="background-color:rgba(86, 56, 253, 0.9); width:60%; text-align:left;color:white">
+	<p style="float: left; width: 72%; padding: 10px">
+		By <b>Michele Righi</b><br/><br/>
+		email: michele.righi5@studio.unibo.it<br/>
+		github: <a id="github" href="https://github.com/mikyll">mikyll</a><br/>
+		ISS repo: <a id="github" href="https://github.com/mikyll/righimichele">mikyll/righimichele</a><br/>
+		<!--cautiousExplorer repo: <a id="github" href="https://github.com/mikyll/righimichele/it.unibo.cautiousExplorer">mikyll/righimichele/it.unibo.cautiousExplorer</a><br/>-->
+	</p>
+	<center><img src="./img/Michele.png" alt="Michele Righi" width="120px" height="159px"/></center>
+</div>
+
+</body></html>
