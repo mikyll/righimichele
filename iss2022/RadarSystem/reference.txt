@@ -1,0 +1,2 @@
+SONAR: https://www.youtube.com/watch?v=JYnMRKVwBuQ
+LED: https://www.lifewire.com/light-an-led-with-the-raspberry-pis-gpio-4090226
