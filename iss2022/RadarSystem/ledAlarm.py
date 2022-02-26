@@ -55,7 +55,7 @@ if __name__ == '__main__':
         while True:
             dist = distance()
             print ("Measured Distance = %.1f cm" % dist)
-            if dist <= 8.0:
+            if dist < 10.0:
                 turn_on_led()
             else:
                 turn_off_led()
