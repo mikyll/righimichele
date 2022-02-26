@@ -3,9 +3,19 @@
 ### Description
 Use the ultrasonic sensor (HC-SR04) to turn on a LED when it detects an object located at a distance less than a certain threshold.
 
+<table>
+  <tr align="center">
+    <td width="49%"><img src="https://github.com/mikyll/righimichele/blob/master/iss2022/RadarSystem/gfx/ledAlarm%20usage.gif"/></td>
+    <td width="49%"><img src="https://github.com/mikyll/righimichele/blob/master/iss2022/RadarSystem/gfx/ledAlarm%20circuit.png"/></td>
+  </tr>
+</table>
+ 
+
 ### How does it work
 #### Sonar
 The sonar works by sending sound waves from the transmitter, which then bounce off of an object and then return to the receiver. It has a range of approximatively 3m (300cm).
+
+<img width="50%" src="https://github.com/mikyll/righimichele/blob/master/iss2022/RadarSystem/gfx/HC-SR04-Ultrasonic-Sensor-Working-Echo-reflected-from-Obstacle.gif"/>
 
 ### Implementation
 We set the TRIGGER pin of the Sonar to HIGH to send a sound wave, and set it back to LOW immediately after; then we set the *startTime* as soon as we read the LOW value from ECHO pin, and set the *stopTime*.<br/>
