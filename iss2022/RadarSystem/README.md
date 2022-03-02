@@ -210,3 +210,7 @@ void turnOffLed()
 
 To compile run ```gcc ledAlarm.c -o ledAlarm -lwiringPi```.<br/>
 To execute run ```./ledAlarm```.
+
+  
+### References
+- [How does the HC-SR04 work](https://lastminuteengineers.com/arduino-sr04-ultrasonic-sensor-tutorial/)
