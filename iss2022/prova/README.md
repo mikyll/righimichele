@@ -26,3 +26,7 @@ NB: Navigando l'albero delle sottodirectory del progetto è possibile visualizza
 <p align="center">
 	<img align="center" width="60%" src="https://github.com/mikyll/righimichele/blob/master/iss2022/prova/gfx/Test%20results%20details.png"/>
 </p>
+
+### Riferimenti
+- [Repo del prof](https://github.com/anatali/issLab2022)
+- [Workspace setup](https://github.com/anatali/issLab2022/blob/main/it.unibo.issLabStart/userDocs/Dispense/html/WorkspaceSetup.html)
