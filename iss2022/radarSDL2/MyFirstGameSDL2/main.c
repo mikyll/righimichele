@@ -50,7 +50,7 @@ void blit(SDL_Texture* texture, int x, int y);
 void initRadar();
 void initObject();
 void doRadar();
-void detectObject();
+void detectObject(int x, int y);
 void doInput();
 static void capFrameRate(long* then, float* remainder);
 
@@ -132,7 +132,7 @@ int main()
 		
 		if (radar.detect)
 		{
-			detectObject();
+			detectObject(radar.x, radar.y);
 			blit(object.texture, object.x, object.y);
 		}
 
@@ -234,10 +234,10 @@ void doRadar()
 {
 	blit(radar.texture, radar.x, radar.y);
 }
-void detectObject()
+void detectObject(int x, int y)
 {
-	object.x = radar.x + radar.w / 4;
-	object.y = radar.y;
+	object.x = x + radar.w / 4;
+	object.y = y;
 }
 
 void doKeyUp(SDL_KeyboardEvent* event)
