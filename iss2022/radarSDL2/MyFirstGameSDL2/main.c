@@ -6,6 +6,7 @@
 #include <ctype.h>
 #include "SDL.h"
 #include "SDL_image.h"
+#include "SDL_net.h"
 
 #define PI 3.14159
 
@@ -14,6 +15,8 @@
 
 #define SCREEN_WIDTH 1280
 #define SCREEN_HEIGHT 720
+
+#define ERROR (0xff)
 
 typedef struct {
 	SDL_Window* window;
@@ -40,6 +43,7 @@ SpawnPoint spawnPoints[4];
 Entity radar;
 Entity object;
 int tot_points;
+UDPsocket sock;
 
 void initSDL();
 void cleanup();
@@ -75,14 +79,7 @@ int main()
 	double angle = 0.0, a1, a2, a3;
 
 	SDL_SetRenderDrawColor(app.renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
-	SDL_RenderClear(app.renderer);
 
-	//prepareScene();
-
-	SDL_SetRenderDrawColor(app.renderer, 0, 154, 23, SDL_ALPHA_OPAQUE);
-	SDL_RenderDrawLine(app.renderer, x1, y1, x2, y2);
-
-	presentScene();
 	uint32_t startTime = SDL_GetTicks();
 	uint32_t stopTime;
 	double elapsedTime;
@@ -150,6 +147,7 @@ void initSDL()
 	rendererFlags = SDL_RENDERER_ACCELERATED;
 	windowFlags = 0;
 
+	// init SDL Video
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
 		printf("Couldn't initialize SDL: %s\n", SDL_GetError());
@@ -170,7 +168,28 @@ void initSDL()
 		exit(1);
 	}
 
-	IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG);
+	// Init SDL Image
+	if (IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG) < 0)
+	{
+		printf("Couldn't initialize SDLImage: %s\n", SDL_GetError());
+		exit(1);
+	}
+
+	// init SDL Net
+	if (SDL_Init(SDLNet_Init()) < 0)
+	{
+		printf("Couldn't initialize SDLNet: %s\n", SDL_GetError());
+		exit(1);
+	}
+
+	// Open UDP Server Socket
+	Uint16 port = (Uint16) 40123;
+	if (!(sock = SDLNet_UDP_Open(port)))
+	{
+		printf("SDLNet_UDP_Open: %s\n", SDLNet_GetError());
+		exit(4);
+	}
+	printf("port %hd opened\n", port);
 }
 void initRadar()
 {
@@ -292,6 +311,30 @@ void doInput()
 void getMessage()
 {
 	// check if there are messages from gpio ... (read buffer length, if there's some value to read, reads it);
+}
+
+int udprecv(UDPsocket sock, UDPpacket* in, Uint32 delay, Uint8 expect, int timeout)
+{
+	Uint32 t, t2;
+	int err;
+
+	in->data[0] = 0;
+	t = SDL_GetTicks();
+	do
+	{
+		t2 = SDL_GetTicks();
+		if (t2 - t > (Uint32)timeout)
+		{
+			printf("timed out\n");
+			return(0);
+		}
+		err = SDLNet_UDP_Recv(sock, in);
+		if (!err)
+			SDL_Delay(delay);
+	} while (!err || (in->data[0] != expect && in->data[0] != ERROR));
+	if (in->data[0] == ERROR)
+		printf("received error code\n");
+	return(in->data[0] == ERROR ? -1 : 1);
 }
 
 static void capFrameRate(long* then, float* remainder)
