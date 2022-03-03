@@ -202,7 +202,7 @@ void initRadar()
 }
 void initObject()
 {
-	object.texture = loadTexture("object.png");
+	object.texture = loadTexture("sus_object.png");
 	SDL_QueryTexture(object.texture, NULL, NULL, &object.w, &object.h);
 
 	object.x = SCREEN_WIDTH / 2;
