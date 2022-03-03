@@ -21,7 +21,8 @@
 typedef struct {
 	SDL_Window* window;
 	SDL_Renderer* renderer;
-	int sonar;
+	int objDetected;
+	int susDetected;
 }App;
 
 typedef struct {
@@ -34,7 +35,7 @@ typedef struct {
 	int y;
 	int w;
 	int h;
-	int detect;
+	int detected;
 	SDL_Texture* texture;
 }Entity;
 
@@ -42,6 +43,7 @@ App app;
 SpawnPoint spawnPoints[4];
 Entity radar;
 Entity object;
+Entity sus;
 int tot_points;
 UDPsocket sock;
 
@@ -53,8 +55,10 @@ void presentScene();
 void blit(SDL_Texture* texture, int x, int y);
 void initRadar();
 void initObject();
+void initSus();
 void doRadar();
 void detectObject(int x, int y);
+void detectSus(int x, int y);
 void doInput();
 static void capFrameRate(long* then, float* remainder);
 
@@ -73,6 +77,7 @@ int main()
 	
 	initRadar();
 	initObject();
+	initSus();
 
 	int l = radar.w / 2;
 	int x1 = SCREEN_WIDTH / 2, y1 = SCREEN_HEIGHT / 2, x2 = SCREEN_WIDTH / 2, y2 = SCREEN_HEIGHT / 2;
@@ -97,11 +102,12 @@ int main()
 			elapsedTime = (stopTime - startTime) / 1000.0;
 			//printf("\nELAPSED TIME: %f\n\n", elapsedTime); // test
 			startTime = SDL_GetTicks();
-			radar.detect = 0;
-			if (app.sonar)
-			{
-				radar.detect = 1;
-			}
+			app.objDetected = 0;
+			app.susDetected = 0;
+			if (object.detected)
+				app.objDetected = 1;
+			if (sus.detected)
+				app.susDetected = 1;
 		}
 
 		a1 = angle * (double)(PI / 180.0);
@@ -127,10 +133,15 @@ int main()
 		angle += 1.0;
 
 		
-		if (radar.detect)
+		if (app.objDetected)
 		{
 			detectObject(radar.x, radar.y);
 			blit(object.texture, object.x, object.y);
+		}
+		if (app.susDetected)
+		{
+			detectSus(radar.x, radar.y);
+			blit(sus.texture, sus.x, sus.y);
 		}
 
 		presentScene();
@@ -198,15 +209,22 @@ void initRadar()
 
 	radar.x = SCREEN_WIDTH / 2;
 	radar.y = SCREEN_HEIGHT / 2;
-	radar.detect = 0;
 }
 void initObject()
 {
-	object.texture = loadTexture("sus_object.png");
+	object.texture = loadTexture("object.png");
 	SDL_QueryTexture(object.texture, NULL, NULL, &object.w, &object.h);
 
 	object.x = SCREEN_WIDTH / 2;
 	object.y = SCREEN_HEIGHT / 2;
+}
+void initSus()
+{
+	sus.texture = loadTexture("sus_object.png");
+	SDL_QueryTexture(sus.texture, NULL, NULL, &sus.w, &sus.h);
+
+	sus.x = SCREEN_WIDTH / 2;
+	sus.y = SCREEN_HEIGHT / 2;
 }
 void cleanup()
 {
@@ -258,6 +276,11 @@ void detectObject(int x, int y)
 	object.x = x + radar.w / 4;
 	object.y = y;
 }
+void detectSus(int x, int y)
+{
+	sus.x = x + radar.w / 4;
+	sus.y = y;
+}
 
 void doKeyUp(SDL_KeyboardEvent* event)
 {
@@ -265,7 +288,11 @@ void doKeyUp(SDL_KeyboardEvent* event)
 	{
 		if(event->keysym.sym == SDLK_SPACE) // event->keysym.scancode == SDL_SCANCODE_DOWN
 		{
-			app.sonar = 0;
+			object.detected = 0;
+		}
+		if (event->keysym.sym == SDLK_s) // event->keysym.scancode == SDL_SCANCODE_DOWN
+		{
+			sus.detected = 0;
 		}
 	}
 }
@@ -277,7 +304,11 @@ void doKeyDown(SDL_KeyboardEvent* event)
 	{
 		if(event->keysym.sym == SDLK_SPACE)
 		{
-			app.sonar = 1;
+			object.detected = 1;
+		}
+		if (event->keysym.sym == SDLK_s) // event->keysym.scancode == SDL_SCANCODE_DOWN
+		{
+			sus.detected = 1;
 		}
 	}
 }
