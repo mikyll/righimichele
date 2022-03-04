@@ -7,4 +7,6 @@
 
 
 - creare semplice programmino client che gira su raspi, poi combinarlo con radar
-- refactor progetto Visual Studio
+- refactor progetto Visual Studio 
+	- ricrearlo e scrivere i passaggi per linkare le varie librerie su Windows
+	- dividere il codice in file diversi
