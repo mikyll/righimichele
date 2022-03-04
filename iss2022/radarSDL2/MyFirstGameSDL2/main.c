@@ -111,24 +111,28 @@ int main()
 		}
 
 		a1 = angle * (double)(PI / 180.0);
-		a2 = (angle - 0.1) * (double)(PI / 180.0);
-		a3 = (angle - 0.2) * (double)(PI / 180.0);
-		//printf("x2=%d, y2=%d, angle=%3.2f, a=%3.2f, cos(a)=%f, sin(a)=%f\n", x2, y2, angle, a1, cos(a1), sin(a1)); // test
+		a2 = (angle - 3.0) * (double)(PI / 180.0);
+		a3 = (angle - 6.0) * (double)(PI / 180.0);
 		
 		x2 = x1 + (cos(a1) * l);
 		y2 = y1 + (sin(a1) * l);
 		SDL_SetRenderDrawColor(app.renderer, 0, 154, 23, SDL_ALPHA_OPAQUE);
 		SDL_RenderDrawLine(app.renderer, x1, y1, x2, y2);
+		//printf("x2=%d, y2=%d, angle=%3.2f, a=%3.2f, cos(a)=%f, sin(a)=%f\n", x2, y2, angle, a1, cos(a1), sin(a1)); // test
+
 
 		x2 = x1 + (cos(a2) * l);
 		y2 = y1 + (sin(a2) * l);
 		SDL_SetRenderDrawColor(app.renderer, 0, 154, 23, SDL_ALPHA_OPAQUE/2);
 		SDL_RenderDrawLine(app.renderer, x1, y1, x2, y2);
+		//printf("x2=%d, y2=%d, angle=%3.2f, a=%3.2f, cos(a)=%f, sin(a)=%f\n", x2, y2, angle, a1, cos(a1), sin(a1)); // test
+
 
 		x2 = x1 + (cos(a3) * l);
 		y2 = y1 + (sin(a3) * l);
 		SDL_SetRenderDrawColor(app.renderer, 0, 154, 23, SDL_ALPHA_OPAQUE/3);
 		SDL_RenderDrawLine(app.renderer, x1, y1, x2, y2);
+		//printf("x2=%d, y2=%d, angle=%3.2f, a=%3.2f, cos(a)=%f, sin(a)=%f\n", x2, y2, angle, a1, cos(a1), sin(a1)); // test
 
 		angle += 1.0;
 
