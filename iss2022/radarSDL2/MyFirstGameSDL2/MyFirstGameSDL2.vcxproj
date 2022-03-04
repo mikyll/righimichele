@@ -146,7 +146,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="draw.c" />
+    <ClCompile Include="init.c" />
+    <ClCompile Include="input.c" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="net.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="draw.h" />
+    <ClInclude Include="init.h" />
+    <ClInclude Include="input.h" />
+    <ClInclude Include="net.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

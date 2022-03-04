@@ -18,5 +18,31 @@
     <ClCompile Include="main.c">
       <Filter>File di risorse</Filter>
     </ClCompile>
+    <ClCompile Include="input.c">
+      <Filter>File di risorse</Filter>
+    </ClCompile>
+    <ClCompile Include="net.c">
+      <Filter>File di risorse</Filter>
+    </ClCompile>
+    <ClCompile Include="init.c">
+      <Filter>File di risorse</Filter>
+    </ClCompile>
+    <ClCompile Include="draw.c">
+      <Filter>File di risorse</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="input.h">
+      <Filter>File di risorse</Filter>
+    </ClInclude>
+    <ClInclude Include="net.h">
+      <Filter>File di risorse</Filter>
+    </ClInclude>
+    <ClInclude Include="init.h">
+      <Filter>File di risorse</Filter>
+    </ClInclude>
+    <ClInclude Include="draw.h">
+      <Filter>File di risorse</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

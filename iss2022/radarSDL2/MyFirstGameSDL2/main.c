@@ -16,7 +16,11 @@
 #define SCREEN_WIDTH 1280
 #define SCREEN_HEIGHT 720
 
-#define ERROR (0xff)
+#define SOCKET_NUM 8
+#define PORT 4123
+#define MAX_PACKET_SIZE 512
+
+#define ERROR 0xff
 
 typedef struct {
 	SDL_Window* window;
@@ -28,26 +32,30 @@ typedef struct {
 typedef struct {
 	int x;
 	int y;
-}SpawnPoint;
-
-typedef struct {
-	int x;
-	int y;
 	int w;
 	int h;
 	int detected;
 	SDL_Texture* texture;
 }Entity;
 
+typedef struct {
+	int timestamp;
+	int distance; // -1 non valido, [0, 3500]mm valido
+}Packet; // NB: a seconda del canale su cui viene inviato, rappresenta il lato del radar
+
 App app;
-SpawnPoint spawnPoints[4];
 Entity radar;
 Entity object;
 Entity sus;
-int tot_points;
+IPaddress* ipAddress;
+Uint16 ports[SOCKET_NUM];
 UDPsocket sock;
+SDLNet_SocketSet socketset;
+UDPsocket udpsocket[SOCKET_NUM];
+UDPpacket* recvPacket;
 
 void initSDL();
+void initSDLNet();
 void cleanup();
 SDL_Texture* loadTexture(char* filename);
 void prepareScene();
@@ -60,6 +68,7 @@ void doRadar();
 void detectObject(int x, int y);
 void detectSus(int x, int y);
 void doInput();
+void doReceive();
 static void capFrameRate(long* then, float* remainder);
 
 int main()
@@ -73,6 +82,7 @@ int main()
 	memset(&radar, 0, sizeof(Entity));
 
 	initSDL();
+	initSDLNet();
 	atexit(cleanup);
 	
 	initRadar();
@@ -93,6 +103,7 @@ int main()
 		prepareScene();
 		blit(radar.texture, radar.x, radar.y);
 
+		doReceive();
 		doInput();
 
 		if (angle == 360.0)
@@ -189,23 +200,66 @@ void initSDL()
 		printf("Couldn't initialize SDLImage: %s\n", SDL_GetError());
 		exit(1);
 	}
+}
+void initSDLNet()
+{
+	int i, numused;
 
 	// init SDL Net
-	if (SDL_Init(SDLNet_Init()) < 0)
+	if (SDLNet_Init() < 0)
 	{
-		printf("Couldn't initialize SDLNet: %s\n", SDL_GetError());
+		printf("Couldn't initialize SDLNet: %s\n", SDLNet_GetError());
 		exit(1);
 	}
 
-	// Open UDP Server Socket
-	Uint16 port = (Uint16) 40123;
-	if (!(sock = SDLNet_UDP_Open(port)))
-	{
-		printf("SDLNet_UDP_Open: %s\n", SDLNet_GetError());
-		exit(4);
+	if (SDLNet_ResolveHost(&ipAddress, NULL, 4123) == -1) {
+		fprintf(stderr, "ER: SDLNet_ResolveHost: %sn", SDLNet_GetError());
+		exit(-1);
 	}
-	printf("port %hd opened\n", port);
+
+	// Create a socket set
+	if (!(socketset = SDLNet_AllocSocketSet(SOCKET_NUM)))
+	{
+		printf("SDLNet_AllocSocketSet: %s\n", SDLNet_GetError());
+		exit(1); //most of the time this is a major error, but do what you want.
+	}
+
+	// Open sockets (server): faccio una socket per ciascun lato (8)
+	for (i = 0; i < 8; i++)
+	{
+		udpsocket[i] = SDLNet_UDP_Open(PORT + i);
+		if (!udpsocket[i])
+		{
+			printf("SDLNet_UDP_Open[%d]: %s\n", i, SDLNet_GetError());
+			exit(2);
+		}
+		printf("listening on 0.0.0.0:%d\n", PORT + i);
+
+		numused = SDLNet_UDP_AddSocket(socketset, udpsocket[i]);
+		if (numused == -1) {
+			printf("SDLNet_AddSocket: %s\n", SDLNet_GetError());
+			exit(2);
+		}
+	}
+
+	if(!(recvPacket = SDLNet_AllocPacket(MAX_PACKET_SIZE)))
+	{
+		printf("Could not allocate packet\n");
+		exit(2);
+	}
+	
 }
+void cleanup()
+{
+	SDL_DestroyRenderer(app.renderer);
+	SDL_DestroyWindow(app.window);
+
+	SDLNet_FreeSocketSet(socketset);
+
+	SDLNet_Quit();
+	SDL_Quit();
+}
+
 void initRadar()
 {
 	radar.texture = loadTexture("radar.png");
@@ -230,14 +284,7 @@ void initSus()
 	sus.x = SCREEN_WIDTH / 2;
 	sus.y = SCREEN_HEIGHT / 2;
 }
-void cleanup()
-{
-	SDL_DestroyRenderer(app.renderer);
 
-	SDL_DestroyWindow(app.window);
-
-	SDL_Quit();
-}
 SDL_Texture* loadTexture(char* filename)
 {
 	SDL_Texture* texture;
@@ -343,33 +390,37 @@ void doInput()
 	}
 }
 
-void getMessage()
+void doReceive()
 {
-	// check if there are messages from gpio ... (read buffer length, if there's some value to read, reads it);
-}
+	int numready, numpkts, i;
+	char tmp[MAX_PACKET_SIZE + 1];
 
-int udprecv(UDPsocket sock, UDPpacket* in, Uint32 delay, Uint8 expect, int timeout)
-{
-	Uint32 t, t2;
-	int err;
-
-	in->data[0] = 0;
-	t = SDL_GetTicks();
-	do
-	{
-		t2 = SDL_GetTicks();
-		if (t2 - t > (Uint32)timeout)
+	numready = SDLNet_CheckSockets(socketset, 0);
+	if (numready == -1) {
+		printf("SDLNet_CheckSockets: %s\n", SDLNet_GetError());
+		
+		// most of the time this is a system error, where perror might help.
+		perror("SDLNet_CheckSockets");
+	}
+	else if (numready) {
+		printf("There are %d sockets with activity!\n", numready);
+		
+		// check all sockets with SDLNet_SocketReady and handle the active ones.
+		for (i = 0; i < SOCKET_NUM; i++)
 		{
-			printf("timed out\n");
-			return(0);
+			if (SDLNet_SocketReady(udpsocket[i])) {
+				numpkts = SDLNet_UDP_Recv(udpsocket, &recvPacket);
+				if (numpkts) {
+					recvPacket->data;
+
+					memcpy(tmp, recvPacket->data, recvPacket->len);
+					tmp[recvPacket->len] = '\0';
+					printf("[%d] Received: %s\n", i, tmp);
+				}
+			}
 		}
-		err = SDLNet_UDP_Recv(sock, in);
-		if (!err)
-			SDL_Delay(delay);
-	} while (!err || (in->data[0] != expect && in->data[0] != ERROR));
-	if (in->data[0] == ERROR)
-		printf("received error code\n");
-	return(in->data[0] == ERROR ? -1 : 1);
+		
+	}
 }
 
 static void capFrameRate(long* then, float* remainder)
