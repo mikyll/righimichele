@@ -16,3 +16,9 @@
 FARE CLIENT STUPIDO SU WINDOWS (copiare progetto radarSDL) IN LOCAL HOST poi provarlo su raspi
 
 abilitare il ping a Windows(?)
+
+
+
+
+per i vari file (.c e .h):
+creare file multiuso, ovvero in net.c / net.h ad esempio mettere sia receive che send, poi nel client o server uso quello specifico
