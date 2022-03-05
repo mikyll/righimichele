@@ -20,8 +20,6 @@
 #define PORT 4123
 #define MAX_PACKET_SIZE 512
 
-#define ERROR 0xff
-
 typedef struct {
 	SDL_Window* window;
 	SDL_Renderer* renderer;
@@ -52,7 +50,7 @@ Uint16 ports[SOCKET_NUM];
 UDPsocket sock;
 SDLNet_SocketSet socketset;
 UDPsocket udpsocket[SOCKET_NUM];
-UDPpacket* recvPacket;
+UDPpacket* recvPacket[SOCKET_NUM];
 
 void initSDL();
 void initSDLNet();
@@ -84,7 +82,7 @@ int main()
 	initSDL();
 	initSDLNet();
 	atexit(cleanup);
-	
+
 	initRadar();
 	initObject();
 	initSus();
@@ -124,7 +122,7 @@ int main()
 		a1 = angle * (double)(PI / 180.0);
 		a2 = (angle - 3.0) * (double)(PI / 180.0);
 		a3 = (angle - 6.0) * (double)(PI / 180.0);
-		
+
 		x2 = x1 + (cos(a1) * l);
 		y2 = y1 + (sin(a1) * l);
 		SDL_SetRenderDrawColor(app.renderer, 0, 154, 23, SDL_ALPHA_OPAQUE);
@@ -134,20 +132,20 @@ int main()
 
 		x2 = x1 + (cos(a2) * l);
 		y2 = y1 + (sin(a2) * l);
-		SDL_SetRenderDrawColor(app.renderer, 0, 154, 23, SDL_ALPHA_OPAQUE/2);
+		SDL_SetRenderDrawColor(app.renderer, 0, 154, 23, SDL_ALPHA_OPAQUE / 2);
 		SDL_RenderDrawLine(app.renderer, x1, y1, x2, y2);
 		//printf("x2=%d, y2=%d, angle=%3.2f, a=%3.2f, cos(a)=%f, sin(a)=%f\n", x2, y2, angle, a1, cos(a1), sin(a1)); // test
 
 
 		x2 = x1 + (cos(a3) * l);
 		y2 = y1 + (sin(a3) * l);
-		SDL_SetRenderDrawColor(app.renderer, 0, 154, 23, SDL_ALPHA_OPAQUE/3);
+		SDL_SetRenderDrawColor(app.renderer, 0, 154, 23, SDL_ALPHA_OPAQUE / 3);
 		SDL_RenderDrawLine(app.renderer, x1, y1, x2, y2);
 		//printf("x2=%d, y2=%d, angle=%3.2f, a=%3.2f, cos(a)=%f, sin(a)=%f\n", x2, y2, angle, a1, cos(a1), sin(a1)); // test
 
 		angle += 1.0;
 
-		
+
 		if (app.objDetected)
 		{
 			detectObject(radar.x, radar.y);
@@ -180,7 +178,7 @@ void initSDL()
 		exit(1);
 	}
 
-	if(!(app.window = SDL_CreateWindow("SDL2 Radar", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, windowFlags)))
+	if (!(app.window = SDL_CreateWindow("SDL2 Radar", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, windowFlags)))
 	{
 		printf("Failed to open% d x% d window : % s\n", SCREEN_WIDTH, SCREEN_HEIGHT, SDL_GetError());
 		exit(1);
@@ -188,7 +186,7 @@ void initSDL()
 
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 
-	if(!(app.renderer = SDL_CreateRenderer(app.window, -1, rendererFlags)))
+	if (!(app.renderer = SDL_CreateRenderer(app.window, -1, rendererFlags)))
 	{
 		printf("Failed to create renderer: %s\n", SDL_GetError());
 		exit(1);
@@ -224,7 +222,7 @@ void initSDLNet()
 		exit(1); //most of the time this is a major error, but do what you want.
 	}
 
-	// Open sockets (server): faccio una socket per ciascun lato (8)
+	// Open sockets (server): faccio una socket per ciascun lato del radar (8)
 	for (i = 0; i < 8; i++)
 	{
 		udpsocket[i] = SDLNet_UDP_Open(PORT + i);
@@ -233,7 +231,7 @@ void initSDLNet()
 			printf("SDLNet_UDP_Open[%d]: %s\n", i, SDLNet_GetError());
 			exit(2);
 		}
-		printf("listening on 0.0.0.0:%d\n", PORT + i);
+		printf("listening on 0.0.0.0:%hd\n", PORT + i);
 
 		numused = SDLNet_UDP_AddSocket(socketset, udpsocket[i]);
 		if (numused == -1) {
@@ -242,13 +240,52 @@ void initSDLNet()
 		}
 	}
 
-	if(!(recvPacket = SDLNet_AllocPacket(MAX_PACKET_SIZE)))
+	// Allocate memory for packets
+	for (i = 0; i < SOCKET_NUM; i++)
 	{
-		printf("Could not allocate packet\n");
-		exit(2);
+		if (!(recvPacket[i] = SDLNet_AllocPacket(MAX_PACKET_SIZE)))
+		{
+			printf("Could not allocate packet\n");
+			exit(2);
+		}
 	}
-	
+
 }
+void doReceive()
+{
+	int numready, i;
+	char tmp[MAX_PACKET_SIZE + 1];
+
+	numready = SDLNet_CheckSockets(socketset, 0);
+	if (numready == -1) {
+		printf("SDLNet_CheckSockets: %s\n", SDLNet_GetError());
+
+		// most of the time this is a system error, where perror might help.
+		perror("SDLNet_CheckSockets");
+	}
+	else if (numready) {
+		printf("There are %d sockets with activity!\n", numready);
+
+		// check all sockets with SDLNet_SocketReady and handle the active ones.
+		for (i = 0; i < SOCKET_NUM; i++)
+		{
+			if (SDLNet_SocketReady(udpsocket[i])) {
+				if(SDLNet_UDP_Recv(udpsocket[i], recvPacket[i]))
+				{
+					printf("UDP Packet incoming\n");
+					printf("\tChan: %d\n", recvPacket[i]->channel);
+					printf("\tData: %s\n", (char*)recvPacket[i]->data);
+					printf("\tLen: %d\n", recvPacket[i]->len);
+					printf("\tMaxlen: %d\n", recvPacket[i]->maxlen);
+					printf("\tStatus: %d\n", recvPacket[i]->status);
+					printf("\tAddress: %x %x\n", recvPacket[i]->address.host, recvPacket[i]->address.port);
+				}
+			}
+		}
+
+	}
+}
+
 void cleanup()
 {
 	SDL_DestroyRenderer(app.renderer);
@@ -335,9 +372,9 @@ void detectSus(int x, int y)
 
 void doKeyUp(SDL_KeyboardEvent* event)
 {
-	if(event->repeat == 0)
+	if (event->repeat == 0)
 	{
-		if(event->keysym.sym == SDLK_SPACE) // event->keysym.scancode == SDL_SCANCODE_DOWN
+		if (event->keysym.sym == SDLK_SPACE) // event->keysym.scancode == SDL_SCANCODE_DOWN
 		{
 			object.detected = 0;
 		}
@@ -351,9 +388,9 @@ void doKeyUp(SDL_KeyboardEvent* event)
 // simula la rilevazione di un oggetto
 void doKeyDown(SDL_KeyboardEvent* event)
 {
-	if(event->repeat == 0)
+	if (event->repeat == 0)
 	{
-		if(event->keysym.sym == SDLK_SPACE)
+		if (event->keysym.sym == SDLK_SPACE)
 		{
 			object.detected = 1;
 		}
@@ -387,39 +424,6 @@ void doInput()
 		default:
 			break;
 		}
-	}
-}
-
-void doReceive()
-{
-	int numready, numpkts, i;
-	char tmp[MAX_PACKET_SIZE + 1];
-
-	numready = SDLNet_CheckSockets(socketset, 0);
-	if (numready == -1) {
-		printf("SDLNet_CheckSockets: %s\n", SDLNet_GetError());
-		
-		// most of the time this is a system error, where perror might help.
-		perror("SDLNet_CheckSockets");
-	}
-	else if (numready) {
-		printf("There are %d sockets with activity!\n", numready);
-		
-		// check all sockets with SDLNet_SocketReady and handle the active ones.
-		for (i = 0; i < SOCKET_NUM; i++)
-		{
-			if (SDLNet_SocketReady(udpsocket[i])) {
-				numpkts = SDLNet_UDP_Recv(udpsocket, &recvPacket);
-				if (numpkts) {
-					recvPacket->data;
-
-					memcpy(tmp, recvPacket->data, recvPacket->len);
-					tmp[recvPacket->len] = '\0';
-					printf("[%d] Received: %s\n", i, tmp);
-				}
-			}
-		}
-		
 	}
 }
 
