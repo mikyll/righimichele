@@ -22,3 +22,9 @@ abilitare il ping a Windows(?)
 
 per i vari file (.c e .h):
 creare file multiuso, ovvero in net.c / net.h ad esempio mettere sia receive che send, poi nel client o server uso quello specifico
+
+- aggiungere RadarPacket
+- mettere tutte le definizioni in defs.h
+	NB: #define NORD, EST, SUD, WEST con le differenti porte
+	
+fare makefile per server e client (linkano diversi header e source file)
