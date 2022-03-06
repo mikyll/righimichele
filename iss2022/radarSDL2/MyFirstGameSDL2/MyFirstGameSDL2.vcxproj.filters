@@ -30,6 +30,9 @@
     <ClCompile Include="draw.c">
       <Filter>File di risorse</Filter>
     </ClCompile>
+    <ClCompile Include="sound.c">
+      <Filter>File di risorse</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="input.h">
@@ -54,6 +57,9 @@
       <Filter>File di risorse</Filter>
     </ClInclude>
     <ClInclude Include="main.h">
+      <Filter>File di risorse</Filter>
+    </ClInclude>
+    <ClInclude Include="sound.h">
       <Filter>File di risorse</Filter>
     </ClInclude>
   </ItemGroup>

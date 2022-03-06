@@ -4,11 +4,12 @@
 
 extern void initSDL(void);
 extern void initSDLNet(void);
+extern void initSDLMixer(void);
 extern void cleanup(void);
 extern void doInput(void);
 extern void prepareScene(void);
-extern void draw(void);
 extern void presentScene(void);
+void playSound(int id, int channel);
 
 App app;
 Radar radar;

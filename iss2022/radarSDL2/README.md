@@ -31,3 +31,6 @@ fare makefile per server e client (linkano diversi header e source file)
 
 
 - fix synchronization between clients and server (timestamp)
+
+
+- sostituire la linea con un rettangolo, oppure con una texture;

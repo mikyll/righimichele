@@ -4,10 +4,6 @@ void doKeyUp(SDL_KeyboardEvent* event)
 {
 	if (event->repeat == 0)
 	{
-		if (event->keysym.sym == SDLK_SPACE) // event->keysym.scancode == SDL_SCANCODE_DOWN
-		{
-			app.objDetected[0] = 0;
-		}
 		if (event->keysym.sym == SDLK_s) // event->keysym.scancode == SDL_SCANCODE_DOWN
 		{
 			app.susDetected = 0;
@@ -20,10 +16,6 @@ void doKeyDown(SDL_KeyboardEvent* event)
 {
 	if (event->repeat == 0)
 	{
-		if (event->keysym.sym == SDLK_SPACE)
-		{
-			app.objDetected[0] = 1;
-		}
 		if (event->keysym.sym == SDLK_s) // event->keysym.scancode == SDL_SCANCODE_DOWN
 		{
 			app.susDetected = 1;

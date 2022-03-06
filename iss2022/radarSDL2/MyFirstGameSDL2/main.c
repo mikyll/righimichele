@@ -4,39 +4,39 @@ void detectObject(int x, int y);
 void detectSus(int x, int y);
 static void capFrameRate(long* then, float* remainder);
 
-int main()
+int main(int argc, char ** argv)
 {
 	long then;
 	float remainder;
+	int i;
+	SDL_Point l1, l2, l3;
+	double a1, a2, a3;
 
 	memset(&app, 0, sizeof(App));
 
 	initSDL();
 	initSDLNet();
+	initSDLMixer();
+
 	atexit(cleanup);
 
 	initRadar();
 	initObjects();
 	initSus();
 
-	SDL_Point r, l1, l2, l3;
-	double a1, a2, a3;
-
-	r.x = SCREEN_WIDTH / 2;
-	r.y = SCREEN_HEIGHT / 2;
-
 	SDL_SetRenderDrawColor(app.renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
-
 
 	// Test
 	uint32_t startTime = SDL_GetTicks();
 	uint32_t stopTime;
 	double elapsedTime;
+	//printf("radar.x = %d | radar.y = %d\nradar.l = %d\nradar.w = %d\n", radar.x, radar.y, radar.l, radar.w); // test
 
 	then = SDL_GetTicks();
 	remainder = 0;
 
-	printf("radar.x = %d | radar.y = %d\nradar.l = %d\nradar.w = %d\n", radar.x, radar.y, radar.l, radar.w); // test
+	if (argc == 2 && strcmp(argv[1], "-s") == 0)
+		app.soundEnabled = 1;
 
 	while (1)
 	{
@@ -60,14 +60,18 @@ int main()
 			elapsedTime = (stopTime - startTime) / 1000.0;
 			printf("\nELAPSED TIME: %f\n\n", elapsedTime);
 			startTime = SDL_GetTicks();*/
-			printf("app.objDetected[0]=%d\nobjects[0].detected=%d\nOBJECT (%d, %d)\n", app.objDetected[0], objects[0].detected, objects[0].x, objects[0].y);
+			
+			//printf("app.objDetected[0]=%d\nobjects[0].detected=%d\nOBJECT (%d, %d)\n", app.objDetected[0], objects[0].detected, objects[0].x, objects[0].y); // test
 
 			objects[0].detected = 0;
 			sus.detected = 0;
 			if (app.objDetected[0])
 				objects[0].detected = 1;
 			if (app.susDetected)
+			{
 				sus.detected = 1;
+				app.soundEnabled ? playSound(SND_SUS_DETECTED, CH_SUS) : (void)0;
+			}
 		}
 
 
@@ -95,10 +99,9 @@ int main()
 		SDL_SetRenderDrawColor(app.renderer, 0, 154, 23, SDL_ALPHA_OPAQUE / 3);
 		SDL_RenderDrawLine(app.renderer, radar.x, radar.y, l3.x, l3.y);
 
-		if (objects[0].detected)
+		for (i = 0; i < SOCKET_NUM; i++)
 		{
-			//detectObject(radar.x, radar.y);
-			blit(objects[0].texture, objects[0].x, objects[0].y);
+			objects[i].detected ? blit(objects[0].texture, objects[0].x, objects[0].y) : NULL;
 		}
 		if (sus.detected)
 		{
@@ -111,6 +114,10 @@ int main()
 
 		capFrameRate(&then, &remainder);
 
+		Uint64 end = SDL_GetPerformanceCounter();
+
+		float elapsed = (end - start) / (float)SDL_GetPerformanceFrequency();
+		printf("FPS: %f\n", (float)1.0f / elapsed);
 
 		// 3. Update objects
 		/*switch ((int)angle)
@@ -152,6 +159,7 @@ static void capFrameRate(long* then, float* remainder)
 {
 	long wait, frameTime;
 
+	//wait = 16 + *remainder; // Caps FPS to ~60
 	//wait = 4.4 + *remainder; // a complete radar cycle in ~2 sec
 	wait = 1.6 + *remainder; // a complete radar cycle in ~1 sec
 
@@ -173,16 +181,6 @@ static void capFrameRate(long* then, float* remainder)
 	*then = SDL_GetTicks();
 }
 
-void detectObject(int x, int y)
-{
-	/*printf("Distance: %3.1f\n", distance[0]);
-	int u = (int)((radar.w / 2) / 300);
-	printf("U: %d, value: %d\n", u, u / distance[0]);
-
-	object[0].x = x + (u / distance[0]);*/
-	objects[0].x = x + radar.w / 4;
-	objects[0].y = y;
-}
 void detectSus(int x, int y)
 {
 	sus.x = x + radar.w / 4;
