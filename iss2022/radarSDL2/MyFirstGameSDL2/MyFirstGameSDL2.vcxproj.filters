@@ -44,5 +44,17 @@
     <ClInclude Include="draw.h">
       <Filter>File di risorse</Filter>
     </ClInclude>
+    <ClInclude Include="common.h">
+      <Filter>File di risorse</Filter>
+    </ClInclude>
+    <ClInclude Include="defs.h">
+      <Filter>File di risorse</Filter>
+    </ClInclude>
+    <ClInclude Include="structs.h">
+      <Filter>File di risorse</Filter>
+    </ClInclude>
+    <ClInclude Include="main.h">
+      <Filter>File di risorse</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
