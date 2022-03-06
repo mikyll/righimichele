@@ -1,382 +1,167 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <math.h>
-#include <ctype.h>
-#include "SDL.h"
-#include "SDL_image.h"
-#include "SDL_net.h"
+#include "main.h"
 
-#define PI 3.14159
-
-#define MIN(a,b) (((a)<(b))?(a):(b))
-#define MAX(a,b) (((a)>(b))?(a):(b))
-
-#define SCREEN_WIDTH 1280
-#define SCREEN_HEIGHT 720
-
-#define ERROR (0xff)
-
-typedef struct {
-	SDL_Window* window;
-	SDL_Renderer* renderer;
-	int objDetected;
-	int susDetected;
-}App;
-
-typedef struct {
-	int x;
-	int y;
-}SpawnPoint;
-
-typedef struct {
-	int x;
-	int y;
-	int w;
-	int h;
-	int detected;
-	SDL_Texture* texture;
-}Entity;
-
-App app;
-SpawnPoint spawnPoints[4];
-Entity radar;
-Entity object;
-Entity sus;
-int tot_points;
-UDPsocket sock;
-
-void initSDL();
-void cleanup();
-SDL_Texture* loadTexture(char* filename);
-void prepareScene();
-void presentScene();
-void blit(SDL_Texture* texture, int x, int y);
-void initRadar();
-void initObject();
-void initSus();
-void doRadar();
 void detectObject(int x, int y);
 void detectSus(int x, int y);
-void doInput();
 static void capFrameRate(long* then, float* remainder);
 
-int main()
+int main(int argc, char ** argv)
 {
 	long then;
 	float remainder;
-
-	then = SDL_GetTicks();
+	int i;
+	SDL_Point l1, l2, l3;
+	double a1, a2, a3;
 
 	memset(&app, 0, sizeof(App));
-	memset(&radar, 0, sizeof(Entity));
 
 	initSDL();
-	atexit(cleanup);
-	
-	initRadar();
-	initObject();
-	initSus();
+	initSDLNet();
+	initSDLMixer();
 
-	int l = radar.w / 2;
-	int x1 = SCREEN_WIDTH / 2, y1 = SCREEN_HEIGHT / 2, x2 = SCREEN_WIDTH / 2, y2 = SCREEN_HEIGHT / 2;
-	double angle = 0.0, a1, a2, a3;
+	atexit(cleanup);
+
+	initRadar();
+	initObjects();
+	initSus();
 
 	SDL_SetRenderDrawColor(app.renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
 
+	// Test
 	uint32_t startTime = SDL_GetTicks();
 	uint32_t stopTime;
 	double elapsedTime;
+	//printf("radar.x = %d | radar.y = %d\nradar.l = %d\nradar.w = %d\n", radar.x, radar.y, radar.l, radar.w); // test
+
+	then = SDL_GetTicks();
+	remainder = 0;
+
+	if (argc == 2 && strcmp(argv[1], "-s") == 0)
+		app.soundEnabled = 1;
+
 	while (1)
 	{
+		Uint64 start = SDL_GetPerformanceCounter();
+
+		// 1. Prepare scene
 		prepareScene();
+
+		// 2. Get input
+		doInput();
+		//doReceive();
+		if ((int)radar.angle % (360 /*/ SOCKET_NUM*/) == 0) // NB: receive only when inside one of the 8 directions
+			doReceiveFromSocket(0);
+
+		// 3. Update
+		if (radar.angle == 360.0)
+		{
+			radar.angle = 0.0;
+
+			/*stopTime = SDL_GetTicks();
+			elapsedTime = (stopTime - startTime) / 1000.0;
+			printf("\nELAPSED TIME: %f\n\n", elapsedTime);
+			startTime = SDL_GetTicks();*/
+			
+			//printf("app.objDetected[0]=%d\nobjects[0].detected=%d\nOBJECT (%d, %d)\n", app.objDetected[0], objects[0].detected, objects[0].x, objects[0].y); // test
+
+			objects[0].detected = 0;
+			sus.detected = 0;
+			if (app.objDetected[0])
+				objects[0].detected = 1;
+			if (app.susDetected)
+			{
+				sus.detected = 1;
+				app.soundEnabled ? playSound(SND_SUS_DETECTED, CH_SUS) : (void)0;
+			}
+		}
+
+
+		a1 = radar.angle * (double)(PI / 180.0);
+		a2 = (radar.angle - 3.0) * (double)(PI / 180.0);
+		a3 = (radar.angle - 6.0) * (double)(PI / 180.0);
+
+		l1.x = radar.x + (cos(a1) * radar.l);
+		l1.y = radar.y + (sin(a1) * radar.l);
+		l2.x = radar.x + (cos(a2) * radar.l);
+		l2.y = radar.y + (sin(a2) * radar.l);
+		l3.x = radar.x + (cos(a3) * radar.l);
+		l3.y = radar.y + (sin(a3) * radar.l);
+		//printf("x2=%d, y2=%d, angle=%3.2f, a=%3.2f, cos(a)=%f, sin(a)=%f\n", x2, y2, angle, a1, cos(a1), sin(a1)); // test
+
+		radar.angle += 1.0;
+
+		// 4. Draw
 		blit(radar.texture, radar.x, radar.y);
 
-		doInput();
-
-		if (angle == 360.0)
-		{
-			stopTime = SDL_GetTicks();
-			angle = 0.0;
-			elapsedTime = (stopTime - startTime) / 1000.0;
-			//printf("\nELAPSED TIME: %f\n\n", elapsedTime); // test
-			startTime = SDL_GetTicks();
-			app.objDetected = 0;
-			app.susDetected = 0;
-			if (object.detected)
-				app.objDetected = 1;
-			if (sus.detected)
-				app.susDetected = 1;
-		}
-
-		a1 = angle * (double)(PI / 180.0);
-		a2 = (angle - 3.0) * (double)(PI / 180.0);
-		a3 = (angle - 6.0) * (double)(PI / 180.0);
-		
-		x2 = x1 + (cos(a1) * l);
-		y2 = y1 + (sin(a1) * l);
 		SDL_SetRenderDrawColor(app.renderer, 0, 154, 23, SDL_ALPHA_OPAQUE);
-		SDL_RenderDrawLine(app.renderer, x1, y1, x2, y2);
-		//printf("x2=%d, y2=%d, angle=%3.2f, a=%3.2f, cos(a)=%f, sin(a)=%f\n", x2, y2, angle, a1, cos(a1), sin(a1)); // test
+		SDL_RenderDrawLine(app.renderer, radar.x, radar.y, l1.x, l1.y);
+		SDL_SetRenderDrawColor(app.renderer, 0, 154, 23, SDL_ALPHA_OPAQUE / 2);
+		SDL_RenderDrawLine(app.renderer, radar.x, radar.y, l2.x, l2.y);
+		SDL_SetRenderDrawColor(app.renderer, 0, 154, 23, SDL_ALPHA_OPAQUE / 3);
+		SDL_RenderDrawLine(app.renderer, radar.x, radar.y, l3.x, l3.y);
 
-
-		x2 = x1 + (cos(a2) * l);
-		y2 = y1 + (sin(a2) * l);
-		SDL_SetRenderDrawColor(app.renderer, 0, 154, 23, SDL_ALPHA_OPAQUE/2);
-		SDL_RenderDrawLine(app.renderer, x1, y1, x2, y2);
-		//printf("x2=%d, y2=%d, angle=%3.2f, a=%3.2f, cos(a)=%f, sin(a)=%f\n", x2, y2, angle, a1, cos(a1), sin(a1)); // test
-
-
-		x2 = x1 + (cos(a3) * l);
-		y2 = y1 + (sin(a3) * l);
-		SDL_SetRenderDrawColor(app.renderer, 0, 154, 23, SDL_ALPHA_OPAQUE/3);
-		SDL_RenderDrawLine(app.renderer, x1, y1, x2, y2);
-		//printf("x2=%d, y2=%d, angle=%3.2f, a=%3.2f, cos(a)=%f, sin(a)=%f\n", x2, y2, angle, a1, cos(a1), sin(a1)); // test
-
-		angle += 1.0;
-
-		
-		if (app.objDetected)
+		for (i = 0; i < SOCKET_NUM; i++)
 		{
-			detectObject(radar.x, radar.y);
-			blit(object.texture, object.x, object.y);
+			objects[i].detected ? blit(objects[0].texture, objects[0].x, objects[0].y) : NULL;
 		}
-		if (app.susDetected)
+		if (sus.detected)
 		{
 			detectSus(radar.x, radar.y);
 			blit(sus.texture, sus.x, sus.y);
 		}
 
+		// 5. Present scene
 		presentScene();
 
 		capFrameRate(&then, &remainder);
+
+		Uint64 end = SDL_GetPerformanceCounter();
+
+		float elapsed = (end - start) / (float)SDL_GetPerformanceFrequency();
+		printf("FPS: %f\n", (float)1.0f / elapsed);
+
+		// 3. Update objects
+		/*switch ((int)angle)
+		{
+		case 45: // South-East
+			doReceiveFromSocket(1);
+			break;
+		case 90: // South
+			doReceiveFromSocket(2);
+			break;
+		case 135: // South-West
+			doReceiveFromSocket(3);
+			break;
+		case 180: // West
+			doReceiveFromSocket(4);
+			break;
+		case 225: // North-West
+			doReceiveFromSocket(5);
+			break;
+		case 270: // North
+			doReceiveFromSocket(6);
+			break;
+		case 315: // North-East
+			doReceiveFromSocket(7);
+			break;
+		case 360: // East
+			doReceiveFromSocket(0);
+
+			if (app.objDetected[0])
+				objects[0].detected = 1;
+			break;
+		}*/
 	}
 
 	return 0;
-}
-
-void initSDL()
-{
-	int rendererFlags, windowFlags;
-	rendererFlags = SDL_RENDERER_ACCELERATED;
-	windowFlags = 0;
-
-	// init SDL Video
-	if (SDL_Init(SDL_INIT_VIDEO) < 0)
-	{
-		printf("Couldn't initialize SDL: %s\n", SDL_GetError());
-		exit(1);
-	}
-
-	if(!(app.window = SDL_CreateWindow("SDL2 Radar", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, windowFlags)))
-	{
-		printf("Failed to open% d x% d window : % s\n", SCREEN_WIDTH, SCREEN_HEIGHT, SDL_GetError());
-		exit(1);
-	}
-
-	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
-
-	if(!(app.renderer = SDL_CreateRenderer(app.window, -1, rendererFlags)))
-	{
-		printf("Failed to create renderer: %s\n", SDL_GetError());
-		exit(1);
-	}
-
-	// Init SDL Image
-	if (IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG) < 0)
-	{
-		printf("Couldn't initialize SDLImage: %s\n", SDL_GetError());
-		exit(1);
-	}
-
-	// init SDL Net
-	if (SDL_Init(SDLNet_Init()) < 0)
-	{
-		printf("Couldn't initialize SDLNet: %s\n", SDL_GetError());
-		exit(1);
-	}
-
-	// Open UDP Server Socket
-	Uint16 port = (Uint16) 40123;
-	if (!(sock = SDLNet_UDP_Open(port)))
-	{
-		printf("SDLNet_UDP_Open: %s\n", SDLNet_GetError());
-		exit(4);
-	}
-	printf("port %hd opened\n", port);
-}
-void initRadar()
-{
-	radar.texture = loadTexture("radar.png");
-	SDL_QueryTexture(radar.texture, NULL, NULL, &radar.w, &radar.h);
-
-	radar.x = SCREEN_WIDTH / 2;
-	radar.y = SCREEN_HEIGHT / 2;
-}
-void initObject()
-{
-	object.texture = loadTexture("object.png");
-	SDL_QueryTexture(object.texture, NULL, NULL, &object.w, &object.h);
-
-	object.x = SCREEN_WIDTH / 2;
-	object.y = SCREEN_HEIGHT / 2;
-}
-void initSus()
-{
-	sus.texture = loadTexture("sus_object.png");
-	SDL_QueryTexture(sus.texture, NULL, NULL, &sus.w, &sus.h);
-
-	sus.x = SCREEN_WIDTH / 2;
-	sus.y = SCREEN_HEIGHT / 2;
-}
-void cleanup()
-{
-	SDL_DestroyRenderer(app.renderer);
-
-	SDL_DestroyWindow(app.window);
-
-	SDL_Quit();
-}
-SDL_Texture* loadTexture(char* filename)
-{
-	SDL_Texture* texture;
-
-	SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, "Loading %s", filename);
-
-	texture = IMG_LoadTexture(app.renderer, filename);
-
-	return texture;
-}
-
-void prepareScene()
-{
-	SDL_SetRenderDrawColor(app.renderer, 0, 0, 0, SDL_ALPHA_OPAQUE); // SDL_ALPHA_OPAQUE = 255
-	SDL_RenderClear(app.renderer);
-}
-void presentScene()
-{
-	SDL_RenderPresent(app.renderer);
-}
-void blit(SDL_Texture* texture, int x, int y)
-{
-	SDL_Rect dest;
-
-	dest.x = x;
-	dest.y = y;
-	SDL_QueryTexture(texture, NULL, NULL, &dest.w, &dest.h);
-	dest.x -= (dest.w / 2);
-	dest.y -= (dest.h / 2);
-
-	SDL_RenderCopy(app.renderer, texture, NULL, &dest, NULL, SDL_FLIP_NONE);
-}
-
-void doRadar()
-{
-	blit(radar.texture, radar.x, radar.y);
-}
-void detectObject(int x, int y)
-{
-	object.x = x + radar.w / 4;
-	object.y = y;
-}
-void detectSus(int x, int y)
-{
-	sus.x = x + radar.w / 4;
-	sus.y = y;
-}
-
-void doKeyUp(SDL_KeyboardEvent* event)
-{
-	if(event->repeat == 0)
-	{
-		if(event->keysym.sym == SDLK_SPACE) // event->keysym.scancode == SDL_SCANCODE_DOWN
-		{
-			object.detected = 0;
-		}
-		if (event->keysym.sym == SDLK_s) // event->keysym.scancode == SDL_SCANCODE_DOWN
-		{
-			sus.detected = 0;
-		}
-	}
-}
-
-// simula la rilevazione di un oggetto
-void doKeyDown(SDL_KeyboardEvent* event)
-{
-	if(event->repeat == 0)
-	{
-		if(event->keysym.sym == SDLK_SPACE)
-		{
-			object.detected = 1;
-		}
-		if (event->keysym.sym == SDLK_s) // event->keysym.scancode == SDL_SCANCODE_DOWN
-		{
-			sus.detected = 1;
-		}
-	}
-}
-
-void doInput()
-{
-	SDL_Event event;
-
-	while (SDL_PollEvent(&event))
-	{
-		switch (event.type)
-		{
-		case SDL_QUIT:
-			exit(0);
-			break;
-
-		case SDL_KEYDOWN:
-			doKeyDown(&event.key);
-			break;
-
-		case SDL_KEYUP:
-			doKeyUp(&event.key);
-			break;
-
-		default:
-			break;
-		}
-	}
-}
-
-void getMessage()
-{
-	// check if there are messages from gpio ... (read buffer length, if there's some value to read, reads it);
-}
-
-int udprecv(UDPsocket sock, UDPpacket* in, Uint32 delay, Uint8 expect, int timeout)
-{
-	Uint32 t, t2;
-	int err;
-
-	in->data[0] = 0;
-	t = SDL_GetTicks();
-	do
-	{
-		t2 = SDL_GetTicks();
-		if (t2 - t > (Uint32)timeout)
-		{
-			printf("timed out\n");
-			return(0);
-		}
-		err = SDLNet_UDP_Recv(sock, in);
-		if (!err)
-			SDL_Delay(delay);
-	} while (!err || (in->data[0] != expect && in->data[0] != ERROR));
-	if (in->data[0] == ERROR)
-		printf("received error code\n");
-	return(in->data[0] == ERROR ? -1 : 1);
 }
 
 static void capFrameRate(long* then, float* remainder)
 {
 	long wait, frameTime;
 
-	wait = 1 + *remainder;
+	//wait = 16 + *remainder; // Caps FPS to ~60
+	//wait = 4.4 + *remainder; // a complete radar cycle in ~2 sec
+	wait = 1.6 + *remainder; // a complete radar cycle in ~1 sec
 
 	*remainder -= (int)*remainder;
 
@@ -394,4 +179,10 @@ static void capFrameRate(long* then, float* remainder)
 	*remainder += 0.667;
 
 	*then = SDL_GetTicks();
+}
+
+void detectSus(int x, int y)
+{
+	sus.x = x + radar.w / 4;
+	sus.y = y;
 }
