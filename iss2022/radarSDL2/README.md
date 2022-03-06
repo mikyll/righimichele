@@ -1,6 +1,16 @@
 # RadarSystem SDL2 GUI
 
-### to-do
+### Setup Visual Studio Project
+1. [...]
+
+### To-do List
+- [ ] Refactor VS Project
+- [ ] Sync UDP packets (use timestamp OR use sync semantic of the receive: client waits for the server ACK)
+- [ ] Print coordinates on screen (sdl2_ttf)
+- [ ] Show FPS on screen
+- [ ] Send & Receive a Struct instead of a char*
+- [ ] Substitute the radar line with a rectangle/texture(?)
+
 - [ ] create server to async read from UDP socket
 - [ ] create client that gets input from raspi and sends over the socket
 - [ ] aggiungere audio per il SUS
@@ -28,9 +38,3 @@ creare file multiuso, ovvero in net.c / net.h ad esempio mettere sia receive che
 	NB: #define NORD, EST, SUD, WEST con le differenti porte
 	
 fare makefile per server e client (linkano diversi header e source file)
-
-
-- fix synchronization between clients and server (timestamp)
-
-
-- sostituire la linea con un rettangolo, oppure con una texture;
