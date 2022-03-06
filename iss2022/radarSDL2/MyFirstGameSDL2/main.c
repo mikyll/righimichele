@@ -21,13 +21,13 @@ int main()
 
 	SDL_Point r, l1, l2, l3;
 	double a1, a2, a3;
-	
+
 	r.x = SCREEN_WIDTH / 2;
 	r.y = SCREEN_HEIGHT / 2;
 
 	SDL_SetRenderDrawColor(app.renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
 
-	
+
 	// Test
 	uint32_t startTime = SDL_GetTicks();
 	uint32_t stopTime;
@@ -36,7 +36,7 @@ int main()
 	then = SDL_GetTicks();
 	remainder = 0;
 
-	//printf("radar.l = %d\nradar.w = %d\n", radar.l, radar.w); // test
+	printf("radar.x = %d | radar.y = %d\nradar.l = %d\nradar.w = %d\n", radar.x, radar.y, radar.l, radar.w); // test
 
 	while (1)
 	{
@@ -48,16 +48,19 @@ int main()
 		// 2. Get input
 		doInput();
 		//doReceive();
+		if ((int)radar.angle % (360 /*/ SOCKET_NUM*/) == 0) // NB: receive only when inside one of the 8 directions
+			doReceiveFromSocket(0);
 
 		// 3. Update
 		if (radar.angle == 360.0)
 		{
 			radar.angle = 0.0;
 
-			stopTime = SDL_GetTicks();
+			/*stopTime = SDL_GetTicks();
 			elapsedTime = (stopTime - startTime) / 1000.0;
 			printf("\nELAPSED TIME: %f\n\n", elapsedTime);
-			startTime = SDL_GetTicks();
+			startTime = SDL_GetTicks();*/
+			printf("app.objDetected[0]=%d\nobjects[0].detected=%d\nOBJECT (%d, %d)\n", app.objDetected[0], objects[0].detected, objects[0].x, objects[0].y);
 
 			objects[0].detected = 0;
 			sus.detected = 0;
@@ -94,7 +97,7 @@ int main()
 
 		if (objects[0].detected)
 		{
-			detectObject(radar.x, radar.y);
+			//detectObject(radar.x, radar.y);
 			blit(objects[0].texture, objects[0].x, objects[0].y);
 		}
 		if (sus.detected)
@@ -107,7 +110,7 @@ int main()
 		presentScene();
 
 		capFrameRate(&then, &remainder);
-		
+
 
 		// 3. Update objects
 		/*switch ((int)angle)

@@ -82,13 +82,13 @@ void doReceive()
 					printf("\tStatus: %d\n", recvPacket[i]->status);
 					printf("\tAddress: %x %x\n", recvPacket[i]->address.host, recvPacket[i]->address.port);
 
-					float distance;
+					double distance;
 					sscanf(recvPacket[i]->data, "%f", &distance);
 					if (distance > 4.0 && distance < 200.0)
 					{
 						app.objDetected[i] = 1;
 						// prendo la x del radar, l e aggiorno la posizione (x, y) del pallino in base a questo e anche in base all'angolo
-						
+
 						objects[i].detected = 1;
 					}
 					else {
@@ -104,7 +104,7 @@ void doReceive()
 		}
 	}
 }
-/*void doReceiveFromSocket(int sock)
+void doReceiveFromSocket(int sock)
 {
 	int numready;
 	char tmp[MAX_PACKET_SIZE + 1];
@@ -123,28 +123,36 @@ void doReceive()
 		if (SDLNet_SocketReady(udpsocket[sock])) {
 			if (SDLNet_UDP_Recv(udpsocket[sock], recvPacket[sock]))
 			{
-				printf("UDP Packet incoming\n");
+				/*printf("UDP Packet incoming\n");
 				printf("\tChan: %d\n", recvPacket[sock]->channel);
 				printf("\tData: %s\n", (char*)recvPacket[sock]->data);
 				printf("\tLen: %d\n", recvPacket[sock]->len);
 				printf("\tMaxlen: %d\n", recvPacket[sock]->maxlen);
 				printf("\tStatus: %d\n", recvPacket[sock]->status);
-				printf("\tAddress: %x %x\n", recvPacket[sock]->address.host, recvPacket[sock]->address.port);
+				printf("\tAddress: %x %x\n", recvPacket[sock]->address.host, recvPacket[sock]->address.port);*/
 
-				sscanf(recvPacket[sock]->data, "%f", &distance[sock]);
-				if (distance[sock] > 4.0 && distance[sock] < 200.0)
+				float distance;
+				sscanf(recvPacket[sock]->data, "%f", &distance);
+				printf("distance: %f\n", distance);
+				if (distance > 4.0 && distance < 200.0)
 				{
-					object[sock].detected = 1;
+					app.objDetected[sock] = 1;
+					// prendo x ed l del radar, e aggiorno la posizione (x, y) del pallino in base a questo e anche in base all'angolo
+					float l = (float)radar.l / 200.0;
+
+					objects[sock].x = radar.x + distance * l;
+					objects[sock].y = radar.y;
 				}
 				else {
-					distance[sock] = -1.0;
-					object[sock].detected = 0;
+					app.objDetected[sock] = 0;
 				}
 			}
 		}
 		else {
-			distance[sock] = -1.0;
-			object[sock].detected = 0;
+			app.objDetected[sock] = 0;
 		}
 	}
-}*/
+	else {
+		app.objDetected[sock] = 0;
+	}
+}

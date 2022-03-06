@@ -1,11 +1,6 @@
 #include "draw.h"
 
 SDL_Texture* loadTexture(char* filename);
-void draw();
-void drawRadar();
-void drawLine(int x1, int y1, double angle, int l);
-void drawObjects();
-void drawSus();
 
 void initRadar()
 {
@@ -13,7 +8,7 @@ void initRadar()
 	SDL_QueryTexture(radar.texture, NULL, NULL, &radar.w, &radar.h);
 
 	radar.x = SCREEN_WIDTH / 2;
-	radar.y = SCREEN_HEIGHT / 2;
+	radar.y = SCREEN_HEIGHT - radar.h / 2;
 	radar.angle = 0.0;
 	radar.l = radar.w / 2;
 }
