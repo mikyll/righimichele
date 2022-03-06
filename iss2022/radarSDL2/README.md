@@ -28,3 +28,6 @@ creare file multiuso, ovvero in net.c / net.h ad esempio mettere sia receive che
 	NB: #define NORD, EST, SUD, WEST con le differenti porte
 	
 fare makefile per server e client (linkano diversi header e source file)
+
+
+- fix synchronization between clients and server (timestamp)
