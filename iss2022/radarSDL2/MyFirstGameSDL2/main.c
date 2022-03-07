@@ -30,11 +30,11 @@ int main(int argc, char ** argv)
 
 	SDL_SetRenderDrawColor(app.renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
 
-	// Test
+	/*// Test
 	uint32_t startTime = SDL_GetTicks();
 	uint32_t stopTime;
 	double elapsedTime;
-	//printf("radar.x = %d | radar.y = %d\nradar.l = %d\nradar.w = %d\n", radar.x, radar.y, radar.l, radar.w); // test
+	printf("radar.x = %d | radar.y = %d\nradar.l = %d\nradar.w = %d\n", radar.x, radar.y, radar.l, radar.w); // test*/
 
 	then = SDL_GetTicks();
 	remainder = 0;
@@ -62,7 +62,7 @@ int main(int argc, char ** argv)
 			elapsedTime = (stopTime - startTime) / 1000.0;
 			printf("\nELAPSED TIME: %f\n\n", elapsedTime);
 			startTime = SDL_GetTicks();*/
-			
+
 			//printf("app.objDetected[0]=%d\nobjects[0].detected=%d\nOBJECT (%d, %d)\n", app.objDetected[0], objects[0].detected, objects[0].x, objects[0].y); // test
 
 			objects[0].detected = 0;
@@ -74,7 +74,6 @@ int main(int argc, char ** argv)
 			}
 			if (app.susDetected)
 			{
-				printf("app.sound: %d\n", app.soundEnabled);
 				sus.detected = 1;
 				app.soundEnabled ? playSound(SND_SUS_DETECTED, CH_SUS) : (void)0;
 			}
@@ -172,9 +171,7 @@ static void capFrameRate(long* then, float* remainder)
 {
 	long wait, frameTime;
 
-	//wait = 16 + *remainder; // Caps FPS to ~60
-	//wait = 4.4 + *remainder; // a complete radar cycle in ~2 sec
-	wait = 1.6 + *remainder; // a complete radar cycle in ~1 sec
+	wait = *remainder;
 
 	*remainder -= (int)*remainder;
 
@@ -189,7 +186,9 @@ static void capFrameRate(long* then, float* remainder)
 
 	SDL_Delay(wait);
 
-	*remainder += 0.667;
+	//*remainder += 16.667; // caps FPS to ~60 (remainder: 1000 / 60 = 16.66667)
+	//*remainder += 5; // a complete radar cycle in ~2 sec
+	*remainder += 2.25; // a complete radar cycle in ~1 sec
 
 	*then = SDL_GetTicks();
 }
