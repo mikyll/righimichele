@@ -3,6 +3,8 @@
 ### Setup Visual Studio Project
 1. [...]
 
+### Compile (Linux, Windows, ...)
+
 ### To-do List
 - [ ] Refactor VS Project (RadarSystemSDL2) + write setup
 - [ ] Sync UDP packets (use timestamp OR use sync semantic of the receive: client waits for the server ACK)
@@ -11,6 +13,7 @@
 - [ ] Send & Receive a Struct (DetectPacket) instead of a char*
 - [ ] Substitute the radar line with a rectangle/texture(?)
 - [ ] Finish the client app
+- [ ] Docker(?)
 
 
 per i vari file (.c e .h):
