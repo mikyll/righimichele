@@ -7,7 +7,7 @@ int main(int argc, char ** argv)
 {
 	long then;
 	float remainder;
-	int i;
+	int i, j, k;
 	SDL_Point l1, l2, l3;
 	double a1, a2, a3;
 	int fps;
@@ -97,12 +97,6 @@ int main(int argc, char ** argv)
 		// 4. Draw
 		blit(radar.texture, radar.x, radar.y, 1);
 
-		// FPS text
-		char buffer[32];
-		snprintf(buffer, 32, "FPS: %d", fps);
-		SDL_Texture* textFPS = getTextTexture(buffer);
-		drawScaledText(textFPS, SCREEN_WIDTH - 90, 0, 0.6, 0.6);
-
 		SDL_SetRenderDrawColor(app.renderer, 0, 154, 23, SDL_ALPHA_OPAQUE);
 		SDL_RenderDrawLine(app.renderer, radar.x, radar.y, l1.x, l1.y);
 		SDL_SetRenderDrawColor(app.renderer, 0, 154, 23, SDL_ALPHA_OPAQUE / 2);
@@ -110,15 +104,38 @@ int main(int argc, char ** argv)
 		SDL_SetRenderDrawColor(app.renderer, 0, 154, 23, SDL_ALPHA_OPAQUE / 3);
 		SDL_RenderDrawLine(app.renderer, radar.x, radar.y, l3.x, l3.y);
 
-		for (i = 0; i < SOCKET_NUM; i++)
+		for (i = 0, j = 0, k = 0; i < SOCKET_NUM; i++)
 		{
-			objects[i].detected ? blit(objects[0].texture, objects[0].x, objects[0].y, 1) : NULL;
+			if (objects[i].detected)
+			{
+				j++;
+				// Object on radar
+				blit(objects[i].texture, objects[i].x, objects[i].y, 1);
+				// Object coordinates text
+				char buffer[32];
+				snprintf(buffer, 32, "Obj %d (%d, %d)", j, objects[i].x, objects[i].y);
+				SDL_Texture* textCoords = getTextTexture(buffer);
+				drawScaledText(textCoords, 10, 0+k, 0.6, 0.6);
+				k += 20;
+			}
 		}
 		if (sus.detected)
 		{
+			// Sus on radar
 			detectSus(radar.x, radar.y);
 			blit(sus.texture, sus.x, sus.y, 1);
+			// Sus coordinates text
+			char buffer[32];
+			snprintf(buffer, 32, "Sus (%d, %d)", sus.x, sus.y);
+			SDL_Texture* textCoords = getTextTexture(buffer);
+			drawScaledText(textCoords, 10, 0+k, 0.6, 0.6);
 		}
+
+		// FPS text
+		char buffer[32];
+		snprintf(buffer, 32, "FPS: %d", fps);
+		SDL_Texture* textFPS = getTextTexture(buffer);
+		drawScaledText(textFPS, SCREEN_WIDTH - 90, 0, 0.6, 0.6);
 
 		// 5. Present scene
 		presentScene();
