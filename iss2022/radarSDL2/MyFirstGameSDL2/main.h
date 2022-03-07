@@ -3,7 +3,7 @@
 #include "SDL_net.h"
 
 extern void initSDL(void);
-extern void initSDLNet(void);
+extern void initSDLNetServer(int port);
 extern void initSDLMixer(void);
 extern void initSDLTtf(void);
 extern void cleanup(void);
@@ -19,12 +19,13 @@ App app;
 Radar radar;
 Entity objects[SOCKET_NUM];
 Entity sus;
-IPaddress* ipAddress;
-Uint16 ports[SOCKET_NUM];
-UDPsocket sock;
-SDLNet_SocketSet socketset;
-UDPsocket udpsocket[SOCKET_NUM];
-UDPpacket* recvPacket[SOCKET_NUM];
+
+extern IPaddress* ipAddress;
+extern Uint16 ports[SOCKET_NUM];
+extern UDPsocket sock;
+extern SDLNet_SocketSet socketset;
+extern UDPsocket udpSockets[SOCKET_NUM];
+extern UDPpacket* udpPackets[SOCKET_NUM];
 
 SDL_Texture* textFPS;
 SDL_Texture* coordinates[SOCKET_NUM];

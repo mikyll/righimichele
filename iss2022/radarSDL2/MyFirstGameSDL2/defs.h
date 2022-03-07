@@ -3,8 +3,12 @@
 
 #define PI				3.14159
 
+#define MAX_D			200.0
+#define MIN_D			0.0
+
+#define DEFAULT_IP		4123
+#define DEFAULT_PORT	4123
 #define SOCKET_NUM		8
-#define PORT			4123
 #define MAX_PACKET_SIZE 512
 
 #define MAX_SND_CHANNELS 8
@@ -25,6 +29,7 @@ enum Directions
 	D_NW,	// NORTH-WEST
 	D_N,	// NORTH
 	D_NE,	// NORTH-EAST
+	D_NUM,	// DIRECTIONS_NUM
 };
 
 enum AngleDegrees

@@ -7,18 +7,19 @@ int main(int argc, char ** argv)
 {
 	long then;
 	float remainder;
-	int i, j, k;
+	int fps, i, j, k;
 	SDL_Point l1, l2, l3;
 	double a1, a2, a3;
-	int fps;
 
 	memset(&app, 0, sizeof(App));
 
 	if (argc == 2 && strcmp(argv[1], "-s") == 0)
 		app.soundEnabled = 1;
 
+	srand(time(NULL));
+
 	initSDL();
-	initSDLNet();
+	initSDLNetServer(DEFAULT_PORT);
 	initSDLMixer();
 	initSDLTtf();
 
@@ -204,8 +205,8 @@ static void capFrameRate(long* then, float* remainder)
 	SDL_Delay(wait);
 
 	//*remainder += 16.667; // caps FPS to ~60 (remainder: 1000 / 60 = 16.66667)
-	//*remainder += 5; // a complete radar cycle in ~2 sec
-	*remainder += 2.25; // a complete radar cycle in ~1 sec
+	*remainder += 5; // a complete radar cycle in ~2 sec
+	//*remainder += 2.25; // a complete radar cycle in ~1 sec
 
 	*then = SDL_GetTicks();
 }
@@ -214,4 +215,29 @@ void detectSus(int x, int y)
 {
 	sus.x = x + radar.w / 4;
 	sus.y = y;
+}
+
+void detectObj(int sock, float distance)
+{
+	switch (sock)
+	{
+	case D_E:	// 0.0° | 360.0°
+		break;
+	case D_SE:	// 45.0°
+		break;
+	case D_S:	// 90°
+		break;
+	case D_SW:	// 135°
+		break;
+	case D_W:	// 180°
+		break;
+	case D_NW:	// 225°
+		break;
+	case D_N:	// 270°
+		break;
+	case D_NE:	// 315°
+		break;
+	default:
+		break;
+	}
 }
