@@ -1,8 +1,7 @@
 #include "main.h"
 
-void detectObject(int x, int y);
-void detectSus(int x, int y);
 static void capFrameRate(long* then, float* remainder);
+void detectSus(int x, int y);
 
 int main(int argc, char ** argv)
 {
@@ -11,12 +10,17 @@ int main(int argc, char ** argv)
 	int i;
 	SDL_Point l1, l2, l3;
 	double a1, a2, a3;
+	int fps;
 
 	memset(&app, 0, sizeof(App));
+
+	if (argc == 2 && strcmp(argv[1], "-s") == 0)
+		app.soundEnabled = 1;
 
 	initSDL();
 	initSDLNet();
 	initSDLMixer();
+	initSDLTtf();
 
 	atexit(cleanup);
 
@@ -34,9 +38,7 @@ int main(int argc, char ** argv)
 
 	then = SDL_GetTicks();
 	remainder = 0;
-
-	if (argc == 2 && strcmp(argv[1], "-s") == 0)
-		app.soundEnabled = 1;
+	fps = 0;
 
 	while (1)
 	{
@@ -66,15 +68,19 @@ int main(int argc, char ** argv)
 			objects[0].detected = 0;
 			sus.detected = 0;
 			if (app.objDetected[0])
+			{
 				objects[0].detected = 1;
+				app.soundEnabled ? playSound(SND_OBJ_DETECTED, CH_ANY) : (void)0;
+			}
 			if (app.susDetected)
 			{
+				printf("app.sound: %d\n", app.soundEnabled);
 				sus.detected = 1;
 				app.soundEnabled ? playSound(SND_SUS_DETECTED, CH_SUS) : (void)0;
 			}
 		}
 
-
+		// Radar Line
 		a1 = radar.angle * (double)(PI / 180.0);
 		a2 = (radar.angle - 3.0) * (double)(PI / 180.0);
 		a3 = (radar.angle - 6.0) * (double)(PI / 180.0);
@@ -90,7 +96,13 @@ int main(int argc, char ** argv)
 		radar.angle += 1.0;
 
 		// 4. Draw
-		blit(radar.texture, radar.x, radar.y);
+		blit(radar.texture, radar.x, radar.y, 1);
+
+		// FPS text
+		char buffer[32];
+		snprintf(buffer, 32, "FPS: %d", fps);
+		SDL_Texture* textFPS = getTextTexture(buffer);
+		drawScaledText(textFPS, SCREEN_WIDTH - 90, 0, 0.6, 0.6);
 
 		SDL_SetRenderDrawColor(app.renderer, 0, 154, 23, SDL_ALPHA_OPAQUE);
 		SDL_RenderDrawLine(app.renderer, radar.x, radar.y, l1.x, l1.y);
@@ -101,12 +113,12 @@ int main(int argc, char ** argv)
 
 		for (i = 0; i < SOCKET_NUM; i++)
 		{
-			objects[i].detected ? blit(objects[0].texture, objects[0].x, objects[0].y) : NULL;
+			objects[i].detected ? blit(objects[0].texture, objects[0].x, objects[0].y, 1) : NULL;
 		}
 		if (sus.detected)
 		{
 			detectSus(radar.x, radar.y);
-			blit(sus.texture, sus.x, sus.y);
+			blit(sus.texture, sus.x, sus.y, 1);
 		}
 
 		// 5. Present scene
@@ -117,7 +129,8 @@ int main(int argc, char ** argv)
 		Uint64 end = SDL_GetPerformanceCounter();
 
 		float elapsed = (end - start) / (float)SDL_GetPerformanceFrequency();
-		printf("FPS: %f\n", (float)1.0f / elapsed);
+		((int)radar.angle % (360 / SOCKET_NUM)) < 2 ? fps = (int)1.0f / elapsed : fps;
+		//printf("FPS: %f\n", (float)1.0f / elapsed);
 
 		// 3. Update objects
 		/*switch ((int)angle)

@@ -57,15 +57,35 @@ SDL_Texture* loadTexture(char* filename)
 	return texture;
 }
 
-void blit(SDL_Texture* texture, int x, int y)
+void blit(SDL_Texture* texture, int x, int y, int center)
 {
 	SDL_Rect dest;
 
 	dest.x = x;
 	dest.y = y;
 	SDL_QueryTexture(texture, NULL, NULL, &dest.w, &dest.h);
-	dest.x -= (dest.w / 2);
-	dest.y -= (dest.h / 2);
+	
+	if (center)
+	{
+		dest.x -= (dest.w / 2);
+		dest.y -= (dest.h / 2);
+	}
 
 	SDL_RenderCopy(app.renderer, texture, NULL, &dest, NULL, SDL_FLIP_NONE);
+}
+
+void blitScaled(SDL_Texture* texture, int x, int y, float sx, float sy)
+{
+	SDL_Rect dest;
+
+	dest.x = x;
+	dest.y = y;
+	SDL_QueryTexture(texture, NULL, NULL, &dest.w, &dest.h);
+	if (sx > 0.0 && sy > 0.0)
+	{
+		dest.w = (int)(dest.w * sx);
+		dest.h = (int)(dest.h * sy);
+	}
+
+	SDL_RenderCopy(app.renderer, texture, NULL, &dest);
 }

@@ -13,7 +13,7 @@ void initSDLNet()
 
 	if (SDLNet_ResolveHost(&ipAddress, NULL, 4123) == -1) {
 		fprintf(stderr, "ER: SDLNet_ResolveHost: %sn", SDLNet_GetError());
-		exit(-1);
+		exit(1);
 	}
 
 	// Create a socket set
@@ -30,14 +30,14 @@ void initSDLNet()
 		if (!udpsocket[i])
 		{
 			printf("SDLNet_UDP_Open[%d]: %s\n", i, SDLNet_GetError());
-			exit(2);
+			exit(1);
 		}
 		printf("listening on 0.0.0.0:%hd\n", PORT + i);
 
 		numused = SDLNet_UDP_AddSocket(socketset, udpsocket[i]);
 		if (numused == -1) {
 			printf("SDLNet_AddSocket: %s\n", SDLNet_GetError());
-			exit(2);
+			exit(1);
 		}
 	}
 
@@ -47,10 +47,9 @@ void initSDLNet()
 		if (!(recvPacket[i] = SDLNet_AllocPacket(MAX_PACKET_SIZE)))
 		{
 			printf("Could not allocate packet\n");
-			exit(2);
+			exit(1);
 		}
 	}
-
 }
 
 void doReceive()
