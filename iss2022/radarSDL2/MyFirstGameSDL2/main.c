@@ -2,6 +2,7 @@
 
 static void capFrameRate(long* then, float* remainder);
 void detectSus(int x, int y);
+void detectObj(int nSock, float distance);
 
 int main(int argc, char ** argv)
 {
@@ -49,10 +50,17 @@ int main(int argc, char ** argv)
 		prepareScene();
 
 		// 2. Get input
-		doInput();
 		//doReceive();
+		// Test (Direction EST, port 4123)
 		if ((int)radar.angle % (360 /*/ SOCKET_NUM*/) == 0) // NB: receive only when inside one of the 8 directions
-			doReceiveFromSocket(0);
+		{
+			// test 360°
+			float d = receiveDistanceFromSocket(0);
+			printf("%3.1f\n", d); // test
+			detectObj(0, d);
+		}
+		doInput();
+		//printf("obj: %d, sus: %d\n", app.objDetected[0], app.susDetected); // test
 
 		// 3. Update
 		if (radar.angle == 360.0)
@@ -95,6 +103,8 @@ int main(int argc, char ** argv)
 
 		radar.angle += 1.0;
 
+		detectSus(radar.x, radar.y);
+
 		// 4. Draw
 		blit(radar.texture, radar.x, radar.y, 1);
 
@@ -110,8 +120,10 @@ int main(int argc, char ** argv)
 			if (objects[i].detected)
 			{
 				j++;
+				
 				// Object on radar
 				blit(objects[i].texture, objects[i].x, objects[i].y, 1);
+				
 				// Object coordinates text
 				char buffer[32];
 				snprintf(buffer, 32, "Obj %d (%d, %d)", j, objects[i].x, objects[i].y);
@@ -123,8 +135,8 @@ int main(int argc, char ** argv)
 		if (sus.detected)
 		{
 			// Sus on radar
-			detectSus(radar.x, radar.y);
 			blit(sus.texture, sus.x, sus.y, 1);
+			
 			// Sus coordinates text
 			char buffer[32];
 			snprintf(buffer, 32, "Sus (%d, %d)", sus.x, sus.y);
@@ -205,8 +217,8 @@ static void capFrameRate(long* then, float* remainder)
 	SDL_Delay(wait);
 
 	//*remainder += 16.667; // caps FPS to ~60 (remainder: 1000 / 60 = 16.66667)
-	*remainder += 5; // a complete radar cycle in ~2 sec
-	//*remainder += 2.25; // a complete radar cycle in ~1 sec
+	//*remainder += 5; // a complete radar cycle in ~2 sec
+	*remainder += 2.25; // a complete radar cycle in ~1 sec
 
 	*then = SDL_GetTicks();
 }
@@ -217,27 +229,46 @@ void detectSus(int x, int y)
 	sus.y = y;
 }
 
-void detectObj(int sock, float distance)
+void detectObj(int nSock, float distance)
 {
-	switch (sock)
+	if (distance > MIN_D && distance <= MAX_D)
 	{
-	case D_E:	// 0.0° | 360.0°
-		break;
-	case D_SE:	// 45.0°
-		break;
-	case D_S:	// 90°
-		break;
-	case D_SW:	// 135°
-		break;
-	case D_W:	// 180°
-		break;
-	case D_NW:	// 225°
-		break;
-	case D_N:	// 270°
-		break;
-	case D_NE:	// 315°
-		break;
-	default:
-		break;
+		// Set that the object has been detected
+		app.objDetected[nSock] = 1;
+		float l = (float)radar.l / MAX_D;
+
+		switch (nSock)
+		{
+		case D_E:	// 0.0° | 360.0°
+			// Update the obj position (x, y) on the radar, based on the line length (proportionally to the distance detected)
+			objects[nSock].x = radar.x + distance * l;
+			objects[nSock].y = radar.y;
+			break;
+		case D_SE:	// 45.0°
+			break;
+		case D_S:	// 90°
+			objects[nSock].x = radar.x;
+			objects[nSock].y = radar.y + distance * l;
+			break;
+		case D_SW:	// 135°
+			break;
+		case D_W:	// 180°
+			objects[nSock].x = radar.x - distance * l;
+			objects[nSock].y = radar.y;
+			break;
+		case D_NW:	// 225°
+			break;
+		case D_N:	// 270°
+			objects[nSock].x = radar.x;
+			objects[nSock].y = radar.y - distance * l;
+			break;
+		case D_NE:	// 315°
+			break;
+		default:
+			break;
+		}
+	}
+	else {
+		app.objDetected[nSock] = 0;
 	}
 }

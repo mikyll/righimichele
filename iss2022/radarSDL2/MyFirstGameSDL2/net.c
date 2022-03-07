@@ -197,6 +197,7 @@ void doReceiveFromSocket(int sock)
 	}
 }
 
+// Refactor
 void sendRandomDistance(int min, int max)
 {
 	int d = min + rand() / (RAND_MAX / (max - min + 1) + 1);
@@ -278,6 +279,14 @@ float receiveDistanceFromSocket(int nSock)
 		}
 	}
 	return -1;
+}
+void sendACK(int nSock)
+{
+
+}
+void receiveACK()
+{
+
 }
 // sendDistance()
 // receiveDistance()

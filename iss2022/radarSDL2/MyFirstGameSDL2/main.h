@@ -8,6 +8,7 @@ extern void initSDLMixer(void);
 extern void initSDLTtf(void);
 extern void cleanup(void);
 extern void doInput(void);
+extern float receiveDistanceFromSocket(int nSock);
 extern void prepareScene(void);
 extern void presentScene(void);
 extern void playSound(int id, int channel);
@@ -20,6 +21,7 @@ Radar radar;
 Entity objects[SOCKET_NUM];
 Entity sus;
 
+// net
 extern IPaddress* ipAddress;
 extern Uint16 ports[SOCKET_NUM];
 extern UDPsocket sock;

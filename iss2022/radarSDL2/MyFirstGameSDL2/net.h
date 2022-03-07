@@ -2,6 +2,8 @@
 
 #include "SDL_net.h"
 
+float receiveDistanceFromSocket(int nSock);
+
 extern App app;
 extern Radar radar;
 extern Entity objects[SOCKET_NUM];
