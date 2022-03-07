@@ -20,3 +20,11 @@ creare file multiuso, ovvero in net.c / net.h ad esempio mettere sia receive che
 	NB: #define NORD, EST, SUD, WEST con le differenti porte
 	
 fare makefile per server e client (linkano diversi header e source file)
+
+
+### References
+- [SDL_net Homepage](https://www.libsdl.org/projects/SDL_net/)
+- [Optimize C Code](http://icps.u-strasbg.fr/~bastoul/local_copies/lee.html)
+- [SDL2 Tutorials](https://www.parallelrealities.co.uk/tutorials/) - buy them, they are stupidly cheap and useful af
+- [Free Windows Installer Maker](https://nsis.sourceforge.io/Main_Page)
+- [SDL_net UDP Example](https://moddb.fandom.com/wiki/SDL:Tutorial:Using_SDL_net#Using_UDP)
