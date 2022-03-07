@@ -14,6 +14,7 @@
 - [ ] Substitute the radar line with a rectangle/texture(?)
 - [ ] Finish the client app
 - [ ] Docker(?)
+- [ ] Object animation (transition)
 
 
 per i vari file (.c e .h):
