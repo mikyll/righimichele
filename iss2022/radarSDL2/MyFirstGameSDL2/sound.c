@@ -1,17 +1,17 @@
 #include "sound.h"
 
 void initSounds();
-static void loadSounds();
+static Mix_Chunk* loadSound(char* filename);
 
 static Mix_Chunk* sounds[SND_MAX];
-static Mix_Music* music;
 
 void initSDLMixer()
 {
     if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 1024) == -1)
     {
-        printf("Couldn't initialize SDL Mixer\n");
-        exit(1);
+        printf("Couldn't initialize SDL Mixer: %s\n", Mix_GetError());
+        app.soundEnabled = 0;
+        return;
     }
 
     Mix_AllocateChannels(MAX_SND_CHANNELS);
@@ -22,10 +22,9 @@ void initSDLMixer()
 void initSounds()
 {
     memset(sounds, 0, sizeof(Mix_Chunk*) * SND_MAX);
-
-    music = NULL;
-
-    loadSounds();
+    
+    sounds[SND_OBJ_DETECTED] = loadSound("sound/sonar_ping.mp3");
+    sounds[SND_SUS_DETECTED] = loadSound("sound/sus.mp3");
 }
 
 void playSound(int id, int channel)
@@ -33,7 +32,13 @@ void playSound(int id, int channel)
     Mix_PlayChannel(channel, sounds[id], 0);
 }
 
-static void loadSounds(void)
+static Mix_Chunk* loadSound(char* filename)
 {
-    sounds[SND_SUS_DETECTED] = Mix_LoadWAV("sound/sus.mp3");
+    Mix_Chunk* sound;
+
+    SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, "Loading %s", filename);
+
+    sound = Mix_LoadWAV(filename);
+
+    return sound;
 }

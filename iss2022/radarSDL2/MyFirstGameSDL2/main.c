@@ -1,22 +1,26 @@
 #include "main.h"
 
-void detectObject(int x, int y);
-void detectSus(int x, int y);
 static void capFrameRate(long* then, float* remainder);
+void detectSus(int x, int y);
 
 int main(int argc, char ** argv)
 {
 	long then;
 	float remainder;
-	int i;
+	int i, j, k;
 	SDL_Point l1, l2, l3;
 	double a1, a2, a3;
+	int fps;
 
 	memset(&app, 0, sizeof(App));
+
+	if (argc == 2 && strcmp(argv[1], "-s") == 0)
+		app.soundEnabled = 1;
 
 	initSDL();
 	initSDLNet();
 	initSDLMixer();
+	initSDLTtf();
 
 	atexit(cleanup);
 
@@ -26,17 +30,15 @@ int main(int argc, char ** argv)
 
 	SDL_SetRenderDrawColor(app.renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
 
-	// Test
+	/*// Test
 	uint32_t startTime = SDL_GetTicks();
 	uint32_t stopTime;
 	double elapsedTime;
-	//printf("radar.x = %d | radar.y = %d\nradar.l = %d\nradar.w = %d\n", radar.x, radar.y, radar.l, radar.w); // test
+	printf("radar.x = %d | radar.y = %d\nradar.l = %d\nradar.w = %d\n", radar.x, radar.y, radar.l, radar.w); // test*/
 
 	then = SDL_GetTicks();
 	remainder = 0;
-
-	if (argc == 2 && strcmp(argv[1], "-s") == 0)
-		app.soundEnabled = 1;
+	fps = 0;
 
 	while (1)
 	{
@@ -60,13 +62,16 @@ int main(int argc, char ** argv)
 			elapsedTime = (stopTime - startTime) / 1000.0;
 			printf("\nELAPSED TIME: %f\n\n", elapsedTime);
 			startTime = SDL_GetTicks();*/
-			
+
 			//printf("app.objDetected[0]=%d\nobjects[0].detected=%d\nOBJECT (%d, %d)\n", app.objDetected[0], objects[0].detected, objects[0].x, objects[0].y); // test
 
 			objects[0].detected = 0;
 			sus.detected = 0;
 			if (app.objDetected[0])
+			{
 				objects[0].detected = 1;
+				app.soundEnabled ? playSound(SND_OBJ_DETECTED, CH_ANY) : (void)0;
+			}
 			if (app.susDetected)
 			{
 				sus.detected = 1;
@@ -74,7 +79,7 @@ int main(int argc, char ** argv)
 			}
 		}
 
-
+		// Radar Line
 		a1 = radar.angle * (double)(PI / 180.0);
 		a2 = (radar.angle - 3.0) * (double)(PI / 180.0);
 		a3 = (radar.angle - 6.0) * (double)(PI / 180.0);
@@ -90,7 +95,7 @@ int main(int argc, char ** argv)
 		radar.angle += 1.0;
 
 		// 4. Draw
-		blit(radar.texture, radar.x, radar.y);
+		blit(radar.texture, radar.x, radar.y, 1);
 
 		SDL_SetRenderDrawColor(app.renderer, 0, 154, 23, SDL_ALPHA_OPAQUE);
 		SDL_RenderDrawLine(app.renderer, radar.x, radar.y, l1.x, l1.y);
@@ -99,15 +104,38 @@ int main(int argc, char ** argv)
 		SDL_SetRenderDrawColor(app.renderer, 0, 154, 23, SDL_ALPHA_OPAQUE / 3);
 		SDL_RenderDrawLine(app.renderer, radar.x, radar.y, l3.x, l3.y);
 
-		for (i = 0; i < SOCKET_NUM; i++)
+		for (i = 0, j = 0, k = 0; i < SOCKET_NUM; i++)
 		{
-			objects[i].detected ? blit(objects[0].texture, objects[0].x, objects[0].y) : NULL;
+			if (objects[i].detected)
+			{
+				j++;
+				// Object on radar
+				blit(objects[i].texture, objects[i].x, objects[i].y, 1);
+				// Object coordinates text
+				char buffer[32];
+				snprintf(buffer, 32, "Obj %d (%d, %d)", j, objects[i].x, objects[i].y);
+				SDL_Texture* textCoords = getTextTexture(buffer);
+				drawScaledText(textCoords, 10, 0+k, 0.6, 0.6);
+				k += 20;
+			}
 		}
 		if (sus.detected)
 		{
+			// Sus on radar
 			detectSus(radar.x, radar.y);
-			blit(sus.texture, sus.x, sus.y);
+			blit(sus.texture, sus.x, sus.y, 1);
+			// Sus coordinates text
+			char buffer[32];
+			snprintf(buffer, 32, "Sus (%d, %d)", sus.x, sus.y);
+			SDL_Texture* textCoords = getTextTexture(buffer);
+			drawScaledText(textCoords, 10, 0+k, 0.6, 0.6);
 		}
+
+		// FPS text
+		char buffer[32];
+		snprintf(buffer, 32, "FPS: %d", fps);
+		SDL_Texture* textFPS = getTextTexture(buffer);
+		drawScaledText(textFPS, SCREEN_WIDTH - 90, 0, 0.6, 0.6);
 
 		// 5. Present scene
 		presentScene();
@@ -117,7 +145,8 @@ int main(int argc, char ** argv)
 		Uint64 end = SDL_GetPerformanceCounter();
 
 		float elapsed = (end - start) / (float)SDL_GetPerformanceFrequency();
-		printf("FPS: %f\n", (float)1.0f / elapsed);
+		((int)radar.angle % (360 / SOCKET_NUM)) < 2 ? fps = (int)1.0f / elapsed : fps;
+		//printf("FPS: %f\n", (float)1.0f / elapsed);
 
 		// 3. Update objects
 		/*switch ((int)angle)
@@ -159,9 +188,7 @@ static void capFrameRate(long* then, float* remainder)
 {
 	long wait, frameTime;
 
-	//wait = 16 + *remainder; // Caps FPS to ~60
-	//wait = 4.4 + *remainder; // a complete radar cycle in ~2 sec
-	wait = 1.6 + *remainder; // a complete radar cycle in ~1 sec
+	wait = *remainder;
 
 	*remainder -= (int)*remainder;
 
@@ -176,7 +203,9 @@ static void capFrameRate(long* then, float* remainder)
 
 	SDL_Delay(wait);
 
-	*remainder += 0.667;
+	//*remainder += 16.667; // caps FPS to ~60 (remainder: 1000 / 60 = 16.66667)
+	//*remainder += 5; // a complete radar cycle in ~2 sec
+	*remainder += 2.25; // a complete radar cycle in ~1 sec
 
 	*then = SDL_GetTicks();
 }
