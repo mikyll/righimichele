@@ -221,33 +221,92 @@ div.imagedesc{
  
 
 <h2>Test plans</h2> 
-Verificare che l'oggetto venga rilevato correttamente:
-utilizzare un metro per misurare la distanza dell'oggetto dal sonar, e verificare che la distanza rilevata sia circa la medesima o comunque differisca di un errore trascurabile;
+<div class="remark">
+	<ol>
+		<li>
+		Verificare che l'oggetto venga rilevato correttamente:
+		utilizzare un metro per misurare la distanza dell'oggetto dal sonar, e verificare che la distanza rilevata sia circa la medesima o comunque differisca di un errore trascurabile;
+		</li>
+		<li>
+		Verificare che il LED si accenda quando l'oggetto viene posizionato ad una distanza inferiore alla soglia <tt>DLIMIT</tt>;
+		</li>
+		<li>
+		Verificare che radarGui aggiorni correttamente la grafica del radar e le coordinate dell'oggetto rilevato, utilizzando un client di test che invii valori pseudo-randomici o una sequenza fissa;
+		</li>
+	</ol>
+</div>
 
-Verificare che il LED si accenda quando l'oggetto viene posizionato ad una distanza inferiore alla soglia;
-
-verificare che radarGui aggiorni correttamente la grafica del radar e le coordinate dell'oggetto rilevato.
-
-client di Test (random values)
-
-<h2>Project</h2> 
+<h2>Project</h2>
+<a href="https://github.com/mikyll/righimichele/tree/sdl2_refactor_net/iss2022/radarGUI">Repository del progetto</a>
+<table>
+	<tr align="center">
+		<td width="54%"><img src="../gfx/radarTestClient.gif"/></td>
+		<td width="45%"><img src="https://github.com/mikyll/righimichele/blob/sdl2_refactor_net/iss2022/radarGUI/gfx/radarTestServer.gif"/></td>
+	</tr>
+	<tr align="center">
+		<td>Client Test</td>
+		<td>Server Test</td>
+	</tr>
+</table>
+<div class="remark">
+<h3>Architettura Logica</h3>
 Il progetto consiste in 2 princiali componenti:
-- server
-	esegue su una macchina distinta rispetto al raspberry e si occupa di ricevere i dati inviati dal raspberry, elaborarli e visualizzarli a schermo tramite la grafica di un radar.
-- client
-	esegue sul raspberry e si occupa di ricevere l'input dal sonar e trasmetterlo al server. Sempre il client, qualora la distanza rilevata dal sonar dovesse essere inferiore alla soglia <tt>DLIM</tt>, si occupa di accendere il LED.
+<ul>
+	<li><b>server</b>,
+	esegue su una macchina distinta rispetto al raspberry e si occupa di <ins>ricevere i dati inviati dal raspberry</ins>, elaborarli e <ins>visualizzarli a schermo</ins> tramite la grafica di un radar.
+	</li>
+	<li><b>client</b>,
+	esegue sul raspberry e si occupa di <ins>ricevere l'input dal sonar</ins> e <ins>trasmetterlo al server</ins>. Sempre il client, qualora la distanza rilevata dal sonar dovesse essere inferiore alla soglia <tt>DLIM</tt>, si occupa di <ins>accendere il LED</ins>.
+	</li>
+</ul>
+
+<h3>Strumenti e Librerie</h3>
+Per la realizzazione del radar abbiamo scelto di utilizzare la libreria <b><a href="https://www.libsdl.org/download-2.0.php">SDL2</a></b>, che permette di realizzare applicazioni grafiche efficienti ed è molto portabile (lo stesso codice SDL2 può essere compilato ed eseguito su architetture differenti). SDL2 prevede anche un modulo relativo al networking, che abbiamo deciso di utilizzare per la comunicazione tra il raspberry e la macchina che visualizza graficamente i risultati. Per la realizzazione del codice che esegue su raspberry, abbiamo deciso di utilizzare la libreria <b><a href="http://wiringpi.com/">wiringPi</a></b>, che permette di accedere facilmente all'hardware e in particolare ai pin GPIO.
+
+<h3>Dettagli Realizzativi</h3>
+<h4>Server</h4>
+Il server è costituito da diversi moduli, ciascuno dei quali ha un ruolo differente:
+<ul>
+	<li><b><a href="https://github.com/mikyll/righimichele/blob/sdl2_refactor_net/iss2022/radarGUI/RadarSystemSDL2/main.c">main.c</a></b>,
+	inizializza SDL2 e le varie strutture dati, dopodiché implementa il ciclo di esecuzione principale dell'applicazione, realizzando la sequenza logica delle operazioni da eseguire ad ogni frame: quando la linea di rilevazione del radar si trova ad un angolo che corrisponde ad una direzione associata ad un sonar, controlla se ci sono dati da ricevere dal client relativo; in caso affermativo mostra a schermo un pallino, la cui distanza dal centro del radar è proporzionale alla distanza rilevata dal sonar; dopodiché viene aggiornata la posizione della linea del radar, applicandovi una rotazione in base al centro di quest'ultimo; infine, viene cappato il framerate per fare in modo che la linea compia un giro completo (360°) ogni 2 secondi.
+	</li>
+	<li><b><a href="https://github.com/mikyll/righimichele/blob/sdl2_refactor_net/iss2022/radarGUI/RadarSystemSDL2/draw.c">draw.c</a></b>,
+	contiene tutte le funzioni utili a renderizzare una texture nella finestra mostrata a schermo, e disegnare le varie entità presenti. In particolare la funzione <code>prepareScene()</code> pulisce il renderer, cancellando tutto ciò che era presente dal frame precedente, così che la finestra possa essere ridisegnata con texture ed entità aggiornate. La funzione <code>presentScene()</code> visualizza il contenuto del renderer a schermo. Queste due procedure vengono chiamate rispettivamente all'inizio ed alla fine del ciclo del main.
+	</li>
+	<li><b><a href="https://github.com/mikyll/righimichele/blob/sdl2_refactor_net/iss2022/radarGUI/RadarSystemSDL2/text.c">text.c</a></b>,
+	contiene le funzioni che permettono di renderizzare del testo. Lo scopo di tale modulo è quello di consentire di visualizzare a schermo le coordinate degli oggetti rilevati, oltre alla rappresentazione grafica del pallino nel radar.
+	</li>
+	<li><b><a href="https://github.com/mikyll/righimichele/blob/sdl2_refactor_net/iss2022/radarGUI/RadarSystemSDL2/net.c">net.c</a></b>,
+	contiene tutte le funzioni e procedure che permettono la comunicazione tra raspberry e server del radar. In particolare, utilizziamo un set di socket che ci permette di controllare se sono presenti messaggi nelle socket contenutevi e, in caso affermativo, di leggere il pacchetto in arrivo. Questo permette di realizzare un meccanismo di comunicazione ideale, superando la semantica sincrona della receive. Tuttavia, poiché il client esegue su una macchina separata, e i tempi non sono sincronizzati, abbiamo utilizzato un segnale di ACK, inviato dal server al client, per fare in modo che il client non invii più pacchetti di quanti il server ne possa ricevere. Se così non fosse, questi si accumulerebbero e non rappresenterebbero più (quando viene mostrato a schermo sul radar) lo stato attuale rilevato dal sonar. In questo modo, il client attende l'ACK prima di fare una nuova rilevazione.
+	</li>
 	
-Per la realizzazione abbiamo scelto di utilizzare la libreria SDL2, che permette di realizzare applicazioni grafiche ed è molto portabile (lo stesso codice SDL2 può essere compilato su architetture differenti).
+</ul>
+<h5>Extra</h5>
+Per rendere l'applicazione più gradevole, abbiamo deciso di aggiungere ulteriori componenti:
+<ul>
+	<li><b><a href="https://github.com/mikyll/righimichele/blob/sdl2_refactor_net/iss2022/radarGUI/RadarSystemSDL2/sound.c">sound.c</a></b>,
+	il modulo sound permette sostanzialmente di riprodurre un suono quando viene rilevato un oggetto, nel range del sonar.
+	</li>
+</ul>
 
-Server
-Il server è costituito da diversi moduli, i principali dei quali sono:
-- main, implementa il ciclo principale dell'applicazione;
-- draw, contiene tutte le funzioni e procedure che permettono di disegnare oggetti ed entità all'interno della finestra, tramite un renderer;
-- net, implementa le funzionalità di rete.
+<h4>Client</h4>
+Per realizzare il componente client, abbiamo utilizzato il codice realizzato in precedenza per <a href="https://github.com/mikyll/righimichele/blob/sdl2_refactor_net/iss2022/RadarSystem/ledAlarm.c">ledAlarm</a>, il quale permetteva di ottenere la distanza rilevata dal sonar e di accendere il LED se questa era inferiore ad una certa soglia. Dunque lo abbiamo modificato aggiungendo le funzionalità relative alla comunicazione col server (radarGUI), ovvero il client ad ogni ciclo:
+<ul>
+	<li>
+		rileva la presenza di oggetti tramite il sonar, scrivendo il valore HIGH sul pin TRIGGER, controllando la durata in cui l'onda del pin ECHO rimane a valore HIGH, e facendo qualche piccolo calcolo per ottenere la distanza;
+	</li>
+	<li>
+		invia al server la distanza rilevata, sfruttando la libreria SDL2_net;
+	</li>
+	<li>
+		attende l'ACK del server, prima di effettuare una nuova rilevazione.
+	</li>
+</ul>
+Per maggiori informazioni sul funzionamento del sonar, consultare <a href="https://github.com/mikyll/righimichele/tree/sdl2_refactor_net/iss2022/RadarSystem">questo README</a>.
 
-La logica prevede che ad ogni ciclo del main
+<h3>Collegamenti</h3>
 
-Client
+</div>
 
 <h2>Testing</h2> 
  
