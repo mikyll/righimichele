@@ -6,8 +6,8 @@ Implementation of a Radar System, written in C using the SDL2 library. The syste
 Radar simulation, using a test client, which sends random inputs to the server.
 <table>
 	<tr align="center">
-		<td width="54%"><img src="https://github.com/mikyll/righimichele/blob/sdl2_refactor_net/iss2022/radarGUI/gfx/radarTestClient.gif"/></td>
-		<td width="45%"><img src="https://github.com/mikyll/righimichele/blob/sdl2_refactor_net/iss2022/radarGUI/gfx/radarTestServer.gif"/></td>
+		<td width="53%"><img src="https://github.com/mikyll/righimichele/blob/sdl2_refactor_net/iss2022/radarGUI/gfx/radarTestClient.gif"/></td>
+		<td width="46%"><img src="https://github.com/mikyll/righimichele/blob/sdl2_refactor_net/iss2022/radarGUI/gfx/radarTestServer.gif"/></td>
 	</tr>
 	<tr align="center">
 		<td>Client Test</td>
