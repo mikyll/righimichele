@@ -274,10 +274,10 @@ float receiveDistanceFromSocket(int nSock)
 				*/
 
 				sscanf(udpPackets[nSock]->data, "%f", &distance);
-				printf("Detected object %d at distance: %3.1f cm\n", nSock, distance); // test
+				//printf("Detected object %d at distance: %3.1f cm\n", nSock, distance); // test
 
 				char host[16];
-				int port = ACK_PORT;
+				int port = DEFAULT_PORT + ACK_PORT_OFFSET + nSock;
 				getIPfromNetwork(udpPackets[nSock]->address, &host, NULL);
 				//printf("RESULT: %s %d\n", host, port); // Test
 

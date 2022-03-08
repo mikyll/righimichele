@@ -11,6 +11,7 @@ int main(int argc, char** argv)
 	int fps, i, j, k;
 	SDL_Point l1, l2, l3;
 	double a1, a2, a3;
+	float distance, heading;
 
 	memset(&app, 0, sizeof(App));
 
@@ -52,23 +53,30 @@ int main(int argc, char** argv)
 		prepareScene();
 
 		// 2. Get input
+		doInput();
 		//doReceive();
 		// Test (Direction EST, port 4123)
-		if ((int)radar.angle % (360 /*/ SOCKET_NUM*/) == 0) // NB: receive only when inside one of the 8 directions
+		//int deg = (int)radar.angle % (360 / SOCKET_NUM);
+		//deg == 0 ? distance = receiveDistanceFromSocket(0), printf("[MAIN] 360) distance: %3.1f cm\n", d) : (float)0;
+		switch ((int) radar.angle)
 		{
-			// test 360°
-			float d = receiveDistanceFromSocket(0);
-			//printf("%3.1f\n", d); // test
-			detectObj(0, d);
-		}
-		doInput();
-		//printf("obj: %d, sus: %d\n", app.objDetected[0], app.susDetected); // test
+		case 360:	// East			(0°/360°)
+			distance = receiveDistanceFromSocket(DIR_E);
+			detectObj(DIR_E, distance);
 
-		// 3. Update
-		if (radar.angle == 360.0)
-		{
-			radar.angle = 0.0;
-
+			objects[DIR_E].detected = 0;
+			if (app.objDetected[DIR_E])
+			{
+				objects[DIR_E].detected = 1;
+				app.soundEnabled ? playSound(SND_OBJ_DETECTED, CH_ANY) : (void)0;
+			}
+			sus.detected = 0;
+			if (app.susDetected)
+			{
+				sus.detected = 1;
+				app.soundEnabled ? playSound(SND_SUS_DETECTED, CH_SUS) : (void)0;
+			}
+			//objects[DIR_E].detected = app.objDetected[DIR_E] ? 1 : 0;
 			/*
 			// Test: elapsed time
 			stopTime = SDL_GetTicks();
@@ -76,9 +84,93 @@ int main(int argc, char** argv)
 			printf("\nELAPSED TIME: %f\n\n", elapsedTime);
 			startTime = SDL_GetTicks();
 			*/
-
 			//printf("app.objDetected[0]=%d\nobjects[0].detected=%d\nOBJECT (%d, %d)\n", app.objDetected[0], objects[0].detected, objects[0].x, objects[0].y); // test
+			radar.angle = 0.0;
+			break;
+		case 45:	// South-East	(45°)
+			distance = receiveDistanceFromSocket(DIR_SE);
+			detectObj(DIR_SE, distance);
 
+			objects[DIR_SE].detected = 0;
+			if (app.objDetected[DIR_SE])
+			{
+				objects[DIR_SE].detected = 1;
+				app.soundEnabled ? playSound(SND_OBJ_DETECTED, CH_ANY) : (void)0;
+			}
+			break;
+		case 90:	// South		(90°)
+			distance = receiveDistanceFromSocket(DIR_S);
+			detectObj(DIR_S, distance);
+
+			objects[DIR_S].detected = 0;
+			if (app.objDetected[DIR_S])
+			{
+				objects[DIR_S].detected = 1;
+				app.soundEnabled ? playSound(SND_OBJ_DETECTED, CH_ANY) : (void)0;
+			}
+			break;
+		case 135:	// South-West	(135°)
+			distance = receiveDistanceFromSocket(DIR_SW);
+			detectObj(DIR_SW, distance);
+
+			objects[DIR_SW].detected = 0;
+			if (app.objDetected[DIR_SW])
+			{
+				objects[DIR_SW].detected = 1;
+				app.soundEnabled ? playSound(SND_OBJ_DETECTED, CH_ANY) : (void)0;
+			}
+			break;
+		case 180:	// West			(180°)
+			distance = receiveDistanceFromSocket(DIR_W);
+			detectObj(DIR_W, distance);
+
+			objects[DIR_W].detected = 0;
+			if (app.objDetected[DIR_W])
+			{
+				objects[DIR_W].detected = 1;
+				app.soundEnabled ? playSound(SND_OBJ_DETECTED, CH_ANY) : (void)0;
+			}
+			break;
+		case 225:	// North-West	(225°)
+			distance = receiveDistanceFromSocket(DIR_NW);
+			detectObj(DIR_NW, distance);
+
+			objects[DIR_NW].detected = 0;
+			if (app.objDetected[DIR_NW])
+			{
+				objects[DIR_NW].detected = 1;
+				app.soundEnabled ? playSound(SND_OBJ_DETECTED, CH_ANY) : (void)0;
+			}
+			break;
+		case 270:	// North		(270°)
+			distance = receiveDistanceFromSocket(DIR_N);
+			detectObj(DIR_N, distance);
+
+			objects[DIR_N].detected = 0;
+			if (app.objDetected[DIR_N])
+			{
+				objects[DIR_N].detected = 1;
+				app.soundEnabled ? playSound(SND_OBJ_DETECTED, CH_ANY) : (void)0;
+			}
+			break;
+		case 315:	// North-East	(315°)
+			distance = receiveDistanceFromSocket(DIR_NE);
+			detectObj(DIR_NE, distance);
+
+			objects[DIR_NE].detected = 0;
+			if (app.objDetected[DIR_NE])
+			{
+				objects[DIR_NE].detected = 1;
+				app.soundEnabled ? playSound(SND_OBJ_DETECTED, CH_ANY) : (void)0;
+			}
+			break;
+		}
+
+		// 3. Update
+		/*if (radar.angle == 360.0)
+		{
+			radar.angle = 0.0;
+			
 			objects[0].detected = 0;
 			sus.detected = 0;
 			if (app.objDetected[0])
@@ -91,7 +183,7 @@ int main(int argc, char** argv)
 				sus.detected = 1;
 				app.soundEnabled ? playSound(SND_SUS_DETECTED, CH_SUS) : (void)0;
 			}
-		}
+		}*/
 
 		// Radar Line
 		a1 = radar.angle * (double)(PI / 180.0);
@@ -234,6 +326,7 @@ void detectSus(int x, int y)
 	sus.y = y;
 }
 
+// update the coordinates
 void detectObj(int nSock, float distance)
 {
 	if (distance > MIN_D && distance <= MAX_D)
@@ -241,33 +334,42 @@ void detectObj(int nSock, float distance)
 		// Set that the object has been detected
 		app.objDetected[nSock] = 1;
 		float l = (float)radar.l / MAX_D;
+		double a = radar.angle * (double)(PI / 180.0);
 
 		switch (nSock)
 		{
-		case D_E:	// 0.0° | 360.0°
+		case DIR_E:		// 0.0° | 360.0°
 			// Update the obj position (x, y) on the radar, based on the line length (proportionally to the distance detected)
 			objects[nSock].x = radar.x + distance * l;
 			objects[nSock].y = radar.y;
 			break;
-		case D_SE:	// 45.0°
+		case DIR_SE:	// 45.0° ok
+			objects[nSock].x = radar.x + (cos(a) * distance * l);
+			objects[nSock].y = radar.y + (sin(a) * distance * l);
 			break;
-		case D_S:	// 90°
+		case DIR_S:		// 90°
 			objects[nSock].x = radar.x;
 			objects[nSock].y = radar.y + distance * l;
 			break;
-		case D_SW:	// 135°
+		case DIR_SW:	// 135°
+			objects[nSock].x = radar.x + (cos(a) * distance * l);
+			objects[nSock].y = radar.y + (sin(a) * distance * l);
 			break;
-		case D_W:	// 180°
+		case DIR_W:		// 180°
 			objects[nSock].x = radar.x - distance * l;
 			objects[nSock].y = radar.y;
 			break;
-		case D_NW:	// 225°
+		case DIR_NW:	// 225°
+			objects[nSock].x = radar.x + (cos(a) * distance * l);
+			objects[nSock].y = radar.y + (sin(a) * distance * l);
 			break;
-		case D_N:	// 270°
+		case DIR_N:		// 270°
 			objects[nSock].x = radar.x;
 			objects[nSock].y = radar.y - distance * l;
 			break;
-		case D_NE:	// 315°
+		case DIR_NE:	// 315°
+			objects[nSock].x = radar.x + (cos(a) * distance * l);
+			objects[nSock].y = radar.y + (sin(a) * distance * l);
 			break;
 		default:
 			break;

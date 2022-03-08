@@ -6,8 +6,9 @@
 #define MAX_D			200.0
 #define MIN_D			0.0
 
-#define DEFAULT_IP		4123
-#define DEFAULT_PORT	4123
+#define DEFAULT_IP		""
+#define DEFAULT_PORT	4000
+#define ACK_PORT_OFFSET	100
 #define SOCKET_NUM		8
 #define MAX_PACKET_SIZE 512
 
@@ -21,27 +22,27 @@
 
 enum Directions
 {
-	D_E,	// EAST
-	D_SE,	// SOUTH-EAST
-	D_S,	// SOUTH
-	D_SW,	// SOUTH-WEST
-	D_W,	// WEST
-	D_NW,	// NORTH-WEST
-	D_N,	// NORTH
-	D_NE,	// NORTH-EAST
-	D_NUM,	// DIRECTIONS_NUM
+	DIR_E,	// EAST
+	DIR_SE,	// SOUTH-EAST
+	DIR_S,	// SOUTH
+	DIR_SW,	// SOUTH-WEST
+	DIR_W,	// WEST
+	DIR_NW,	// NORTH-WEST
+	DIR_N,	// NORTH
+	DIR_NE,	// NORTH-EAST
+	DIR_NUM,	// DIRECTIONS_NUM
 };
 
-enum AngleDegrees
+enum Degrees
 {
-	A_E = 360,	// EAST
-	A_SE = 45,		// SOUTH-EAST
-	A_S = 90,		// SOUTH
-	A_SW = 135,	// SOUTH-WEST
-	A_W = 180,	// WEST
-	A_NW = 225,	// NORTH-WEST
-	A_N = 270,	// NORTH
-	A_NE = 315,	// NORTH-EAST
+	DEG_E = 360,	// EAST
+	DEG_SE = 45,	// SOUTH-EAST
+	DEG_S = 90,	// SOUTH
+	DEG_SW = 135,	// SOUTH-WEST
+	DEG_W = 180,	// WEST
+	DEG_NW = 225,	// NORTH-WEST
+	DEG_N = 270,	// NORTH
+	DEG_NE = 315,	// NORTH-EAST
 };
 
 enum Channels
