@@ -14,7 +14,6 @@ Radar simulation, using a test client, which sends random inputs to the server.
 		<td>Server Test</td>
 	</tr>
 </table>
-Various images, GIF and others.
 
 ### Setup Visual Studio Project
 1. Download **Simple Directmedia Layer** (**SDL 2.0**) <ins>development libraries</ins> for Visual C++:
