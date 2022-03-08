@@ -221,11 +221,33 @@ div.imagedesc{
  
 
 <h2>Test plans</h2> 
+Verificare che l'oggetto venga rilevato correttamente:
+utilizzare un metro per misurare la distanza dell'oggetto dal sonar, e verificare che la distanza rilevata sia circa la medesima o comunque differisca di un errore trascurabile;
 
+Verificare che il LED si accenda quando l'oggetto viene posizionato ad una distanza inferiore alla soglia;
+
+verificare che radarGui aggiorni correttamente la grafica del radar e le coordinate dell'oggetto rilevato.
+
+client di Test (random values)
 
 <h2>Project</h2> 
- 
-</div>
+Il progetto consiste in 2 princiali componenti:
+- server
+	esegue su una macchina distinta rispetto al raspberry e si occupa di ricevere i dati inviati dal raspberry, elaborarli e visualizzarli a schermo tramite la grafica di un radar.
+- client
+	esegue sul raspberry e si occupa di ricevere l'input dal sonar e trasmetterlo al server. Sempre il client, qualora la distanza rilevata dal sonar dovesse essere inferiore alla soglia <tt>DLIM</tt>, si occupa di accendere il LED.
+	
+Per la realizzazione abbiamo scelto di utilizzare la libreria SDL2, che permette di realizzare applicazioni grafiche ed è molto portabile (lo stesso codice SDL2 può essere compilato su architetture differenti).
+
+Server
+Il server è costituito da diversi moduli, i principali dei quali sono:
+- main, implementa il ciclo principale dell'applicazione;
+- draw, contiene tutte le funzioni e procedure che permettono di disegnare oggetti ed entità all'interno della finestra, tramite un renderer;
+- net, implementa le funzionalità di rete.
+
+La logica prevede che ad ogni ciclo del main
+
+Client
 
 <h2>Testing</h2> 
  
@@ -248,7 +270,7 @@ div.imagedesc{
 <br/><br/> 	
 </div>  
 
-<div float="left" style="width: 60%; background-color: rgba(86, 56, 253, 0.9);color:white;font-family: Tahoma;">
+<div float="left" style="width: 80%; background-color: rgba(86, 56, 253, 0.9);color:white;font-family: Tahoma;">
 	<p style="float: left; width: 60%; padding: 10px">
 		By <b>Michele Righi</b><br/><br/>
 		<span><b>ISS repo: <a id="issRepo" style="color:white" href="https://github.com/mikyll/righimichele/tree/master/iss2022">mikyll/righimichele/iss2022/</a></b></span><br/><br/>

@@ -2,6 +2,9 @@
 
 void sendDistance(float d);
 
+UDPsocket ackSocket;
+IPaddress ackIP;
+
 void initSDLNetServer(int port)
 {
 	int i, numused;
@@ -44,6 +47,18 @@ void initSDLNetServer(int port)
 			printf("SDLNet_AddSocket: %s\n", SDLNet_GetError());
 			exit(1);
 		}
+	}
+
+	// 4.3 Test: open ACK socket
+	if (!(ackSocket = SDLNet_UDP_Open(0)))
+	{
+		printf("SDLNet_UDP_Open: %s\n", i, SDLNet_GetError());
+		exit(1);
+	}
+	// Resolve ACK IP
+	if (SDLNet_ResolveHost(&ackIP, "127.0.0.1", 4200) == -1) {
+		fprintf(stderr, "ER: SDLNet_ResolveHost: %sn", SDLNet_GetError());
+		exit(1);
 	}
 
 	// 5. Allocate memory for packets
@@ -229,7 +244,7 @@ float receiveDistanceFromSocket(int nSock)
 	UDPpacket* p;
 	char buffer[64];
 	int numready;
-	char tmp[MAX_PACKET_SIZE + 1];
+	float distance = -1;
 
 	// 1. Check if there are sockets with activity
 	numready = SDLNet_CheckSockets(socketset, 0);
@@ -260,13 +275,10 @@ float receiveDistanceFromSocket(int nSock)
 				printf("\tAddress: %x %x\n", udpPackets[nSock]->address.host, udpPackets[nSock]->address.port);
 				*/
 
-				float distance;
 				sscanf(udpPackets[nSock]->data, "%f", &distance);
 				printf("distance: %f\n", distance); // test
 
-				return distance;
-
-				if (distance > MIN_D && distance < MAX_D)
+				/*if (distance > MIN_D && distance < MAX_D)
 				{
 					app.objDetected[nSock] = 1;
 					// prendo x ed l del radar, e aggiorno la posizione (x, y) del pallino in base a questo e anche in base all'angolo
@@ -274,11 +286,18 @@ float receiveDistanceFromSocket(int nSock)
 
 					objects[nSock].x = radar.x + distance * l;
 					objects[nSock].y = radar.y;
-				}
+				}*/
 			}
 		}
 	}
-	return -1;
+
+	// send ACK anyways (?) maybe if the socket is enabled
+	udpPackets[nSock]->address.host = ackIP.host;
+	udpPackets[nSock]->address.port = ackIP.port;
+
+	SDLNet_UDP_Send(ackSocket, -1, udpPackets[nSock]);
+
+	return distance;
 }
 void sendACK(int nSock)
 {

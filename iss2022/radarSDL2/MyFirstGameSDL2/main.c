@@ -56,7 +56,7 @@ int main(int argc, char ** argv)
 		{
 			// test 360°
 			float d = receiveDistanceFromSocket(0);
-			printf("%3.1f\n", d); // test
+			//printf("%3.1f\n", d); // test
 			detectObj(0, d);
 		}
 		doInput();
@@ -217,8 +217,8 @@ static void capFrameRate(long* then, float* remainder)
 	SDL_Delay(wait);
 
 	//*remainder += 16.667; // caps FPS to ~60 (remainder: 1000 / 60 = 16.66667)
-	//*remainder += 5; // a complete radar cycle in ~2 sec
-	*remainder += 2.25; // a complete radar cycle in ~1 sec
+	*remainder += 5; // a complete radar cycle in ~2 sec
+	//*remainder += 2.25; // a complete radar cycle in ~1 sec
 
 	*then = SDL_GetTicks();
 }
