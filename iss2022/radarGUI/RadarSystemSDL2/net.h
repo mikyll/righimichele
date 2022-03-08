@@ -2,6 +2,8 @@
 
 #include "SDL_net.h"
 
+#define ACK_IP "192.168.1.4"
+
 float receiveDistanceFromSocket(int nSock);
 
 extern App app;

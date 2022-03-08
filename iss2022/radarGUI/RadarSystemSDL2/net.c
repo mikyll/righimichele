@@ -3,7 +3,12 @@
 void sendDistance(float d);
 
 UDPsocket ackSocket;
-IPaddress ackIP;
+IPaddress ackAddress;
+
+const int ACK_PORT = 4200;
+
+void getIPfromNetwork(IPaddress address, char* ip, int* port);
+void getIPfromHost(IPaddress address, char* ip, int* port);
 
 void initSDLNetServer(int port)
 {
@@ -53,11 +58,6 @@ void initSDLNetServer(int port)
 	if (!(ackSocket = SDLNet_UDP_Open(0)))
 	{
 		printf("SDLNet_UDP_Open: %s\n", i, SDLNet_GetError());
-		exit(1);
-	}
-	// Resolve ACK IP
-	if (SDLNet_ResolveHost(&ackIP, "127.0.0.1", 4200) == -1) {
-		fprintf(stderr, "ER: SDLNet_ResolveHost: %sn", SDLNet_GetError());
 		exit(1);
 	}
 
@@ -254,10 +254,8 @@ float receiveDistanceFromSocket(int nSock)
 		// NB: Most of the time this is a system error, where perror might help.
 		perror("SDLNet_CheckSockets");
 	}
-	else if (numready)
+	else if (numready) // There is at least 1 socket with activity
 	{
-		printf("There are %d sockets with activity!\n", numready);
-
 		// 2. Check if the specific socket has packets ready
 		if (SDLNet_SocketReady(udpSockets[nSock]))
 		{
@@ -276,26 +274,28 @@ float receiveDistanceFromSocket(int nSock)
 				*/
 
 				sscanf(udpPackets[nSock]->data, "%f", &distance);
-				printf("distance: %f\n", distance); // test
+				printf("Detected object %d at distance: %3.1f cm\n", nSock, distance); // test
 
-				/*if (distance > MIN_D && distance < MAX_D)
+				char host[16];
+				int port = ACK_PORT;
+				getIPfromNetwork(udpPackets[nSock]->address, &host, NULL);
+				//printf("RESULT: %s %d\n", host, port); // Test
+
+				// Resolve ACK IP (TEST)
+				if (SDLNet_ResolveHost(&ackAddress, host, port) == -1) {
+					fprintf(stderr, "ERROR: SDLNet_ResolveHost: %s\n", SDLNet_GetError());
+					exit(1);
+				}
+				udpPackets[nSock]->address = ackAddress;
+
+				// Send ACK
+				if (!SDLNet_UDP_Send(ackSocket, -1, udpPackets[nSock]))
 				{
-					app.objDetected[nSock] = 1;
-					// prendo x ed l del radar, e aggiorno la posizione (x, y) del pallino in base a questo e anche in base all'angolo
-					float l = (float)radar.l / MAX_D;
-
-					objects[nSock].x = radar.x + distance * l;
-					objects[nSock].y = radar.y;
-				}*/
+					printf("ERROR: SDLNet_UDP_Send: %s\n\n", SDLNet_GetError());
+				}
 			}
 		}
 	}
-
-	// send ACK anyways (?) maybe if the socket is enabled
-	udpPackets[nSock]->address.host = ackIP.host;
-	udpPackets[nSock]->address.port = ackIP.port;
-
-	SDLNet_UDP_Send(ackSocket, -1, udpPackets[nSock]);
 
 	return distance;
 }
@@ -312,3 +312,49 @@ void receiveACK()
 // receiveDistanceFromSocket()
 // send ACK
 // receive ACK
+
+// Big Endian (network order)
+void getIPfromNetwork(IPaddress address, char* ip, int* port)
+{
+	Uint8 addr[4];
+	int val, i;
+	char res[16];
+	char tmp[4];
+
+	res[0] = '\0';
+	for (i = 0; i < 4; i++)
+	{
+		addr[i] = address.host >> i * 8;
+
+		val = (int)addr[i];
+		sprintf(tmp, "%d", val);
+		strcat(res, tmp);
+		i < 3 ? strcat(res, ".") : NULL;
+	}
+
+	ip != NULL ? strcpy(ip, res) : NULL;
+	port != NULL ? *port = (int)address.port : NULL;
+}
+
+// Little Endian (host order)
+void getIPfromHost(IPaddress address, char* ip, int* port)
+{
+	Uint8 addr[4];
+	int val, i;
+	char res[16];
+	char tmp[4];
+
+	res[0] = '\0';
+	for (i = 0; i < 4; i++)
+	{
+		addr[i] = address.host >> 24 - (i * 8);
+
+		val = (int)addr[i];
+		sprintf(tmp, "%d", val);
+		strcat(res, tmp);
+		i < 3 ? strcat(res, ".") : NULL;
+	}
+	
+	ip != NULL ? strcpy(ip, res) : NULL;
+	port != NULL ? *port = (int)address.port : NULL;
+}
