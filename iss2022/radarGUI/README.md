@@ -1,4 +1,8 @@
-# RadarSystem SDL2 GUI
+<h1 align="center">RadarSystem SDL2 GUI</h1>
+Implementation of a Radar System, written in C using the SDL2 library. The system consists of a **client**, which runs on the Raspberry Pi and gets the input from SR-HC04 sonar, and a **server** which shows a radar on GUI ad gets the coordinates of the detected objects from the client.
+
+### Demo
+Various images, GIF and others.
 
 ### Setup Visual Studio Project
 1. Download **Simple Directmedia Layer** (**SDL 2.0**) <ins>development libraries</ins> for Visual C++:
@@ -16,8 +20,9 @@
 	1. Select "**Configuration properties > C/C++ > General > Additional Include Directories**", and add the path of each include directory (e.g. "C:\SDL2\include" for SDL2, "C:\SDL2_image\include" for SDL2_image, etc.); 
 	2. Select "**Configuration properties > Linker > General > Additional Library Directories**", and add the path of each lib directory (e.g. "C:\SDL2\lib\x64" for SDL2, "C:\SDL2_image\lib\x64" for SDL2_image, etc.);
 	3. Select "**Configuration properties > Linker > Input > Additional Dependencies**", and add the SDL2 lib files that can be found in ".\lib\x64" (e.g. "SDL2.lib" and "SDL2main.lib" for SDL2, etc.).
+	4. Select "****" and add \_CRT_SECURE_NO_WARNINGS
 8. Add all the **.dll** to the source files directory (they can be found in ".\lib\x64\").
- 
+
 ### Setup Linux
 1. ```sudo apt-get install libsdl2-*```
 
