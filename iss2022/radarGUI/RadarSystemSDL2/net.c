@@ -44,7 +44,7 @@ void initSDLNetServer(int port)
 			printf("SDLNet_UDP_Open[%d]: %s\n", i, SDLNet_GetError());
 			exit(1);
 		}
-		printf("listening on 0.0.0.0:%hd\n", port + i);
+		SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, "Listening on 0.0.0.0:%hd", port + i);
 
 		// 4.2 Add socket #i to the socket set
 		numused = SDLNet_UDP_AddSocket(socketset, udpSockets[i]);
