@@ -103,10 +103,6 @@ To execute run ```python ledAlarm.py```.
 
 #### C Code
 We use the C library **Wiring Pi**, which is a PIN based GPIO access library for the RaspberryPi (with Raspberry OS 32-bit). We then use sigaction to catch the CTRL+C event and handle it with a cleanup function. 
-- [Reference](http://wiringpi.com/reference/)
-- [Pin numbering](http://wiringpi.com/pins/)
-- [Timing](http://wiringpi.com/reference/timing/)
-- [sigaction example](https://stackoverflow.com/a/1641223)
 
 <details>
   <summary>View Code</summary>
@@ -214,3 +210,10 @@ To execute run ```./ledAlarm```.
   
 ### References
 - [How does the HC-SR04 work](https://lastminuteengineers.com/arduino-sr04-ultrasonic-sensor-tutorial/)
+- [Sonar tutorial](https://tutorials-raspberrypi.com/raspberry-pi-ultrasonic-sensor-hc-sr04/)
+- [Sonar YT tutorial](https://www.youtube.com/watch?v=JYnMRKVwBuQ)
+- [WiringPi: Reference](http://wiringpi.com/reference/)
+- [WiringPi: Pin numbering](http://wiringpi.com/pins/)
+- [WiringPi: Timing](http://wiringpi.com/reference/timing/)
+- [sigaction example](https://stackoverflow.com/a/1641223)
+- [LED utilis](https://www.lifewire.com/light-an-led-with-the-raspberry-pis-gpio-4090226)
