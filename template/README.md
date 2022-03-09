@@ -2,7 +2,7 @@
 
 ### Setup Progetto
 
-1. gradle init (opzioni ```1, 1, -```)
+1. eseguire il comando ```gradle init``` (opzioni **1, 1, -**)
 2. Copia e incolla delle seguenti impostazioni in *build.gradle*
 
 <details>
@@ -71,8 +71,12 @@ distributions {
     }
 }
 ```
-	</details>
-4. Passaggio 3
+	
+</details>
+
+3. eseguire lo script ```./gradlew eclipse```
+4. creare le directory **src** e **test** (vengono aggiunte al Java Build Path)
+5. creare le directory **userDocs** e **resources**
 
 <p align="center">
 	<img alt="img1" align="center" width="60%" src="img.png"/>
@@ -83,5 +87,5 @@ distributions {
 </p>
 
 ### Riferimenti
-- []()
+- [Workspace Setup](https://github.com/anatali/issLab2022/blob/main/it.unibo.issLabStart/userDocs/Dispense/html/WorkspaceSetup.html)
 - []()
