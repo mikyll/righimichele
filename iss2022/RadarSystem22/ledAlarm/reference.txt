@@ -1,3 +1,0 @@
-SONAR: https://www.youtube.com/watch?v=JYnMRKVwBuQ
-SONAR: https://tutorials-raspberrypi.com/raspberry-pi-ultrasonic-sensor-hc-sr04/
-LED: https://www.lifewire.com/light-an-led-with-the-raspberry-pis-gpio-4090226
