@@ -237,7 +237,19 @@ div.imagedesc{
 </div>
 
 <h2>Project</h2>
-<a href="https://github.com/mikyll/righimichele/tree/master/iss2022/RadarSystem22">Repository del progetto</a>
+Riferimento: <a href="https://github.com/mikyll/righimichele/tree/master/iss2022/RadarSystem22"><b>Repository del progetto</b></a>
+
+<h3>Demo</h3>
+In questa sezione viene mostrata un'<b>animazione dimostrativa</b> in cui due client:
+<ul>
+	<li>
+	quello in alto a sinistra (direzione Est) è connesso effettivamente al sonar hardware e ne riceve le rilevazioni;
+	</li>
+	<li>
+	quello in basso (direzione Sud-Ovest) è un client fittizio che genera distanze pseudorandomiche in un intervallo arbitrario.
+	</li>
+</ul>
+Come si può vedere dall'animazione, il server radarGUI è in grado di ricevere contemporaneamente gli input di diversi client (fino a 8), uno per ciascuna direzione.
 <table>
 	<tr align="center">
 		<td><a href="https://github.com/mikyll/righimichele/tree/master/iss2022/RadarSystem22/radarClient/src"><img width="93%" src="img/radarClient.gif"/></a></td>
@@ -250,12 +262,12 @@ div.imagedesc{
 </table>
 <div class="remark">
 <h3>Architettura Logica</h3>
-Il progetto consiste in 2 princiali componenti:
+Il progetto consiste in 2 principali componenti:
 <ul>
-	<li><b>server</b>,
+	<li><b>server (radarGUI)</b>,
 	esegue su una macchina distinta rispetto al raspberry e si occupa di <ins>ricevere i dati inviati dal raspberry</ins>, elaborarli e <ins>visualizzarli a schermo</ins> tramite la grafica di un radar.
 	</li>
-	<li><b>client</b>,
+	<li><b>client (radarClient)</b>,
 	esegue sul raspberry e si occupa di <ins>ricevere l'input dal sonar</ins> e <ins>trasmetterlo al server</ins>. Sempre il client, qualora la distanza rilevata dal sonar dovesse essere inferiore alla soglia <tt>DLIM</tt>, si occupa di <ins>accendere il LED</ins>.
 	</li>
 </ul>
@@ -277,7 +289,7 @@ Il server è costituito da diversi moduli, ciascuno dei quali ha un ruolo differ
 	contiene le funzioni che permettono di renderizzare del testo. Lo scopo di tale modulo è quello di consentire di visualizzare a schermo le coordinate degli oggetti rilevati, oltre alla rappresentazione grafica del pallino nel radar.
 	</li>
 	<li><b><a href="https://github.com/mikyll/righimichele/blob/master/iss2022/RadarSystem22/radarGUI/src/net.c">net.c</a></b>,
-	contiene tutte le funzioni e procedure che permettono la comunicazione tra raspberry e server del radar. In particolare, utilizziamo un set di socket che ci permette di controllare se sono presenti messaggi nelle socket contenutevi e, in caso affermativo, di leggere il pacchetto in arrivo. Questo permette di realizzare un meccanismo di comunicazione ideale, superando la semantica sincrona della receive. Tuttavia, poiché il client esegue su una macchina separata, e i tempi non sono sincronizzati, abbiamo utilizzato un segnale di ACK, inviato dal server al client, per fare in modo che il client non invii più pacchetti di quanti il server ne possa ricevere. Se così non fosse, questi si accumulerebbero e non rappresenterebbero più (quando viene mostrato a schermo sul radar) lo stato attuale rilevato dal sonar. In questo modo, il client attende l'ACK prima di fare una nuova rilevazione.
+	contiene tutte le funzioni e procedure che permettono la comunicazione tra raspberry e server del radar. In particolare, utilizziamo un set di socket (meccanismo simile alla <a href="https://man7.org/linux/man-pages/man2/select.2.html">select</a>) che ci permette di controllare se sono presenti messaggi nelle socket contenutevi e, in caso affermativo, di leggere il pacchetto in arrivo. Questo permette di realizzare un meccanismo di comunicazione ideale, <ins>superando la semantica sincrona della receive</ins>. Tuttavia, poiché il client esegue su una macchina separata, e i tempi non sono sincronizzati, abbiamo utilizzato un segnale di ACK, inviato dal server al client, per fare in modo che il client non invii più pacchetti di quanti il server ne possa ricevere. Se così non fosse, questi si accumulerebbero e non rappresenterebbero più (quando viene mostrato a schermo sul radar) lo stato attuale rilevato dal sonar. In questo modo, il client attende l'ACK prima di fare una nuova rilevazione.
 	</li>
 	
 </ul>
@@ -301,10 +313,13 @@ Per realizzare il componente client, abbiamo utilizzato il codice realizzato in 
 	<li>
 		attende l'ACK del server, prima di effettuare una nuova rilevazione.
 	</li>
+	<li>
+		se l'ACK non viene ricevuto entro una certa soglia, effettua una nuova rilevazione ed invia il relativo nuovo pacchetto. In questo modo, il client non rischia di rimanere bloccato.
+	</li>
 </ul>
-Per maggiori informazioni sul funzionamento del sonar, consultare <a href="https://github.com/mikyll/righimichele/tree/master/iss2022/RadarSystem">questo README</a>.
+Per maggiori informazioni sul funzionamento del sonar, consultare <a href="https://github.com/mikyll/righimichele/tree/master/iss2022/RadarSystem22/ledAlarm">questo README</a>.
 
-<h3>Collegamenti</h3>
+<h3>Collegamenti Hardware</h3>
 <img width="70%" src="img/ledAlarm circuit.png"/>
 </div>
 
