@@ -6,16 +6,18 @@
 #include <ctype.h>
 #include <time.h>
 
-#include <signal.h>
-#include <unistd.h>
-#include "wiringPi.h"
+#ifdef __unix__
+	#include <signal.h>
+	#include <unistd.h>
+	#include "wiringPi.h"
+#endif
 
 #include "SDL_net.h"
 #include "SDL.h"
 
 #define GPIO_TRIGGER 4	// GPIO 23
-#define GPIO_ECHO 5	// GPIO 24
-#define GPIO_LED 6	// GPIO 25
+#define GPIO_ECHO 5		// GPIO 24
+#define GPIO_LED 6		// GPIO 25
 
 enum Flags
 {
@@ -31,8 +33,8 @@ enum Flags
 #define DEFAULT_SND_PORT 4000
 #define ACK_PORT_OFFSET	100
 #define DEFAULT_DLIM	20.0	// (cm)
-#define TIMEOUT		5000	// (ms)
-#define TIMER_INCREMENT	500	// (ms)
+#define TIMEOUT		5000		// (ms)
+#define TIMER_INCREMENT	500		// (ms)
 
 void printUsage(char** argv);
 void cleanup();
@@ -129,6 +131,8 @@ int main(int argc, char** argv)
 	// Init random seed
 	srand(time(NULL));
 
+#ifdef __unix__
+	printf("UNIX\n");
 	// Setup wiringPi
 	wiringPiSetup();
 	pinMode(GPIO_TRIGGER, OUTPUT);
@@ -143,9 +147,10 @@ int main(int argc, char** argv)
 	sigIntHandler.sa_flags = 0;
 
 	sigaction(SIGINT, &sigIntHandler, NULL);
-
-	
-	
+#else
+	printf("Windows!\n");
+	rand = 1;
+#endif
 
 	printf("CLIENT UDP\n\n");
 
@@ -190,6 +195,8 @@ int main(int argc, char** argv)
 	{
 		d = (rand == 0 ? distance() : randRange(0.0, 320.0));
 		printf("Distance: %3.1f cm", (float) d);
+		
+#ifdef __unix__
 		if (d <= DLIM)
 		{
 			digitalWrite(GPIO_LED, HIGH);
@@ -199,6 +206,7 @@ int main(int argc, char** argv)
 			digitalWrite(GPIO_LED, LOW);
 			printf(" (LED OFF)\n");
 		}
+#endif
 
 		char buffer[64];
 		int ret = snprintf(buffer, sizeof buffer, "%3.1f", (float) d);
