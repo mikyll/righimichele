@@ -3,18 +3,22 @@
 Implementation of a Radar System, written in C using the SDL2 library. The system consists of a **client**, which runs on the Raspberry Pi and gets the input from SR-HC04 sonar, and a **server** which shows a radar on GUI ad gets the coordinates of the detected objects from the client.
 
 ### Demo
-
 Radar simulation, using a test client, which sends random inputs to the server.
 <table>
 	<tr align="center">
-		<td width="53%"><img alt="Client" src="https://github.com/mikyll/righimichele/blob/master/iss2022/RadarSystem22/userDocs/img/radarTestClient.gif"/></td>
-		<td width="46%"><img alt="Server (radarGUI)" src="https://github.com/mikyll/righimichele/blob/master/iss2022/RadarSystem22/userDocs/img/radarTestServer.gif"/></td>
+		<td width="53%"><a href="https://github.com/mikyll/righimichele/tree/master/iss2022/RadarSystem22/radarClient"><img alt="Client" src="https://github.com/mikyll/righimichele/blob/master/iss2022/RadarSystem22/userDocs/img/radarTestClient.gif"/></a></td>
+		<td width="46%"><a href="https://github.com/mikyll/righimichele/tree/master/iss2022/RadarSystem22/radarGUI"><img alt="Server (radarGUI)" src="https://github.com/mikyll/righimichele/blob/master/iss2022/RadarSystem22/userDocs/img/radarTestServer.gif"/></a></td>
 	</tr>
 	<tr align="center">
 		<td>Client (Raspberry Pi)</td>
 		<td>Server (PC - radarGUI)</td>
 	</tr>
 </table>
+
+### Usage
+
+#### radarClient
+#### radarGUI
 
 ### Setup Visual Studio Project
 1. Download **Simple Directmedia Layer** (**SDL 2.0**) <ins>development libraries</ins> for Visual C++:
