@@ -53,6 +53,7 @@ Radar simulation, using a test client, which sends random inputs to the server.
 - [ ] Use 2 sonar(?): one for the x axis, the other for the y one.
 - [ ] Make single modules more general purpose
 - [ ] Client: add passing port as argument by specifying the direction (e.g. North/N -> DEFAULT_PORT + i)
+- [ ] GitHub action to dynamically generate pdf from HTML userdocs and commit it
 
 ### References
 - [SDL_net Homepage](https://www.libsdl.org/projects/SDL_net/)
