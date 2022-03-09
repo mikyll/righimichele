@@ -302,7 +302,7 @@ Per rendere l'applicazione più gradevole, abbiamo deciso di aggiungere ulterior
 </ul>
 
 <h4>Client</h4>
-Per realizzare il componente client, abbiamo utilizzato il codice realizzato in precedenza per <a href="https://github.com/mikyll/righimichele/blob/master/iss2022/RadarSystem22/ledAlarm/src/ledAlarm.c">ledAlarm</a>, il quale permetteva di ottenere la distanza rilevata dal sonar e di accendere il LED se questa era inferiore ad una certa soglia. Dunque lo abbiamo modificato aggiungendo le funzionalità relative alla comunicazione col server (radarGUI), ovvero il client ad ogni ciclo:
+Per realizzare il componente <a href="https://github.com/mikyll/righimichele/blob/master/iss2022/RadarSystem22/radarClient/src/radarClient.c">radarClient</a>, abbiamo utilizzato il codice realizzato in precedenza per <a href="https://github.com/mikyll/righimichele/blob/master/iss2022/RadarSystem22/ledAlarm/src/ledAlarm.c">ledAlarm</a>, il quale permetteva di ottenere la distanza rilevata dal sonar e di accendere il LED se questa era inferiore ad una certa soglia. Dunque lo abbiamo modificato aggiungendo le funzionalità relative alla comunicazione col server (radarGUI), ovvero il client ad ogni ciclo:
 <ul>
 	<li>
 		rileva la presenza di oggetti tramite il sonar, scrivendo il valore HIGH sul pin TRIGGER, controllando la durata in cui l'onda del pin ECHO rimane a valore HIGH, e facendo qualche piccolo calcolo per ottenere la distanza;
