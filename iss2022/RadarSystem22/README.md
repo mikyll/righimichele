@@ -1,4 +1,5 @@
 <h1 align="center">RadarSystem SDL2 GUI</h1>
+
 Implementation of a Radar System, written in C using the SDL2 library. The system consists of a **client**, which runs on the Raspberry Pi and gets the input from SR-HC04 sonar, and a **server** which shows a radar on GUI ad gets the coordinates of the detected objects from the client.
 
 ### Demo
@@ -6,12 +7,12 @@ Implementation of a Radar System, written in C using the SDL2 library. The syste
 Radar simulation, using a test client, which sends random inputs to the server.
 <table>
 	<tr align="center">
-		<td width="53%"><img src="https://github.com/mikyll/righimichele/blob/sdl2_refactor_net/iss2022/radarGUI/gfx/radarTestClient.gif"/></td>
-		<td width="46%"><img src="https://github.com/mikyll/righimichele/blob/sdl2_refactor_net/iss2022/radarGUI/gfx/radarTestServer.gif"/></td>
+		<td width="53%"><img alt="Client" src="https://github.com/mikyll/righimichele/blob/master/iss2022/RadarSystem22/userDocs/img/radarTestClient.gif"/></td>
+		<td width="46%"><img alt="Server (radarGUI)" src="https://github.com/mikyll/righimichele/blob/master/iss2022/RadarSystem22/userDocs/img/radarTestServer.gif"/></td>
 	</tr>
 	<tr align="center">
-		<td>Client Test</td>
-		<td>Server Test</td>
+		<td>Client (Raspberry Pi)</td>
+		<td>Server (PC - radarGUI)</td>
 	</tr>
 </table>
 
@@ -31,32 +32,23 @@ Radar simulation, using a test client, which sends random inputs to the server.
 	1. Select "**Configuration properties > C/C++ > General > Additional Include Directories**", and add the path of each include directory (e.g. "C:\SDL2\include" for SDL2, "C:\SDL2_image\include" for SDL2_image, etc.); 
 	2. Select "**Configuration properties > Linker > General > Additional Library Directories**", and add the path of each lib directory (e.g. "C:\SDL2\lib\x64" for SDL2, "C:\SDL2_image\lib\x64" for SDL2_image, etc.);
 	3. Select "**Configuration properties > Linker > Input > Additional Dependencies**", and add the SDL2 lib files that can be found in ".\lib\x64" (e.g. "SDL2.lib" and "SDL2main.lib" for SDL2, etc.).
-	4. Select "****" and add \_CRT_SECURE_NO_WARNINGS
+	4. Select "**Configuration properties > C/C++ > Preprocessor > Preprocessor definitions**" and add \_CRT_SECURE_NO_WARNINGS
 8. Add all the **.dll** to the source files directory (they can be found in ".\lib\x64\").
 
 ### Setup Linux
 1. ```sudo apt-get install libsdl2-*```
 
-### To-do List
-- [ ] Refactor VS Project (RadarSystemSDL2) + write setup
+### Roadmap (to-do list)
+- [ ] add TCP communication
 - [ ] Sync communication (use timestamp OR use sync semantic of the receive: client waits for the server ACK). NB: in this case TCP would be better, since with UDP tha packet could go lost
-- [ ] Print coordinates on screen (sdl2_ttf)
-- [ ] Show FPS on screen
 - [ ] Send & Receive a Struct (DetectPacket) instead of a char*
 - [ ] Substitute the radar line with a rectangle/texture(?)
-- [ ] Finish the client app
+- [ ] Refactor client app (and add makefile)
 - [ ] Docker(?)
-- [ ] Object animation (transition)
+- [ ] Object animation (transition/disapperance)
 - [ ] Use 2 sonar(?): one for the x axis, the other for the y one.
-
-per i vari file (.c e .h):
-creare file multiuso, ovvero in net.c / net.h ad esempio mettere sia receive che send, poi nel client o server uso quello specifico
-
-- mettere tutte le definizioni in defs.h
-	NB: #define NORD, EST, SUD, WEST con le differenti porte
-	
-fare makefile per server e client (linkano diversi header e source file)
-
+- [ ] Make single modules more general purpose
+- [ ] Client: add passing port as argument by specifying the direction (e.g. North/N -> DEFAULT_PORT + i)
 
 ### References
 - [SDL_net Homepage](https://www.libsdl.org/projects/SDL_net/)
