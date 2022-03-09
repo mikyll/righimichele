@@ -197,14 +197,13 @@ int main(int argc, char** argv)
 		printf("Distance: %3.1f cm", (float) d);
 		
 #ifdef __unix__
+		// Turn ON/OFF led
 		if (d <= DLIM)
 		{
-			digitalWrite(GPIO_LED, HIGH);
-			printf(" (LED ON)\n");
+			turnOnLed()
 		}
 		else {
-			digitalWrite(GPIO_LED, LOW);
-			printf(" (LED OFF)\n");
+			turnOffLed()
 		}
 #endif
 
@@ -310,11 +309,13 @@ float distance()
 void turnOnLed()
 {
 	digitalWrite(GPIO_LED, HIGH);
+	printf(" (LED ON)\n");
 }
 
 void turnOffLed()
 {
 	digitalWrite(GPIO_LED, LOW);
+	printf(" (LED OFF)\n");
 }
 
 float randRange(float min, float max)

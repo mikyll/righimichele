@@ -151,7 +151,7 @@ float receiveDistanceFromSocket(int nSock)
 			// 3. Receive a packet from the specific socket
 			if (SDLNet_UDP_Recv(udpSockets[nSock], udpPackets[nSock]))
 			{
-				/*
+				
 				// Test
 				printf("UDP Packet incoming\n");
 				printf("\tChan: %d\n", udpPackets[nSock]->channel);
@@ -160,7 +160,7 @@ float receiveDistanceFromSocket(int nSock)
 				printf("\tMaxlen: %d\n", udpPackets[nSock]->maxlen);
 				printf("\tStatus: %d\n", udpPackets[nSock]->status);
 				printf("\tAddress: %x %x\n", udpPackets[nSock]->address.host, udpPackets[nSock]->address.port);
-				*/
+				
 
 				sscanf(udpPackets[nSock]->data, "%f", &distance);
 				//printf("Detected object %d at distance: %3.1f cm\n", nSock, distance); // test

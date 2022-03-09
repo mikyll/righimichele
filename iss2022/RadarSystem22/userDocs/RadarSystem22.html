@@ -302,19 +302,20 @@ Per rendere l'applicazione più gradevole, abbiamo deciso di aggiungere ulterior
 </ul>
 
 <h4>Client</h4>
+Il client è un semplice programma costituito da un loop infinito che, ad ogni ciclo, effettua una rilevazione dal sonar ed invia un messaggio tramite una socket UDP al server. Per questo motivo, il client può essere realizzato utilizzando un linguaggio o librerie differenti rispetto a ciò che è stato utilizzato per il server.<br/>
 Per realizzare il componente <a href="https://github.com/mikyll/righimichele/blob/master/iss2022/RadarSystem22/radarClient/src/radarClient.c">radarClient</a>, abbiamo utilizzato il codice realizzato in precedenza per <a href="https://github.com/mikyll/righimichele/blob/master/iss2022/RadarSystem22/ledAlarm/src/ledAlarm.c">ledAlarm</a>, il quale permetteva di ottenere la distanza rilevata dal sonar e di accendere il LED se questa era inferiore ad una certa soglia. Dunque lo abbiamo modificato aggiungendo le funzionalità relative alla comunicazione col server (radarGUI), ovvero il client ad ogni ciclo:
 <ul>
 	<li>
 		rileva la presenza di oggetti tramite il sonar, scrivendo il valore HIGH sul pin TRIGGER, controllando la durata in cui l'onda del pin ECHO rimane a valore HIGH, e facendo qualche piccolo calcolo per ottenere la distanza;
 	</li>
 	<li>
-		invia al server la distanza rilevata, sfruttando la libreria SDL2_net;
+		invia al server un pacchetto UDP contenente semplicemente la distanza rilevata (float a 32bit), sfruttando la libreria SDL2_net;
 	</li>
 	<li>
-		attende l'ACK del server, prima di effettuare una nuova rilevazione.
+		attende l'ACK del server, ovvero un pacchetto UDP di cui viene ignorato il contenuto, prima di effettuare una nuova rilevazione;
 	</li>
 	<li>
-		se l'ACK non viene ricevuto entro una certa soglia, effettua una nuova rilevazione ed invia il relativo nuovo pacchetto. In questo modo, il client non rischia di rimanere bloccato.
+		se l'ACK non viene ricevuto entro una certa soglia (ad esempio 5 secondi), il client effettua una nuova rilevazione ed invia il relativo nuovo pacchetto. In questo modo, il client non rischia di rimanere bloccato a causa di errori del canale di comunicazione o perdita di pacchetti.
 	</li>
 </ul>
 Per maggiori informazioni sul funzionamento del sonar, consultare <a href="https://github.com/mikyll/righimichele/tree/master/iss2022/RadarSystem22/ledAlarm">questo README</a>.
