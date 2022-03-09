@@ -2,7 +2,7 @@ typedef struct {
 	SDL_Window* window;
 	SDL_Renderer* renderer;
 	int soundEnabled;
-	int objDetected[SOCKET_NUM];
+	int objDetected[DIR_NUM];
 	int susDetected;
 }App;
 

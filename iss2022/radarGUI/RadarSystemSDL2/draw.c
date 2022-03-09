@@ -15,7 +15,7 @@ void initRadar()
 void initObjects()
 {
 	int i;
-	for (i = 0; i < SOCKET_NUM; i++)
+	for (i = 0; i < DIR_NUM; i++)
 	{
 		objects[i].texture = loadTexture("gfx/object.png");
 		SDL_QueryTexture(objects[i].texture, NULL, NULL, &objects[i].w, &objects[i].h);

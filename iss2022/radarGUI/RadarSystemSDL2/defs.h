@@ -1,20 +1,22 @@
-#define SCREEN_WIDTH	520
-#define SCREEN_HEIGHT	600
+#define SCREEN_WIDTH		520
+#define SCREEN_HEIGHT		600
 
-#define PI				3.14159
+#define PI					3.14159
 
-#define MAX_D			200.0
-#define MIN_D			0.0
+#define SPC1 2.25	// 1 Second Per Cycle
+#define SPC2 5		// 2 Seconds Per Cycle
 
-#define DEFAULT_IP		""
-#define DEFAULT_PORT	4000
-#define ACK_PORT_OFFSET	100
-#define SOCKET_NUM		8
-#define MAX_PACKET_SIZE 512
+#define MAX_D				200.0
+#define MIN_D				0.0
 
-#define MAX_SND_CHANNELS 8
+#define DEFAULT_IP			"127.0.0.1"
+#define DEFAULT_PORT		4000
+#define ACK_PORT_OFFSET		100
+#define MAX_PACKET_SIZE		512
 
-#define FONT_SIZE    48
+#define MAX_SND_CHANNELS	8
+
+#define FONT_SIZE			28
 
 #define MIN(a,b) (((a)<(b))?(a):(b))
 #define MAX(a,b) (((a)>(b))?(a):(b))
@@ -22,14 +24,14 @@
 
 enum Directions
 {
-	DIR_E,	// EAST
-	DIR_SE,	// SOUTH-EAST
-	DIR_S,	// SOUTH
-	DIR_SW,	// SOUTH-WEST
-	DIR_W,	// WEST
-	DIR_NW,	// NORTH-WEST
-	DIR_N,	// NORTH
-	DIR_NE,	// NORTH-EAST
+	DIR_E,		// EAST
+	DIR_SE,		// SOUTH-EAST
+	DIR_S,		// SOUTH
+	DIR_SW,		// SOUTH-WEST
+	DIR_W,		// WEST
+	DIR_NW,		// NORTH-WEST
+	DIR_N,		// NORTH
+	DIR_NE,		// NORTH-EAST
 	DIR_NUM,	// DIRECTIONS_NUM
 };
 
@@ -37,7 +39,7 @@ enum Degrees
 {
 	DEG_E = 360,	// EAST
 	DEG_SE = 45,	// SOUTH-EAST
-	DEG_S = 90,	// SOUTH
+	DEG_S = 90,		// SOUTH
 	DEG_SW = 135,	// SOUTH-WEST
 	DEG_W = 180,	// WEST
 	DEG_NW = 225,	// NORTH-WEST

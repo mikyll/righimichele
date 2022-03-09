@@ -18,16 +18,16 @@ extern void drawScaledText(SDL_Texture* text, int x, int y, float sx, float sy);
 
 App app;
 Radar radar;
-Entity objects[SOCKET_NUM];
+Entity objects[DIR_NUM];
 Entity sus;
 
 // net
 extern IPaddress* ipAddress;
-extern Uint16 ports[SOCKET_NUM];
+extern Uint16 ports[DIR_NUM];
 extern UDPsocket sock;
 extern SDLNet_SocketSet socketset;
-extern UDPsocket udpSockets[SOCKET_NUM];
-extern UDPpacket* udpPackets[SOCKET_NUM];
+extern UDPsocket udpSockets[DIR_NUM];
+extern UDPpacket* udpPackets[DIR_NUM];
 
 SDL_Texture* textFPS;
-SDL_Texture* coordinates[SOCKET_NUM];
+SDL_Texture* coordinates[DIR_NUM];

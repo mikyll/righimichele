@@ -28,14 +28,14 @@ void initSDLNetServer(int port)
 	}
 
 	// 3. Create a socket set
-	if (!(socketset = SDLNet_AllocSocketSet(SOCKET_NUM)))
+	if (!(socketset = SDLNet_AllocSocketSet(DIR_NUM)))
 	{
 		printf("SDLNet_AllocSocketSet: %s\n", SDLNet_GetError());
 		exit(1); //most of the time this is a major error, but do what you want.
 	}
 
 	// 4. Open sockets and add them to the set (8, one for each radar direction)
-	for (i = 0; i < SOCKET_NUM; i++)
+	for (i = 0; i < DIR_NUM; i++)
 	{
 		// 4.1. Open socket #i
 		udpSockets[i] = SDLNet_UDP_Open(port + i);
@@ -54,15 +54,15 @@ void initSDLNetServer(int port)
 		}
 	}
 
-	// 4.3 Test: open ACK socket
+	// 4.3 Open ACK socket on first available port
 	if (!(ackSocket = SDLNet_UDP_Open(0)))
 	{
-		printf("SDLNet_UDP_Open: %s\n", i, SDLNet_GetError());
+		printf("SDLNet_UDP_Open: %s\n", SDLNet_GetError());
 		exit(1);
 	}
 
 	// 5. Allocate memory for packets
-	for (i = 0; i < SOCKET_NUM; i++)
+	for (i = 0; i < DIR_NUM; i++)
 	{
 		if (!(udpPackets[i] = SDLNet_AllocPacket(MAX_PACKET_SIZE)))
 		{

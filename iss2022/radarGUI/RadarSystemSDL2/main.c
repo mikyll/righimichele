@@ -86,7 +86,7 @@ int main(int argc, char** argv)
 		SDL_RenderDrawLine(app.renderer, radar.x, radar.y, l3.x, l3.y);
 
 		// draw Objects and Text
-		for (i = 0, j = 0, k = 0; i < SOCKET_NUM; i++)
+		for (i = 0, j = 0, k = 0; i < DIR_NUM; i++)
 		{
 			if (objects[i].detected)
 			{
@@ -120,7 +120,7 @@ int main(int argc, char** argv)
 		// Get FPS
 		end = SDL_GetPerformanceCounter();
 		float elapsed = (end - start) / (float)SDL_GetPerformanceFrequency();
-		((int)radar.angle % (360 / SOCKET_NUM)) < 2 ? fps = (int)1.0f / elapsed : fps;
+		((int)radar.angle % (360 / DIR_NUM)) < 2 ? fps = (int)1.0f / elapsed : fps;
 	}
 
 	return 0;
@@ -230,24 +230,25 @@ void drawObjectText(int dir, int objN, int offset)
 {
 	char buffer[32];
 	int xcoord, ycoord;
-	xcoord = objects[dir].x - radar.x;
-	snprintf(buffer, 32, "Obj %d (%d, %d)", objN, xcoord, -(objects[dir].y - radar.y));
+	xcoord = ((long) objects[dir].x - radar.x) / (radar.l / MAX_D);
+	ycoord = -(objects[dir].y - radar.y);
+	snprintf(buffer, 32, "Obj %d (%d, %d)", objN, xcoord, ycoord);
 	SDL_Texture* textCoords = getTextTexture(buffer);
-	drawScaledText(textCoords, 10, 0 + offset, 0.6, 0.6);
+	drawNormalText(textCoords, 10, 0 + offset);
 }
 void drawSusText(int offset)
 {
 	char buffer[32];
-	snprintf(buffer, 32, "Sus (%d, %d)", sus.x, sus.y);
+	snprintf(buffer, 32, "Sus (%d, %d)", sus.x - radar.x, -(sus.y - radar.y));
 	SDL_Texture* textCoords = getTextTexture(buffer);
-	drawScaledText(textCoords, 10, 0 + offset, 0.6, 0.6);
+	drawNormalText(textCoords, 10, 0 + offset);
 }
 void drawFPStext(int fps)
 {
 	char buffer[32];
 	snprintf(buffer, 32, "FPS: %d", fps);
 	SDL_Texture* textFPS = getTextTexture(buffer);
-	drawScaledText(textFPS, SCREEN_WIDTH - 90, 0, 0.6, 0.6);
+	drawNormalText(textFPS, SCREEN_WIDTH - 90, 0);
 }
 void drawCoordinateSystemText()
 {

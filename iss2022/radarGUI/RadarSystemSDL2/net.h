@@ -8,11 +8,11 @@ float receiveDistanceFromSocket(int nSock);
 
 extern App app;
 extern Radar radar;
-extern Entity objects[SOCKET_NUM];
+extern Entity objects[DIR_NUM];
 
 IPaddress* ipAddress;
-Uint16 ports[SOCKET_NUM];
+Uint16 ports[DIR_NUM];
 UDPsocket sock;
 SDLNet_SocketSet socketset;
-UDPsocket udpSockets[SOCKET_NUM];
-UDPpacket* udpPackets[SOCKET_NUM];
+UDPsocket udpSockets[DIR_NUM];
+UDPpacket* udpPackets[DIR_NUM];
