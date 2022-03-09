@@ -248,7 +248,7 @@ void drawFPStext(int fps)
 	char buffer[32];
 	snprintf(buffer, 32, "FPS: %d", fps);
 	SDL_Texture* textFPS = getTextTexture(buffer);
-	drawNormalText(textFPS, SCREEN_WIDTH - 90, 0);
+	drawNormalText(textFPS, WINDOW_WIDTH - 90, 0);
 }
 void drawCoordinateSystemText()
 {

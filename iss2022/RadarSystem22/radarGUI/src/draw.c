@@ -7,8 +7,8 @@ void initRadar()
 	radar.texture = loadTexture("gfx/radar.png");
 	SDL_QueryTexture(radar.texture, NULL, NULL, &radar.w, &radar.h);
 
-	radar.x = SCREEN_WIDTH / 2;
-	radar.y = SCREEN_HEIGHT - radar.h / 2;
+	radar.x = WINDOW_WIDTH / 2;
+	radar.y = WINDOW_HEIGHT - radar.h / 2;
 	radar.angle = 0.0;
 	radar.l = radar.w / 2;
 }
@@ -21,8 +21,8 @@ void initObjects()
 		SDL_QueryTexture(objects[i].texture, NULL, NULL, &objects[i].w, &objects[i].h);
 
 		objects[i].detected = 0;
-		objects[i].x = SCREEN_WIDTH / 2;
-		objects[i].y = SCREEN_HEIGHT / 2;
+		objects[i].x = WINDOW_WIDTH / 2;
+		objects[i].y = WINDOW_HEIGHT / 2;
 	}
 }
 void initSus()
@@ -31,8 +31,8 @@ void initSus()
 	SDL_QueryTexture(sus.texture, NULL, NULL, &sus.w, &sus.h);
 
 	sus.detected = 0;
-	sus.x = SCREEN_WIDTH / 2;
-	sus.y = SCREEN_HEIGHT / 2;
+	sus.x = WINDOW_WIDTH / 2;
+	sus.y = WINDOW_HEIGHT / 2;
 }
 
 void prepareScene(void)

@@ -13,9 +13,9 @@ void initSDL()
 		exit(1);
 	}
 
-	if (!(app.window = SDL_CreateWindow("SDL2 Radar", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, windowFlags)))
+	if (!(app.window = SDL_CreateWindow(WINDOW_TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH, WINDOW_HEIGHT, windowFlags)))
 	{
-		printf("Failed to open% d x% d window : % s\n", SCREEN_WIDTH, SCREEN_HEIGHT, SDL_GetError());
+		printf("Failed to open% d x% d window : % s\n", WINDOW_WIDTH, WINDOW_HEIGHT, SDL_GetError());
 		exit(1);
 	}
 
