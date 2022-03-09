@@ -1,9 +1,19 @@
 #include "main.h"
 
 void doReceive();
-static void capFrameRate(long* then, float* remainder);
 void detectSus(int x, int y);
 void detectObj(int nSock, float distance);
+
+void drawRadar();
+void drawRadarLine(float decrement);
+void drawObject(int dir);
+void drawSus();
+void drawObjectText(int dir, int objN, int offset);
+void drawSusText(int offset);
+void drawFPStext(int fps);
+void drawCoordinateSystemText();
+
+static void capFrameRate(long* then, float* remainder);
 
 int main(int argc, char** argv)
 {
@@ -12,7 +22,7 @@ int main(int argc, char** argv)
 	int fps, i, j, k;
 	SDL_Point l1, l2, l3;
 	double a1, a2, a3;
-	float heading;
+	Uint64 start, end;
 
 	memset(&app, 0, sizeof(App));
 
@@ -21,6 +31,7 @@ int main(int argc, char** argv)
 
 	srand(time(NULL));
 
+	// Init SDL2 libraries
 	initSDL();
 	initSDLNetServer(DEFAULT_PORT);
 	initSDLMixer();
@@ -28,19 +39,12 @@ int main(int argc, char** argv)
 
 	atexit(cleanup);
 
+	// Init elements
 	initRadar();
 	initObjects();
 	initSus();
 
 	SDL_SetRenderDrawColor(app.renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
-
-	/*
-	// Test: elapsed time
-	uint32_t startTime = SDL_GetTicks();
-	uint32_t stopTime;
-	double elapsedTime;
-	printf("radar.x = %d | radar.y = %d\nradar.l = %d\nradar.w = %d\n", radar.x, radar.y, radar.l, radar.w); // test
-	*/
 
 	then = SDL_GetTicks();
 	remainder = 0;
@@ -48,7 +52,7 @@ int main(int argc, char** argv)
 
 	while (1)
 	{
-		Uint64 start = SDL_GetPerformanceCounter();
+		start = SDL_GetPerformanceCounter();
 
 		// 1. Prepare scene
 		prepareScene();
@@ -58,51 +62,30 @@ int main(int argc, char** argv)
 		doReceive();
 
 		// 3. Update
-		/*if (radar.angle == 360.0)
-		{
-			radar.angle = 0.0;
-			
-			objects[0].detected = 0;
-			sus.detected = 0;
-			if (app.objDetected[0])
-			{
-				objects[0].detected = 1;
-				app.soundEnabled ? playSound(SND_OBJ_DETECTED, CH_ANY) : (void)0;
-			}
-			if (app.susDetected)
-			{
-				sus.detected = 1;
-				app.soundEnabled ? playSound(SND_SUS_DETECTED, CH_SUS) : (void)0;
-			}
-		}*/
-
-		// Radar Line
+		// Update Radar Line
 		a1 = radar.angle * (double)(PI / 180.0);
 		a2 = (radar.angle - 3.0) * (double)(PI / 180.0);
 		a3 = (radar.angle - 6.0) * (double)(PI / 180.0);
-
 		l1.x = radar.x + (cos(a1) * radar.l);
 		l1.y = radar.y + (sin(a1) * radar.l);
 		l2.x = radar.x + (cos(a2) * radar.l);
 		l2.y = radar.y + (sin(a2) * radar.l);
 		l3.x = radar.x + (cos(a3) * radar.l);
 		l3.y = radar.y + (sin(a3) * radar.l);
-		//printf("x2=%d, y2=%d, angle=%3.2f, a=%3.2f, cos(a)=%f, sin(a)=%f\n", x2, y2, angle, a1, cos(a1), sin(a1)); // test
-
-		radar.angle += 1.0;
 
 		detectSus(radar.x, radar.y);
+		radar.angle += 1.0;
 
 		// 4. Draw
-		blit(radar.texture, radar.x, radar.y, 1);
+		drawRadar();
 
+		// Draw Line
 		SDL_SetRenderDrawColor(app.renderer, 0, 154, 23, SDL_ALPHA_OPAQUE);
 		SDL_RenderDrawLine(app.renderer, radar.x, radar.y, l1.x, l1.y);
-		SDL_SetRenderDrawColor(app.renderer, 0, 154, 23, SDL_ALPHA_OPAQUE / 2);
 		SDL_RenderDrawLine(app.renderer, radar.x, radar.y, l2.x, l2.y);
-		SDL_SetRenderDrawColor(app.renderer, 0, 154, 23, SDL_ALPHA_OPAQUE / 3);
 		SDL_RenderDrawLine(app.renderer, radar.x, radar.y, l3.x, l3.y);
 
+		// draw Objects and Text
 		for (i = 0, j = 0, k = 0; i < SOCKET_NUM; i++)
 		{
 			if (objects[i].detected)
@@ -110,76 +93,34 @@ int main(int argc, char** argv)
 				j++;
 
 				// Object on radar
-				blit(objects[i].texture, objects[i].x, objects[i].y, 1);
+				drawObject(i);
 
 				// Object coordinates text
-				char buffer[32];
-				snprintf(buffer, 32, "Obj %d (%d, %d)", j, objects[i].x, objects[i].y);
-				SDL_Texture* textCoords = getTextTexture(buffer);
-				drawScaledText(textCoords, 10, 0 + k, 0.6, 0.6);
+				drawObjectText(i, j, k);
 				k += 20;
 			}
 		}
 		if (sus.detected)
 		{
 			// Sus on radar
-			blit(sus.texture, sus.x, sus.y, 1);
+			drawSus();
 
 			// Sus coordinates text
-			char buffer[32];
-			snprintf(buffer, 32, "Sus (%d, %d)", sus.x, sus.y);
-			SDL_Texture* textCoords = getTextTexture(buffer);
-			drawScaledText(textCoords, 10, 0 + k, 0.6, 0.6);
+			drawSusText(k);
 		}
 
-		// FPS text
-		char buffer[32];
-		snprintf(buffer, 32, "FPS: %d", fps);
-		SDL_Texture* textFPS = getTextTexture(buffer);
-		drawScaledText(textFPS, SCREEN_WIDTH - 90, 0, 0.6, 0.6);
+		drawFPStext(fps);
 
 		// 5. Present scene
 		presentScene();
 
+		// Cap framerate to get ~same time to complete a full radar cycle
 		capFrameRate(&then, &remainder);
 
-		Uint64 end = SDL_GetPerformanceCounter();
-
+		// Get FPS
+		end = SDL_GetPerformanceCounter();
 		float elapsed = (end - start) / (float)SDL_GetPerformanceFrequency();
 		((int)radar.angle % (360 / SOCKET_NUM)) < 2 ? fps = (int)1.0f / elapsed : fps;
-		//printf("FPS: %f\n", (float)1.0f / elapsed);
-
-		// 3. Update objects
-		/*switch ((int)angle)
-		{
-		case 45: // South-East
-			doReceiveFromSocket(1);
-			break;
-		case 90: // South
-			doReceiveFromSocket(2);
-			break;
-		case 135: // South-West
-			doReceiveFromSocket(3);
-			break;
-		case 180: // West
-			doReceiveFromSocket(4);
-			break;
-		case 225: // North-West
-			doReceiveFromSocket(5);
-			break;
-		case 270: // North
-			doReceiveFromSocket(6);
-			break;
-		case 315: // North-East
-			doReceiveFromSocket(7);
-			break;
-		case 360: // East
-			doReceiveFromSocket(0);
-
-			if (app.objDetected[0])
-				objects[0].detected = 1;
-			break;
-		}*/
 	}
 
 	return 0;
@@ -189,22 +130,18 @@ void doReceive()
 {
 	float distance;
 
-	// Test (Direction EST, port 4123)
-	//int deg = (int)radar.angle % (360 / SOCKET_NUM);
-	//deg == 0 ? distance = receiveDistanceFromSocket(0), printf("[MAIN] 360) distance: %3.1f cm\n", d) : (float)0;
-
 	if ((int)radar.angle % 45 == 0)
 	{
-		int a = (int)radar.angle % 8;
-		a == 5 || a == 7 ? a -= 4 : (a == 1 || a == 3 ? a += 4 : 0);
+		int dir = (int)radar.angle % 8;
+		dir == 5 || dir == 7 ? dir -= 4 : (dir == 1 || dir == 3 ? dir += 4 : 0);
 
-		distance = receiveDistanceFromSocket(a);
-		detectObj(a, distance);
+		distance = receiveDistanceFromSocket(dir);
+		detectObj(dir, distance);
 
-		objects[a].detected = 0;
-		if (app.objDetected[a])
+		objects[dir].detected = 0;
+		if (app.objDetected[dir])
 		{
-			objects[a].detected = 1;
+			objects[dir].detected = 1;
 			app.soundEnabled ? playSound(SND_OBJ_DETECTED, CH_ANY) : (void)0;
 		}
 		if (radar.angle == 360.0)
@@ -216,14 +153,6 @@ void doReceive()
 				app.soundEnabled ? playSound(SND_SUS_DETECTED, CH_SUS) : (void)0;
 			}
 			radar.angle = 0.0;
-			/*
-			// Test: elapsed time
-			stopTime = SDL_GetTicks();
-			elapsedTime = (stopTime - startTime) / 1000.0;
-			printf("\nELAPSED TIME: %f\n\n", elapsedTime);
-			startTime = SDL_GetTicks();
-			*/
-			//printf("app.objDetected[0]=%d\nobjects[0].detected=%d\nOBJECT (%d, %d)\n", app.objDetected[0], objects[0].detected, objects[0].x, objects[0].y); // test
 		}
 	}
 }
@@ -276,4 +205,51 @@ void detectObj(int nSock, float distance)
 	else {
 		app.objDetected[nSock] = 0;
 	}
+}
+
+void drawRadar()
+{
+	blit(radar.texture, radar.x, radar.y, 1);
+}
+void drawRadarLine(float decrement)
+{
+	int a1, a2, a3;
+	SDL_Point l1, l2, l3;
+	
+	
+}
+void drawObject(int dir)
+{
+	blit(objects[dir].texture, objects[dir].x, objects[dir].y, 1);
+}
+void drawSus()
+{
+	blit(sus.texture, sus.x, sus.y, 1);
+}
+void drawObjectText(int dir, int objN, int offset)
+{
+	char buffer[32];
+	int xcoord, ycoord;
+	xcoord = objects[dir].x - radar.x;
+	snprintf(buffer, 32, "Obj %d (%d, %d)", objN, xcoord, -(objects[dir].y - radar.y));
+	SDL_Texture* textCoords = getTextTexture(buffer);
+	drawScaledText(textCoords, 10, 0 + offset, 0.6, 0.6);
+}
+void drawSusText(int offset)
+{
+	char buffer[32];
+	snprintf(buffer, 32, "Sus (%d, %d)", sus.x, sus.y);
+	SDL_Texture* textCoords = getTextTexture(buffer);
+	drawScaledText(textCoords, 10, 0 + offset, 0.6, 0.6);
+}
+void drawFPStext(int fps)
+{
+	char buffer[32];
+	snprintf(buffer, 32, "FPS: %d", fps);
+	SDL_Texture* textFPS = getTextTexture(buffer);
+	drawScaledText(textFPS, SCREEN_WIDTH - 90, 0, 0.6, 0.6);
+}
+void drawCoordinateSystemText()
+{
+	
 }
