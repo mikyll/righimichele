@@ -15,58 +15,58 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.c">
+    <ClInclude Include="src\common.h">
       <Filter>File di risorse</Filter>
-    </ClCompile>
-    <ClCompile Include="draw.c">
+    </ClInclude>
+    <ClInclude Include="src\defs.h">
       <Filter>File di risorse</Filter>
-    </ClCompile>
-    <ClCompile Include="init.c">
+    </ClInclude>
+    <ClInclude Include="src\draw.h">
       <Filter>File di risorse</Filter>
-    </ClCompile>
-    <ClCompile Include="input.c">
+    </ClInclude>
+    <ClInclude Include="src\init.h">
       <Filter>File di risorse</Filter>
-    </ClCompile>
-    <ClCompile Include="net.c">
+    </ClInclude>
+    <ClInclude Include="src\input.h">
       <Filter>File di risorse</Filter>
-    </ClCompile>
-    <ClCompile Include="sound.c">
+    </ClInclude>
+    <ClInclude Include="src\main.h">
       <Filter>File di risorse</Filter>
-    </ClCompile>
-    <ClCompile Include="text.c">
+    </ClInclude>
+    <ClInclude Include="src\net.h">
       <Filter>File di risorse</Filter>
-    </ClCompile>
+    </ClInclude>
+    <ClInclude Include="src\sound.h">
+      <Filter>File di risorse</Filter>
+    </ClInclude>
+    <ClInclude Include="src\structs.h">
+      <Filter>File di risorse</Filter>
+    </ClInclude>
+    <ClInclude Include="src\text.h">
+      <Filter>File di risorse</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="main.h">
+    <ClCompile Include="src\draw.c">
       <Filter>File di risorse</Filter>
-    </ClInclude>
-    <ClInclude Include="common.h">
+    </ClCompile>
+    <ClCompile Include="src\init.c">
       <Filter>File di risorse</Filter>
-    </ClInclude>
-    <ClInclude Include="defs.h">
+    </ClCompile>
+    <ClCompile Include="src\input.c">
       <Filter>File di risorse</Filter>
-    </ClInclude>
-    <ClInclude Include="draw.h">
+    </ClCompile>
+    <ClCompile Include="src\main.c">
       <Filter>File di risorse</Filter>
-    </ClInclude>
-    <ClInclude Include="init.h">
+    </ClCompile>
+    <ClCompile Include="src\net.c">
       <Filter>File di risorse</Filter>
-    </ClInclude>
-    <ClInclude Include="input.h">
+    </ClCompile>
+    <ClCompile Include="src\sound.c">
       <Filter>File di risorse</Filter>
-    </ClInclude>
-    <ClInclude Include="net.h">
+    </ClCompile>
+    <ClCompile Include="src\text.c">
       <Filter>File di risorse</Filter>
-    </ClInclude>
-    <ClInclude Include="sound.h">
-      <Filter>File di risorse</Filter>
-    </ClInclude>
-    <ClInclude Include="structs.h">
-      <Filter>File di risorse</Filter>
-    </ClInclude>
-    <ClInclude Include="text.h">
-      <Filter>File di risorse</Filter>
-    </ClInclude>
+    </ClCompile>
   </ItemGroup>
 </Project>
