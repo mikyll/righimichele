@@ -7,3 +7,6 @@ Repository di Michele Righi per il corso Ingegneria dei Sistemi Software M ([729
 
 ### Anno 2021/2022
 [iss2022](https://github.com/mikyll/righimichele/tree/master/iss2022)
+
+### Utilities
+- [Connect to Raspberry Pi via Ethernet](https://medium.com/@jrcharney/connect-your-raspberry-pi-to-your-computer-via-ethernet-4564e1e68922#:~:text=Connect%20your%20Raspberry%20Pi%20using,make%20sure%20things%20are%20connected.)
