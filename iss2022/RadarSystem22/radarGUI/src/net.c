@@ -17,20 +17,21 @@ void initSDLNetServer(int port)
 	// 1. Init SDL Net
 	if (SDLNet_Init() < 0)
 	{
-		printf("Couldn't initialize SDLNet: %s\n", SDLNet_GetError());
+		SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_CRITICAL, "Couldn't initialize SDLNet:  %s", SDLNet_GetError());
 		exit(1);
 	}
 
 	// 2. Resolve Host (if NULL the address is broadcast: 0.0.0.0)
-	if (SDLNet_ResolveHost(&ipAddress, NULL, 4123) == -1) {
-		fprintf(stderr, "ER: SDLNet_ResolveHost: %sn", SDLNet_GetError());
+	if (SDLNet_ResolveHost(&ipAddress, NULL, 4123) == -1)
+	{
+		SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_CRITICAL, "SDLNet_ResolveHost failed: %s", SDLNet_GetError());
 		exit(1);
 	}
 
 	// 3. Create a socket set
 	if (!(socketset = SDLNet_AllocSocketSet(DIR_NUM)))
 	{
-		printf("SDLNet_AllocSocketSet: %s\n", SDLNet_GetError());
+		SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_CRITICAL, "SDLNet_AllocSocketSet failed: %s", SDLNet_GetError());
 		exit(1); //most of the time this is a major error, but do what you want.
 	}
 
@@ -41,7 +42,7 @@ void initSDLNetServer(int port)
 		udpSockets[i] = SDLNet_UDP_Open(port + i);
 		if (!udpSockets[i])
 		{
-			printf("SDLNet_UDP_Open[%d]: %s\n", i, SDLNet_GetError());
+			SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR, "SDLNet_UDP_Open[%d] failed: %s", port + i, SDLNet_GetError());
 			exit(1);
 		}
 		SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, "Listening on 0.0.0.0:%hd", port + i);
@@ -57,16 +58,17 @@ void initSDLNetServer(int port)
 	// 4.3 Open ACK socket on first available port
 	if (!(ackSocket = SDLNet_UDP_Open(0)))
 	{
-		printf("SDLNet_UDP_Open: %s\n", SDLNet_GetError());
+		SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR, "SDLNet_UDP_Open[ACK] failed: %s", SDLNet_GetError());
 		exit(1);
 	}
+	SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, "ACK socket opened correcly");
 
 	// 5. Allocate memory for packets
 	for (i = 0; i < DIR_NUM; i++)
 	{
 		if (!(udpPackets[i] = SDLNet_AllocPacket(MAX_PACKET_SIZE)))
 		{
-			printf("Could not allocate packet\n");
+			SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR, "Could not allocate packet: %s", SDLNet_GetError());
 			exit(1);
 		}
 	}

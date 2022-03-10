@@ -36,9 +36,13 @@ static Mix_Chunk* loadSound(char* filename)
 {
     Mix_Chunk* sound;
 
-    SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, "Loading %s", filename);
-
-    sound = Mix_LoadWAV(filename);
+    if(sound = Mix_LoadWAV(filename))
+    {
+        SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, "Correctly loaded %s", filename);
+    }
+    else {
+    SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR, "Couldn't find %s", filename);
+    }
 
     return sound;
 }

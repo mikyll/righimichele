@@ -26,9 +26,13 @@ TTF_Font* loadFont(char* filename)
 {
 	TTF_Font* font;
 
-	SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, "Loading %s", filename);
-
-	font = TTF_OpenFont(filename, FONT_SIZE);
+	if(font = TTF_OpenFont(filename, FONT_SIZE))
+	{
+		SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, "Correctly loaded %s", filename);
+	}
+	else {
+	SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR, "Couldn't find %s", filename);
+	}
 
 	return font;
 }
