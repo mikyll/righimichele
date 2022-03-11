@@ -154,6 +154,14 @@ float receiveDistanceFromSocket(int nSock)
 			if (SDLNet_UDP_Recv(udpSockets[nSock], udpPackets[nSock]))
 			{
 				
+
+				sscanf(udpPackets[nSock]->data, "%f", &distance);
+				//printf("Detected object %d at distance: %3.1f cm\n", nSock, distance); // test
+
+				char host[16];
+				int port;
+				getIPfromNetwork(udpPackets[nSock]->address, &host, &port);
+
 				// Test
 				printf("UDP Packet incoming\n");
 				printf("\tChan: %d\n", udpPackets[nSock]->channel);
@@ -161,16 +169,10 @@ float receiveDistanceFromSocket(int nSock)
 				printf("\tLen: %d\n", udpPackets[nSock]->len);
 				printf("\tMaxlen: %d\n", udpPackets[nSock]->maxlen);
 				printf("\tStatus: %d\n", udpPackets[nSock]->status);
-				printf("\tAddress: %x %x\n", udpPackets[nSock]->address.host, udpPackets[nSock]->address.port);
-				
+				printf("\tAddress: %x:%x", udpPackets[nSock]->address.host, udpPackets[nSock]->address.port);
+				printf(" (%s:%d)\n", host, port);
 
-				sscanf(udpPackets[nSock]->data, "%f", &distance);
-				//printf("Detected object %d at distance: %3.1f cm\n", nSock, distance); // test
-
-				char host[16];
-				int port = DEFAULT_PORT + ACK_PORT_OFFSET + nSock;
-				getIPfromNetwork(udpPackets[nSock]->address, &host, NULL);
-				//printf("RESULT: %s %d\n", host, port); // Test
+				port = DEFAULT_PORT + ACK_PORT_OFFSET + nSock;
 
 				// Resolve ACK IP (TEST)
 				if (SDLNet_ResolveHost(&ackAddress, host, port) == -1) {

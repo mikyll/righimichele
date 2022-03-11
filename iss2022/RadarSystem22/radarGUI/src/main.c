@@ -230,7 +230,7 @@ void drawObjectText(int dir, int objN, int offset)
 {
 	char buffer[32];
 	int xcoord, ycoord;
-	xcoord = ((long) objects[dir].x - radar.x) / (radar.l / MAX_D);
+	xcoord = (objects[dir].x - radar.x) / (radar.l / MAX_D);
 	ycoord = -(objects[dir].y - radar.y);
 	snprintf(buffer, 32, "Obj %d (%d, %d)", objN, xcoord, ycoord);
 	SDL_Texture* textCoords = getTextTexture(buffer);

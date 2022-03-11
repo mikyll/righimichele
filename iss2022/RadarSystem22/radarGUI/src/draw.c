@@ -71,7 +71,7 @@ void blit(SDL_Texture* texture, int x, int y, int center)
 		dest.y -= (dest.h / 2);
 	}
 
-	SDL_RenderCopy(app.renderer, texture, NULL, &dest, NULL, SDL_FLIP_NONE);
+	SDL_RenderCopy(app.renderer, texture, NULL, &dest);
 }
 
 void blitScaled(SDL_Texture* texture, int x, int y, float sx, float sy)
