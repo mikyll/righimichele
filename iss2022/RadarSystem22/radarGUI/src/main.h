@@ -1,6 +1,6 @@
 #include "common.h"
 
-#include "SDL_net.h"
+#include "SDL2/SDL_net.h"
 
 extern void initSDL(void);
 extern void initSDLNetServer(int port);
@@ -22,12 +22,12 @@ Entity objects[DIR_NUM];
 Entity sus;
 
 // net
-extern IPaddress* ipAddress;
+/*extern IPaddress* ipAddress;
 extern Uint16 ports[DIR_NUM];
 extern UDPsocket sock;
 extern SDLNet_SocketSet socketset;
 extern UDPsocket udpSockets[DIR_NUM];
-extern UDPpacket* udpPackets[DIR_NUM];
+extern UDPpacket* udpPackets[DIR_NUM];*/
 
 SDL_Texture* textFPS;
 SDL_Texture* coordinates[DIR_NUM];

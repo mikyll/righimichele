@@ -1,5 +1,5 @@
 #include "common.h"
 
-#include "SDL_mixer.h"
+#include "SDL2/SDL_mixer.h"
 
 extern App app;
