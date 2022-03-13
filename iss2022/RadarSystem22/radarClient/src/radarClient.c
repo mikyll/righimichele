@@ -6,18 +6,19 @@
 #include <ctype.h>
 #include <time.h>
 
-#ifdef __unix__
+#include "SDL2/SDL_net.h"
+#include "SDL2/SDL.h"
+
+#if(defined __unix__ && __arm__)
 	#include <signal.h>
 	#include <unistd.h>
 	#include "wiringPi.h"
+	
+	#define GPIO_TRIGGER 4	// GPIO 23
+	#define GPIO_ECHO 5		// GPIO 24
+	#define GPIO_LED 6		// GPIO 25
 #endif
 
-#include "SDL_net.h"
-#include "SDL.h"
-
-#define GPIO_TRIGGER 4	// GPIO 23
-#define GPIO_ECHO 5		// GPIO 24
-#define GPIO_LED 6		// GPIO 25
 
 enum Flags
 {
@@ -131,8 +132,7 @@ int main(int argc, char** argv)
 	// Init random seed
 	srand(time(NULL));
 
-#ifdef __unix__
-	printf("UNIX\n");
+#if(defined __unix__ && __arm__)
 	// Setup wiringPi
 	wiringPiSetup();
 	pinMode(GPIO_TRIGGER, OUTPUT);
@@ -148,7 +148,6 @@ int main(int argc, char** argv)
 
 	sigaction(SIGINT, &sigIntHandler, NULL);
 #else
-	printf("Windows!\n");
 	rand = 1;
 #endif
 
@@ -193,10 +192,10 @@ int main(int argc, char** argv)
 	// 5. Fill and send the packet
 	while (1)
 	{
+#if(defined __unix__ && __arm__)
 		d = (rand == 0 ? distance() : randRange(0.0, 320.0));
 		printf("Distance: %3.1f cm", (float) d);
 		
-#ifdef __unix__
 		// Turn ON/OFF led
 		if (d <= DLIM)
 		{
@@ -205,6 +204,8 @@ int main(int argc, char** argv)
 		else {
 			turnOffLed()
 		}
+#else
+	d = randRange(0.0, 320.0);
 #endif
 
 		char buffer[64];
@@ -264,12 +265,16 @@ int main(int argc, char** argv)
 
 	return 0;
 }
-
 void printUsage(char ** argv)
 {
 	printf("USAGE:\n\t%s [-i/--ip <ip_address>] [-p/--port <port>] [-r/--random] [-D/--distance <distance>]\n\n\n-i/--ip <ip_address>, speficies the IP address of the remote host on which send the packets (default is %s)\n\n-p/--port <port>, specifies the remote port on which send the packets (default is %d)\n\n-r/--random, specifies that the distance will be generated with a RNG\n\n-D/--distance <distance>, specifies the distance lower limit under which the led will light up (default is %3.1f)\n\n", argv[0], DEFAULT_IP, DEFAULT_SND_PORT, DEFAULT_DLIM);
 }
+float randRange(float min, float max)
+{
+	return min + rand() / (RAND_MAX / (max - min + 1) + 1);
+}
 
+#if(defined __unix__ && __arm__)
 void cleanup()
 {
 	digitalWrite(GPIO_LED, LOW);
@@ -317,8 +322,5 @@ void turnOffLed()
 	digitalWrite(GPIO_LED, LOW);
 	printf(" (LED OFF)\n");
 }
+#endif
 
-float randRange(float min, float max)
-{
-	return min + rand() / (RAND_MAX / (max - min + 1) + 1);
-}
