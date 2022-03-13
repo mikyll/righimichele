@@ -60,6 +60,7 @@ Radar simulation, using a test client, which sends random inputs to the server.
 
 ### References
 - [SDL_net Homepage](https://www.libsdl.org/projects/SDL_net/)
+- [Compile SDL2 on Windows with MinGW](https://www.matsson.com/prog/sdl2-mingw-w64-tutorial.php)
 - [Optimize C Code](http://icps.u-strasbg.fr/~bastoul/local_copies/lee.html)
 - [SDL2 Tutorials](https://www.parallelrealities.co.uk/tutorials/) - consider buying them, they are stupidly cheap and useful af!
 - [Free Windows Installer Maker](https://nsis.sourceforge.io/Main_Page)
