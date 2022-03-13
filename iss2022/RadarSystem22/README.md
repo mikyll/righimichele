@@ -39,6 +39,9 @@ Radar simulation, using a test client, which sends random inputs to the server.
 	4. Select "**Configuration properties > C/C++ > Preprocessor > Preprocessor definitions**" and add \_CRT_SECURE_NO_WARNINGS
 8. Add all the **.dll** to the source files directory (they can be found in ".\lib\x64\").
 
+### Compile with MinGW
+```gcc -std=c17 ".\prova.c" -I<path\to\include> -L<path\to\lib> -Wall -lmingw32 -lSDL2main -lSDL2 -o main```
+
 ### Setup Linux
 1. ```sudo apt-get install libsdl2-*```
 
@@ -57,6 +60,7 @@ Radar simulation, using a test client, which sends random inputs to the server.
 
 ### References
 - [SDL_net Homepage](https://www.libsdl.org/projects/SDL_net/)
+- [Compile SDL2 on Windows with MinGW](https://www.matsson.com/prog/sdl2-mingw-w64-tutorial.php)
 - [Optimize C Code](http://icps.u-strasbg.fr/~bastoul/local_copies/lee.html)
 - [SDL2 Tutorials](https://www.parallelrealities.co.uk/tutorials/) - consider buying them, they are stupidly cheap and useful af!
 - [Free Windows Installer Maker](https://nsis.sourceforge.io/Main_Page)
