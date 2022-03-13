@@ -39,6 +39,9 @@ Radar simulation, using a test client, which sends random inputs to the server.
 	4. Select "**Configuration properties > C/C++ > Preprocessor > Preprocessor definitions**" and add \_CRT_SECURE_NO_WARNINGS
 8. Add all the **.dll** to the source files directory (they can be found in ".\lib\x64\").
 
+### Compile with MinGW
+```gcc -std=c17 ".\prova.c" -I<path\to\include> -L<path\to\lib> -Wall -lmingw32 -lSDL2main -lSDL2 -o main```
+
 ### Setup Linux
 1. ```sudo apt-get install libsdl2-*```
 
