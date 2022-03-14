@@ -199,13 +199,13 @@ int main(int argc, char** argv)
 		// Turn ON/OFF led
 		if (d <= DLIM)
 		{
-			turnOnLed()
+			turnOnLed();
 		}
 		else {
-			turnOffLed()
+			turnOffLed();
 		}
 #else
-	d = randRange(0.0, 320.0);
+		d = randRange(0.0, 320.0);
 #endif
 
 		char buffer[64];
