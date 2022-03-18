@@ -12,6 +12,15 @@ void initRadar()
 	radar.angle = 0.0;
 	radar.l = radar.w / 2;
 }
+void initRadarLine()
+{
+	radarLine.texture = loadTexture("gfx/radar_line.png");
+	SDL_QueryTexture(radarLine.texture, NULL, NULL, &radarLine.w, &radarLine.h);
+
+	radarLine.x = WINDOW_WIDTH / 2;
+	radarLine.y = WINDOW_HEIGHT - radarLine.h / 2;
+	radarLine.angle = 0.0;
+}
 void initObjects()
 {
 	int i;
@@ -88,4 +97,37 @@ void blitScaled(SDL_Texture* texture, int x, int y, float sx, float sy)
 	}
 
 	SDL_RenderCopy(app.renderer, texture, NULL, &dest);
+}
+
+void blitRotated(SDL_Texture* texture, int x, int y, int center, float angle)
+{
+	SDL_Rect dest;
+
+	dest.x = x;
+	dest.y = y;
+	SDL_QueryTexture(texture, NULL, NULL, &dest.w, &dest.h);
+
+	if (center)
+	{
+		dest.x -= (dest.w / 2);
+		dest.y -= (dest.h / 2);
+	}
+
+	SDL_RenderCopyEx(app.renderer, texture, NULL, &dest, angle, NULL, SDL_FLIP_NONE);
+}
+
+void blitScaledRotated(SDL_Texture* texture, int x, int y, float sx, float sy, float angle)
+{
+	SDL_Rect dest;
+
+	dest.x = x;
+	dest.y = y;
+	SDL_QueryTexture(texture, NULL, NULL, &dest.w, &dest.h);
+	if (sx > 0.0 && sy > 0.0)
+	{
+		dest.w = (int)(dest.w * sx);
+		dest.h = (int)(dest.h * sy);
+	}
+
+	SDL_RenderCopyEx(app.renderer, texture, NULL, &dest, angle, NULL, SDL_FLIP_NONE);
 }

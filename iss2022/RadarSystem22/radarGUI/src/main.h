@@ -15,9 +15,11 @@ extern void playSound(int id, int channel);
 extern SDL_Texture* getTextTexture(char* text);
 extern void drawNormalText(SDL_Texture* text, int x, int y);
 extern void drawScaledText(SDL_Texture* text, int x, int y, float sx, float sy);
+extern void blitRotated(SDL_Texture* texture, int x, int y, int center, float angle);
 
 App app;
 Radar radar;
+Radar radarLine;
 Entity objects[DIR_NUM];
 Entity sus;
 

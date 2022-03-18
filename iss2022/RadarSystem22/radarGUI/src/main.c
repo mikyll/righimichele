@@ -5,7 +5,7 @@ void detectSus(int x, int y);
 void detectObj(int nSock, float distance);
 
 void drawRadar();
-void drawRadarLine(float decrement);
+void drawRadarLine();
 void drawObject(int dir);
 void drawSus();
 void drawObjectText(int dir, int objN, int offset);
@@ -41,6 +41,7 @@ int main(int argc, char** argv)
 
 	// Init elements
 	initRadar();
+	initRadarLine();
 	initObjects();
 	initSus();
 
@@ -63,9 +64,16 @@ int main(int argc, char** argv)
 
 		// 3. Update
 		// Update Radar Line
-		a1 = radar.angle * (double)(PI / 180.0);
-		a2 = (radar.angle - 3.0) * (double)(PI / 180.0);
-		a3 = (radar.angle - 6.0) * (double)(PI / 180.0);
+		if (radar.angle == 360.0)
+		{
+			radar.angle = 0.0;
+			radarLine.angle = 0.0;
+		}
+		
+		double hPI = PI / 180.0;
+		a1 = radar.angle * hPI;
+		a2 = (radar.angle - 2.0) * hPI;
+		a3 = (radar.angle - 4.0) * hPI;
 		l1.x = radar.x + (cos(a1) * radar.l);
 		l1.y = radar.y + (sin(a1) * radar.l);
 		l2.x = radar.x + (cos(a2) * radar.l);
@@ -75,15 +83,18 @@ int main(int argc, char** argv)
 
 		detectSus(radar.x, radar.y);
 		radar.angle += 1.0;
+		radarLine.angle += 1.0;
 
 		// 4. Draw
 		drawRadar();
+		drawRadarLine();
 
 		// Draw Line
-		SDL_SetRenderDrawColor(app.renderer, 0, 154, 23, SDL_ALPHA_OPAQUE);
+		/*SDL_SetRenderDrawColor(app.renderer, 0, 154, 23, SDL_ALPHA_OPAQUE);
 		SDL_RenderDrawLine(app.renderer, radar.x, radar.y, l1.x, l1.y);
 		SDL_RenderDrawLine(app.renderer, radar.x, radar.y, l2.x, l2.y);
-		SDL_RenderDrawLine(app.renderer, radar.x, radar.y, l3.x, l3.y);
+		SDL_RenderDrawLine(app.renderer, radar.x, radar.y, l3.x, l3.y);*/
+		
 
 		// draw Objects and Text
 		for (i = 0, j = 0, k = 0; i < DIR_NUM; i++)
@@ -152,7 +163,6 @@ void doReceive()
 				sus.detected = 1;
 				app.soundEnabled ? playSound(SND_SUS_DETECTED, CH_SUS) : (void)0;
 			}
-			radar.angle = 0.0;
 		}
 	}
 }
@@ -211,12 +221,9 @@ void drawRadar()
 {
 	blit(radar.texture, radar.x, radar.y, 1);
 }
-void drawRadarLine(float decrement)
+void drawRadarLine()
 {
-	int a1, a2, a3;
-	SDL_Point l1, l2, l3;
-	
-	
+	blitRotated(radarLine.texture, radarLine.x, radarLine.y, 1, radarLine.angle);
 }
 void drawObject(int dir)
 {
