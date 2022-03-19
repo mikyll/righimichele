@@ -1,7 +1,5 @@
 #include "net.h"
 
-void sendDistance(float d);
-
 UDPsocket ackSocket;
 IPaddress ackAddress;
 
@@ -73,62 +71,7 @@ void initSDLNetServer(int port)
 		}
 	}
 }
-void initSDLNetClient(char* ip, int port)
-{
-	// 1. Init SDL Net
-	if (SDLNet_Init() < 0)
-	{
-		printf("Couldn't initialize SDLNet: %s\n", SDLNet_GetError());
-		exit(1);
-	}
 
-	// 2. Resolve Host
-	if (SDLNet_ResolveHost(&ipAddress, ip, port))
-	{
-		printf("SDLNet_ResolveHost(%s %d): %s\n", ip, port, SDLNet_GetError());
-		exit(1);
-	}
-
-	// 3. Open a socket on a random usable port
-	if (!(udpSockets[0] = SDLNet_UDP_Open(0)))
-	{
-		printf("SDLNet_UDP_Open: %s\n", SDLNet_GetError());
-		exit(1);
-	}
-
-	// 4. Allocate memory for packets
-	if (!(udpPackets[0] = SDLNet_AllocPacket(512)))
-	{
-		fprintf(stderr, "SDLNet_AllocPacket: %s\n", SDLNet_GetError());
-		exit(EXIT_FAILURE);
-	}
-}
-
-void sendRandomDistance(int min, int max)
-{
-	int d = min + rand() / (RAND_MAX / (max - min + 1) + 1);
-	sendDistance((float)d);
-}
-void sendDistance(float d)
-{
-	UDPpacket* p;
-	char buffer[64];
-
-	// Prepare Packet to send
-	memset(&p, 0, sizeof(UDPpacket));
-	snprintf(buffer, sizeof buffer, "%3.1f", d);
-	p->data = buffer;
-	p->address.host = ipAddress->host;
-	p->address.port = ipAddress->port;
-	p->len = strlen((char*)p->data) + 1;
-
-	// Send
-	if (!SDLNet_UDP_Send(udpSockets[0], -1, p)) // This sets the p->channel
-	{
-		printf("SDLNet_UDP_Send: %s\n", SDLNet_GetError());
-		return;
-	}
-}
 // Returns the distance received or -1 if the packet wasn't valid, if the socket wasn't ready or if there aren't socket with values
 float receiveDistanceFromSocket(int nSock)
 {
@@ -192,19 +135,6 @@ float receiveDistanceFromSocket(int nSock)
 
 	return distance;
 }
-void sendACK(int nSock)
-{
-
-}
-void receiveACK()
-{
-
-}
-// sendDistance()
-// receiveDistance()
-// receiveDistanceFromSocket()
-// send ACK
-// receive ACK
 
 // Big Endian (network order)
 void getIPfromNetwork(IPaddress address, char* ip, int* port)
