@@ -209,6 +209,7 @@ void detectObj(int nSock, float distance)
 		float l = (float)radar.l / MAX_D;
 		double a = radar.angle * (double)(PI / 180.0);
 
+		// Set the object coordinates
 		objects[nSock].x = radar.x + (cos(a) * distance * l);
 		objects[nSock].y = radar.y + (sin(a) * distance * l);
 	}

@@ -15,4 +15,3 @@ Uint16 ports[DIR_NUM];
 UDPsocket sock;
 SDLNet_SocketSet socketset;
 UDPsocket udpSockets[DIR_NUM];
-UDPpacket* udpPackets[DIR_NUM];

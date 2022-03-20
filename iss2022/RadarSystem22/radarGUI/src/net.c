@@ -60,16 +60,6 @@ void initSDLNetServer(int port)
 		exit(1);
 	}
 	SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, "ACK socket opened correcly");
-
-	// 5. Allocate memory for packets
-	for (i = 0; i < DIR_NUM; i++)
-	{
-		if (!(udpPackets[i] = SDLNet_AllocPacket(MAX_PACKET_SIZE)))
-		{
-			SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR, "Could not allocate packet: %s", SDLNet_GetError());
-			exit(1);
-		}
-	}
 }
 
 // Returns the distance received or -1 if the packet wasn't valid, if the socket wasn't ready or if there aren't socket with values
@@ -77,59 +67,47 @@ float receiveDistanceFromSocket(int nSock)
 {
 	UDPpacket* p;
 	char buffer[64];
-	int numready;
 	float distance = -1;
 
-	// 1. Check if there are sockets with activity
-	numready = SDLNet_CheckSockets(socketset, 0);
-	if (numready == -1)
+	if (!(p = SDLNet_AllocPacket(MAX_PACKET_SIZE)))
 	{
-		printf("SDLNet_CheckSockets: %s\n", SDLNet_GetError());
-		// NB: Most of the time this is a system error, where perror might help.
-		perror("SDLNet_CheckSockets");
+		SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR, "Could not allocate packet: %s", SDLNet_GetError());
+		exit(1);
 	}
-	else if (numready) // There is at least 1 socket with activity
+
+	// 1. Receive a packet from the specific socket
+	if (SDLNet_UDP_Recv(udpSockets[nSock], p))
 	{
-		// 2. Check if the specific socket has packets ready
-		if (SDLNet_SocketReady(udpSockets[nSock]))
+		sscanf(p->data, "%f", &distance);
+		//printf("Detected object %d at distance: %3.1f cm\n", nSock, distance); // test
+
+		char host[16];
+		int port;
+		getIPfromNetwork(p->address, &host, &port);
+
+		// Test
+		printf("UDP Packet incoming\n");
+		printf("\tChan: %d\n", p->channel);
+		printf("\tData: %s\n", (char*)p->data);
+		printf("\tLen: %d\n", p->len);
+		printf("\tMaxlen: %d\n", p->maxlen);
+		printf("\tStatus: %d\n", p->status);
+		printf("\tAddress: %x:%x", p->address.host, p->address.port);
+		printf(" (%s:%d)\n", host, port);
+
+		port = DEFAULT_PORT + ACK_PORT_OFFSET + nSock;
+
+		// 2. Resolve ACK IP (TEST)
+		if (SDLNet_ResolveHost(&ackAddress, host, port) == -1) {
+			fprintf(stderr, "ERROR: SDLNet_ResolveHost: %s\n", SDLNet_GetError());
+			exit(1);
+		}
+		p->address = ackAddress;
+
+		// 3. Send ACK
+		if (!SDLNet_UDP_Send(ackSocket, -1, p))
 		{
-			// 3. Receive a packet from the specific socket
-			if (SDLNet_UDP_Recv(udpSockets[nSock], udpPackets[nSock]))
-			{
-				
-
-				sscanf(udpPackets[nSock]->data, "%f", &distance);
-				//printf("Detected object %d at distance: %3.1f cm\n", nSock, distance); // test
-
-				char host[16];
-				int port;
-				getIPfromNetwork(udpPackets[nSock]->address, &host, &port);
-
-				// Test
-				printf("UDP Packet incoming\n");
-				printf("\tChan: %d\n", udpPackets[nSock]->channel);
-				printf("\tData: %s\n", (char*)udpPackets[nSock]->data);
-				printf("\tLen: %d\n", udpPackets[nSock]->len);
-				printf("\tMaxlen: %d\n", udpPackets[nSock]->maxlen);
-				printf("\tStatus: %d\n", udpPackets[nSock]->status);
-				printf("\tAddress: %x:%x", udpPackets[nSock]->address.host, udpPackets[nSock]->address.port);
-				printf(" (%s:%d)\n", host, port);
-
-				port = DEFAULT_PORT + ACK_PORT_OFFSET + nSock;
-
-				// Resolve ACK IP (TEST)
-				if (SDLNet_ResolveHost(&ackAddress, host, port) == -1) {
-					fprintf(stderr, "ERROR: SDLNet_ResolveHost: %s\n", SDLNet_GetError());
-					exit(1);
-				}
-				udpPackets[nSock]->address = ackAddress;
-
-				// Send ACK
-				if (!SDLNet_UDP_Send(ackSocket, -1, udpPackets[nSock]))
-				{
-					printf("ERROR: SDLNet_UDP_Send: %s\n\n", SDLNet_GetError());
-				}
-			}
+			printf("ERROR: SDLNet_UDP_Send: %s\n\n", SDLNet_GetError());
 		}
 	}
 
