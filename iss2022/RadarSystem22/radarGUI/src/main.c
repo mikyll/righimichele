@@ -124,6 +124,16 @@ void doReceive()
 
 	if ((int)radar.angle % 45 == 0)
 	{
+		/*
+		* 0 (360)	% 8 == 0 OK
+		* 45		% 8 == 5 NO -> 1
+		* 90		% 8 == 2 OK
+		* 135		% 8 == 7 NO -> 3
+		* 180		% 8 == 4 OK
+		* 225		% 8 == 1 NO -> 5
+		* 270		% 8 == 6 OK
+		* 315		% 8 == 3 NO -> 7
+		*/
 		int dir = (int)radar.angle % 8;
 		dir == 5 || dir == 7 ? dir -= 4 : (dir == 1 || dir == 3 ? dir += 4 : 0);
 
