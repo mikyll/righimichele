@@ -63,7 +63,7 @@ void initSDLNetServer(int port)
 }
 
 // Returns the distance received or -1 if the packet wasn't valid, if the socket wasn't ready or if there aren't socket with values
-float receiveDistanceFromSocket(int nSock)
+float receiveDistanceFromSocket(int dir)
 {
 	UDPpacket* p;
 	char buffer[64];
@@ -76,7 +76,7 @@ float receiveDistanceFromSocket(int nSock)
 	}
 
 	// 1. Receive a packet from the specific socket
-	if (SDLNet_UDP_Recv(udpSockets[nSock], p))
+	if (SDLNet_UDP_Recv(udpSockets[dir], p))
 	{
 		sscanf(p->data, "%f", &distance);
 		//printf("Detected object %d at distance: %3.1f cm\n", nSock, distance); // test
@@ -95,9 +95,9 @@ float receiveDistanceFromSocket(int nSock)
 		printf("\tAddress: %x:%x", p->address.host, p->address.port);
 		printf(" (%s:%d)\n", host, port);
 
-		port = DEFAULT_PORT + ACK_PORT_OFFSET + nSock;
+		port = DEFAULT_PORT + ACK_PORT_OFFSET + dir;
 
-		// 2. Resolve ACK IP (TEST)
+		// 2. Resolve ACK IP
 		if (SDLNet_ResolveHost(&ackAddress, host, port) == -1) {
 			fprintf(stderr, "ERROR: SDLNet_ResolveHost: %s\n", SDLNet_GetError());
 			exit(1);
