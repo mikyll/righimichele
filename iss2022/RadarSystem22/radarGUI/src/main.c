@@ -69,17 +69,6 @@ int main(int argc, char** argv)
 			radar.angle = 0.0;
 			radarLine.angle = 0.0;
 		}
-		
-		double hPI = PI / 180.0;
-		a1 = radar.angle * hPI;
-		a2 = (radar.angle - 2.0) * hPI;
-		a3 = (radar.angle - 4.0) * hPI;
-		l1.x = radar.x + (cos(a1) * radar.l);
-		l1.y = radar.y + (sin(a1) * radar.l);
-		l2.x = radar.x + (cos(a2) * radar.l);
-		l2.y = radar.y + (sin(a2) * radar.l);
-		l3.x = radar.x + (cos(a3) * radar.l);
-		l3.y = radar.y + (sin(a3) * radar.l);
 
 		detectSus(radar.x, radar.y);
 		radar.angle += 1.0;
@@ -88,13 +77,6 @@ int main(int argc, char** argv)
 		// 4. Draw
 		drawRadar();
 		drawRadarLine();
-
-		// Draw Line
-		/*SDL_SetRenderDrawColor(app.renderer, 0, 154, 23, SDL_ALPHA_OPAQUE);
-		SDL_RenderDrawLine(app.renderer, radar.x, radar.y, l1.x, l1.y);
-		SDL_RenderDrawLine(app.renderer, radar.x, radar.y, l2.x, l2.y);
-		SDL_RenderDrawLine(app.renderer, radar.x, radar.y, l3.x, l3.y);*/
-		
 
 		// draw Objects and Text
 		for (i = 0, j = 0, k = 0; i < DIR_NUM; i++)
