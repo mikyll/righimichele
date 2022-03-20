@@ -11,7 +11,6 @@ void drawSus();
 void drawObjectText(int dir, int objN, int offset);
 void drawSusText(int offset);
 void drawFPStext(int fps);
-void drawCoordinateSystemText();
 
 static void capFrameRate(long* then, float* remainder);
 
@@ -239,8 +238,4 @@ void drawFPStext(int fps)
 	snprintf(buffer, 32, "FPS: %d", fps);
 	SDL_Texture* textFPS = getTextTexture(buffer);
 	drawNormalText(textFPS, WINDOW_WIDTH - 90, 0);
-}
-void drawCoordinateSystemText()
-{
-	
 }
