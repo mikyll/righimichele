@@ -1,8 +1,8 @@
 #include "sound.h"
 
-void initSounds();
-static Mix_Chunk* loadSound(char* filename);
+static void initSounds();
 
+static Mix_Chunk* loadSound(char* filename);
 static Mix_Chunk* sounds[SND_MAX];
 
 void initSDLMixer()
@@ -19,7 +19,7 @@ void initSDLMixer()
     initSounds();
 }
 
-void initSounds()
+static void initSounds()
 {
     memset(sounds, 0, sizeof(Mix_Chunk*) * SND_MAX);
 
@@ -36,13 +36,11 @@ static Mix_Chunk* loadSound(char* filename)
 {
     Mix_Chunk* sound;
 
-    if(sound = Mix_LoadWAV(filename))
+    if(!(sound = Mix_LoadWAV(filename)))
     {
-        SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, "Correctly loaded %s", filename);
+        SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, "Loading of sound '%s' failed", filename);
     }
-    else {
-    SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR, "Couldn't find %s", filename);
-    }
+    SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, "Loaded sound '%s'", filename);
 
     return sound;
 }

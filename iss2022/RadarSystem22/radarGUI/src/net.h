@@ -4,15 +4,14 @@
 
 #define ACK_IP "192.168.1.4"
 
-float receiveDistanceFromSocket(int nSock);
+void initInteraction();
 
 extern App app;
 extern Radar radar;
-extern Entity objects[DIR_NUM];
 
-IPaddress* ipAddress;
+Interaction interaction;
+
 Uint16 ports[DIR_NUM];
 UDPsocket sock;
 SDLNet_SocketSet socketset;
 UDPsocket udpSockets[DIR_NUM];
-UDPpacket* udpPackets[DIR_NUM];

@@ -45,6 +45,9 @@
     <ClInclude Include="src\text.h">
       <Filter>File di risorse</Filter>
     </ClInclude>
+    <ClInclude Include="src\stage.h">
+      <Filter>File di risorse</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\draw.c">
@@ -66,6 +69,9 @@
       <Filter>File di risorse</Filter>
     </ClCompile>
     <ClCompile Include="src\text.c">
+      <Filter>File di risorse</Filter>
+    </ClCompile>
+    <ClCompile Include="src\stage.c">
       <Filter>File di risorse</Filter>
     </ClCompile>
   </ItemGroup>

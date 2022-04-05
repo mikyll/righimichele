@@ -2,7 +2,30 @@
 
 #include "SDL2/SDL_net.h"
 
+
+// Refactor
+extern void cleanup(void);
 extern void initSDL(void);
+extern void initSDLNetServer(int port);
+extern void initSDLMixer(void);
+extern void initSDLTtf(void);
+extern void initStage(void);
+extern void prepareScene(void);
+extern void presentScene(void);
+extern void doInput();
+
+
+extern void initInteraction();
+extern void doReceive();
+
+App app;
+Stage stage;
+extern Entity* radarLine;
+
+// ---------------
+
+
+/*extern void initSDL(void);
 extern void initSDLNetServer(int port);
 extern void initSDLMixer(void);
 extern void initSDLTtf(void);
@@ -23,13 +46,5 @@ Radar radarLine;
 Entity objects[DIR_NUM];
 Entity sus;
 
-// net
-/*extern IPaddress* ipAddress;
-extern Uint16 ports[DIR_NUM];
-extern UDPsocket sock;
-extern SDLNet_SocketSet socketset;
-extern UDPsocket udpSockets[DIR_NUM];
-extern UDPpacket* udpPackets[DIR_NUM];*/
-
 SDL_Texture* textFPS;
-SDL_Texture* coordinates[DIR_NUM];
+SDL_Texture* coordinates[DIR_NUM];*/

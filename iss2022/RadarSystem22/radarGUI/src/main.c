@@ -1,6 +1,6 @@
 #include "main.h"
 
-void doReceive();
+/*void doReceive();
 void detectSus(int x, int y);
 void detectObj(int nSock, float distance);
 
@@ -10,19 +10,23 @@ void drawObject(int dir);
 void drawSus();
 void drawObjectText(int dir, int objN, int offset);
 void drawSusText(int offset);
-void drawFPStext(int fps);
-void drawCoordinateSystemText();
+void drawFPStext(int fps);*/
 
 static void capFrameRate(long* then, float* remainder);
+
+static int t = 1000 / FPS;
+static int r;
 
 int main(int argc, char** argv)
 {
 	long then;
 	float remainder;
-	int fps, i, j, k;
-	SDL_Point l1, l2, l3;
-	double a1, a2, a3;
+
+	r = (1000 / FPS) - (float)t;
+
+	int i, j, k;
 	Uint64 start, end;
+	float elapsed;
 
 	memset(&app, 0, sizeof(App));
 
@@ -33,33 +37,49 @@ int main(int argc, char** argv)
 
 	// Init SDL2 libraries
 	initSDL();
-	initSDLNetServer(DEFAULT_PORT);
+	initSDLNet(DEFAULT_PORT);
 	initSDLMixer();
 	initSDLTtf();
 
 	atexit(cleanup);
 
-	// Init elements
-	initRadar();
-	initRadarLine();
-	initObjects();
-	initSus();
+	initStage();
 
-	SDL_SetRenderDrawColor(app.renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+	initInteraction();
 
 	then = SDL_GetTicks();
 	remainder = 0;
-	fps = 0;
 
 	while (1)
 	{
 		start = SDL_GetPerformanceCounter();
 
-		// 1. Prepare scene
 		prepareScene();
 
-		// 2. Get input
 		doInput();
+
+		doReceive();
+		// NB: doReceive calls function pointer to Interaction (receive); that function is set by initNet();
+
+		app.delegate.logic();
+
+		app.delegate.draw();
+
+		presentScene();
+
+		capFrameRate(&then, &remainder);
+
+		end = SDL_GetPerformanceCounter();
+		elapsed = (end - start) / (float)SDL_GetPerformanceFrequency();
+		((int)radarLine->angle % (360 / DIR_NUM)) == 0 ? stage.fps = (int)1.0f / elapsed : stage.fps;
+		
+		/*
+		// end cycle
+
+
+		// 2. Get input
+		
+
 		doReceive();
 
 		// 3. Update
@@ -69,17 +89,6 @@ int main(int argc, char** argv)
 			radar.angle = 0.0;
 			radarLine.angle = 0.0;
 		}
-		
-		double hPI = PI / 180.0;
-		a1 = radar.angle * hPI;
-		a2 = (radar.angle - 2.0) * hPI;
-		a3 = (radar.angle - 4.0) * hPI;
-		l1.x = radar.x + (cos(a1) * radar.l);
-		l1.y = radar.y + (sin(a1) * radar.l);
-		l2.x = radar.x + (cos(a2) * radar.l);
-		l2.y = radar.y + (sin(a2) * radar.l);
-		l3.x = radar.x + (cos(a3) * radar.l);
-		l3.y = radar.y + (sin(a3) * radar.l);
 
 		detectSus(radar.x, radar.y);
 		radar.angle += 1.0;
@@ -88,13 +97,6 @@ int main(int argc, char** argv)
 		// 4. Draw
 		drawRadar();
 		drawRadarLine();
-
-		// Draw Line
-		/*SDL_SetRenderDrawColor(app.renderer, 0, 154, 23, SDL_ALPHA_OPAQUE);
-		SDL_RenderDrawLine(app.renderer, radar.x, radar.y, l1.x, l1.y);
-		SDL_RenderDrawLine(app.renderer, radar.x, radar.y, l2.x, l2.y);
-		SDL_RenderDrawLine(app.renderer, radar.x, radar.y, l3.x, l3.y);*/
-		
 
 		// draw Objects and Text
 		for (i = 0, j = 0, k = 0; i < DIR_NUM; i++)
@@ -129,20 +131,78 @@ int main(int argc, char** argv)
 		capFrameRate(&then, &remainder);
 
 		// Get FPS
-		end = SDL_GetPerformanceCounter();
-		float elapsed = (end - start) / (float)SDL_GetPerformanceFrequency();
-		((int)radar.angle % (360 / DIR_NUM)) < 2 ? fps = (int)1.0f / elapsed : fps;
+		*/
 	}
 
 	return 0;
 }
 
-void doReceive()
+static void capFrameRate(long* then, float* remainder)
+{
+	long wait, frameTime;
+
+	wait = t + *remainder;
+
+	*remainder -= (int)*remainder;
+
+	frameTime = SDL_GetTicks() - *then;
+
+	wait -= frameTime;
+
+	if (wait < 1)
+	{
+		wait = 1;
+	}
+
+	SDL_Delay(wait);
+
+	*remainder += r;
+
+	*then = SDL_GetTicks();
+}
+
+/*static void capFrameRate(long* then, float* remainder)
+{
+	long wait, frameTime;
+
+	wait = *remainder;
+
+	*remainder -= (int)*remainder;
+
+	frameTime = SDL_GetTicks() - *then;
+
+	wait -= frameTime;
+
+	if (wait < 1)
+	{
+		wait = 1;
+	}
+
+	SDL_Delay(wait);
+
+	*remainder += 16.667; // caps FPS to ~60 (remainder: 1000 / 60 = 16.66667)
+	//*remainder += 5; // a complete radar cycle in ~2 sec
+	//*remainder += 2.25; // a complete radar cycle in ~1 sec
+
+	*then = SDL_GetTicks();
+}*/
+
+/*void doReceive()
 {
 	float distance;
 
 	if ((int)radar.angle % 45 == 0)
 	{
+		//
+		// 0 (360)	% 8 == 0 OK
+		// 45		% 8 == 5 NO -> 1
+		// 90		% 8 == 2 OK
+		// 135		% 8 == 7 NO -> 3
+		// 180		% 8 == 4 OK
+		// 225		% 8 == 1 NO -> 5
+		// 270		% 8 == 6 OK
+		// 315		% 8 == 3 NO -> 7
+		//
 		int dir = (int)radar.angle % 8;
 		dir == 5 || dir == 7 ? dir -= 4 : (dir == 1 || dir == 3 ? dir += 4 : 0);
 
@@ -167,32 +227,6 @@ void doReceive()
 	}
 }
 
-static void capFrameRate(long* then, float* remainder)
-{
-	long wait, frameTime;
-
-	wait = *remainder;
-
-	*remainder -= (int)*remainder;
-
-	frameTime = SDL_GetTicks() - *then;
-
-	wait -= frameTime;
-
-	if (wait < 1)
-	{
-		wait = 1;
-	}
-
-	SDL_Delay(wait);
-
-	//*remainder += 16.667; // caps FPS to ~60 (remainder: 1000 / 60 = 16.66667)
-	*remainder += 5; // a complete radar cycle in ~2 sec
-	//*remainder += 2.25; // a complete radar cycle in ~1 sec
-
-	*then = SDL_GetTicks();
-}
-
 void detectSus(int x, int y)
 {
 	sus.x = x + radar.w / 4;
@@ -209,6 +243,7 @@ void detectObj(int nSock, float distance)
 		float l = (float)radar.l / MAX_D;
 		double a = radar.angle * (double)(PI / 180.0);
 
+		// Set the object coordinates
 		objects[nSock].x = radar.x + (cos(a) * distance * l);
 		objects[nSock].y = radar.y + (sin(a) * distance * l);
 	}
@@ -257,7 +292,4 @@ void drawFPStext(int fps)
 	SDL_Texture* textFPS = getTextTexture(buffer);
 	drawNormalText(textFPS, WINDOW_WIDTH - 90, 0);
 }
-void drawCoordinateSystemText()
-{
-	
-}
+*/

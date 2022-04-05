@@ -27,6 +27,7 @@
     <ClInclude Include="src\main.h" />
     <ClInclude Include="src\net.h" />
     <ClInclude Include="src\sound.h" />
+    <ClInclude Include="src\stage.h" />
     <ClInclude Include="src\structs.h" />
     <ClInclude Include="src\text.h" />
   </ItemGroup>
@@ -37,6 +38,7 @@
     <ClCompile Include="src\main.c" />
     <ClCompile Include="src\net.c" />
     <ClCompile Include="src\sound.c" />
+    <ClCompile Include="src\stage.c" />
     <ClCompile Include="src\text.c" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

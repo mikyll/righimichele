@@ -3,6 +3,12 @@
 #define WINDOW_WIDTH		520
 #define WINDOW_HEIGHT		600
 
+#define FPS					60
+
+#define CPS					2	// Cycle Per Second
+
+#define ANGLE_INCREMENT		(360 / FPS / CPS)
+
 #define PI					3.14159
 
 #define SPC1 2.25	// 1 Second Per Cycle
@@ -15,6 +21,8 @@
 #define DEFAULT_PORT		4000
 #define ACK_PORT_OFFSET		100
 #define MAX_PACKET_SIZE		512
+
+#define MAX_SOCKET			16
 
 #define MAX_SND_CHANNELS	8
 
