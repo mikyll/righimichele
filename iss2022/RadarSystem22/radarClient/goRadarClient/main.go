@@ -30,6 +30,23 @@ func connection_handler() {
 		os.Exit(1)
 	}
 
+	// test
+	i := 0
+	for {
+		i++
+		if i > 200 {
+			i = 0
+		}
+		var msg = make([]byte, 64)
+		msg = []byte("{\"distance\": " + strconv.Itoa(i) + ", \"angle\": " + strconv.Itoa(i) + "}")
+
+		_, err = conn.Write(msg)
+		if err != nil {
+			println("Write to server failed:", err.Error())
+			os.Exit(1)
+		}
+	}
+
 	defer conn.Close()
 	for !exit {
 		select {
