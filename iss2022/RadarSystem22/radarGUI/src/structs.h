@@ -15,15 +15,6 @@ typedef struct {
 } Delegate;
 
 typedef struct {
-	IPaddress* ipAddress;
-	SDLNet_SocketSet socketset;
-	SDLNet_GenericSocket sockets[MAX_SOCKET];
-	Distance distanceHead, * distanceTail;
-	void (*send)(void);
-	void (*receive)(void);
-} Interaction;
-
-typedef struct {
 	SDL_Window* window;
 	SDL_Renderer* renderer;
 	Delegate delegate;
@@ -43,13 +34,6 @@ struct Entity {
 };
 
 typedef struct {
-	int fps;
-	// detect queue;
-	// text queue;
-	Entity obstacleHead, * obstacleTail;
-}Stage;
-
-typedef struct {
 	int x;
 	int y;
 	int w;
@@ -60,6 +44,15 @@ typedef struct {
 }Radar;
 
 typedef struct {
-	int timestamp;
-	int distance; // -1 non valido, [0, 200]mm valido
-}Packet; // NB: a seconda del canale su cui viene inviato, rappresenta il lato del radar
+	int fps;
+	Entity obstacleHead, * obstacleTail;
+}Stage;
+
+typedef struct {
+	IPaddress* ipAddress;
+	SDLNet_SocketSet socketset;
+	SDLNet_GenericSocket sockets[MAX_SOCKET];
+	void (*send)(void);
+	void (*receive)(void);
+	Distance distanceHead, * distanceTail; // linked list containing each distance received from clients
+} Interaction;

@@ -22,7 +22,7 @@
 #define ACK_PORT_OFFSET		100
 #define MAX_PACKET_SIZE		512
 
-#define MAX_SOCKET			16
+#define MAX_SOCKET			4
 
 #define MAX_SND_CHANNELS	8
 

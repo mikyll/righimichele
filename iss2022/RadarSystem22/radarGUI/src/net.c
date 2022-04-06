@@ -31,6 +31,7 @@ void initSDLNet(int port)
 
 void initInteraction()
 {
+	IPaddress* ipAddress;
 	int i, numused;
 
 	// 1. Set function pointers for receive and send
@@ -39,7 +40,7 @@ void initInteraction()
 
 	interaction.distanceTail = &interaction.distanceHead;
 
-	// 2. Resolve Host (if NULL the address is broadcast: 0.0.0.0)
+	// 2. Resolve Host (if IP is NULL then the address is broadcast: 0.0.0.0)
 	if (SDLNet_ResolveHost(&interaction.ipAddress, NULL, 4123) == -1)
 	{
 		SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_CRITICAL, "SDLNet_ResolveHost failed: %s", SDLNet_GetError());
@@ -53,20 +54,34 @@ void initInteraction()
 		exit(1); //most of the time this is a major error, but do what you want.
 	}
 
+	// to-do: add 1 udp socket and N (N = MAX_SOCKET - 1) tcp socket, to the socket set
 	// 4. Open sockets and add them to the set
-	for (i = 0; i < MAX_SOCKET; i++)
+	// 4.1 Open UDP socket #1
+	interaction.sockets[i] = SDLNet_UDP_Open(4000);
+	if (!interaction.sockets[i])
 	{
-		// 4.1 Open socket #i
-		interaction.sockets[i] = SDLNet_UDP_Open(4000 + i);
-		if (!interaction.sockets[i])
-		{
-			SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR, "SDLNet_UDP_Open[%d] failed: %s", 4000 + i, SDLNet_GetError());
-			exit(1);
-		}
-		SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, "Listening on 0.0.0.0:%hd", 4000 + i);
+		SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR, "SDLNet_UDP_Open[%d] failed: %s", 4000 + i, SDLNet_GetError());
+		exit(1);
+	}
+	SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, "Listening on 0.0.0.0:%hd", 4000 + i);
 
-		// 4.2 Add socket #i to the socket set
-		numused = SDLNet_UDP_AddSocket(interaction.socketset, interaction.sockets[i]);
+	// 4.2 Add UDP socket #1 to the socket set
+	numused = SDLNet_UDP_AddSocket(interaction.socketset, interaction.sockets[i]);
+	if (numused == -1) {
+		printf("SDLNet_AddSocket: %s\n", SDLNet_GetError());
+		exit(1);
+	}
+	
+	// 4.3 Open & Add TCP sockets to the socket set
+	for (i = 1; i < MAX_SOCKET; i++)
+	{
+		interaction.sockets[i] = SDLNet_TCP_Open(&interaction.ipAddress);
+		if (!interaction.sockets[i]) {
+			printf("SDLNet_TCP_Open: %s\n", SDLNet_GetError());
+			exit(2);
+		}
+
+		numused = SDLNet_TCP_AddSocket(interaction.socketset, interaction.sockets[i]);
 		if (numused == -1) {
 			printf("SDLNet_AddSocket: %s\n", SDLNet_GetError());
 			exit(1);
@@ -119,18 +134,15 @@ static void receiveDistance()
 			SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR, "Could not allocate packet: %s", SDLNet_GetError());
 			exit(1);
 		}
-
-		printf("OK1\n");
+		
 		for (i = 0; i < MAX_SOCKET; i++)
 		{
 			// 3. Check if the specific socket has packets ready
 			if (SDLNet_SocketReady(interaction.sockets[i]))
 			{
-				printf("OK2\n");
 				// 4. Receive a packet from the socket #i
 				if (SDLNet_UDP_Recv(interaction.sockets[i], p))
 				{
-					printf("OK3\n");
 					int distance, angle;
 					sscanf(p->data, "{\"distance\": %d, \"angle\" : %d}", &distance, &angle);
 					//printf("Detected object %d at distance: %3.1f cm\n", nSock, distance); // test
