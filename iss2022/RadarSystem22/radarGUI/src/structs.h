@@ -50,11 +50,10 @@ typedef struct {
 
 typedef struct {
 	IPaddress* ipAddress;
-	TCPsocket serverSocket;
+	int used;
 	SDLNet_SocketSet socketSet;
 	SDLNet_GenericSocket sockets[MAX_SOCKET];
 	int socketType[MAX_SOCKET];
-	void (*send)(void);
 	void (*receive)(void);
 	Distance distanceHead, * distanceTail; // linked list containing each distance received from clients
 } Interaction;

@@ -74,5 +74,6 @@ enum Sounds
 enum SockType
 {
 	SOCK_UDP,
+	SOCK_TCP_SERVER,
 	SOCK_TCP,
 };
