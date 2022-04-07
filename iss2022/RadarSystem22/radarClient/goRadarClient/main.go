@@ -5,6 +5,7 @@ import (
 	"net"
 	"os"
 	"strconv"
+	"time"
 )
 
 type Input struct {
@@ -17,7 +18,7 @@ var done = make(chan bool)
 
 func connection_handler() {
 	exit := false
-	servAddr := "localhost:4123"
+	servAddr := "localhost:4001"
 	tcpAddr, err := net.ResolveTCPAddr("tcp", servAddr)
 	if err != nil {
 		println("ResolveTCPAddr failed:", err.Error())
@@ -34,7 +35,7 @@ func connection_handler() {
 	i := 0
 	for {
 		i++
-		if i > 200 {
+		if i > 100 {
 			i = 0
 		}
 		var msg = make([]byte, 64)
@@ -45,6 +46,8 @@ func connection_handler() {
 			println("Write to server failed:", err.Error())
 			os.Exit(1)
 		}
+
+		time.Sleep(time.Duration(time.Millisecond * 30))
 	}
 
 	defer conn.Close()
@@ -56,6 +59,7 @@ func connection_handler() {
 				break
 			}
 
+			fmt.Println("TEST" + input.message)
 			l := len([]rune(input.message))
 			fmt.Println(l)
 			for i := l; i < 64; i++ {
@@ -98,7 +102,7 @@ func input() {
 	var distance, angle int
 
 	for {
-		input.message += "{\"distance\": "
+		input.message = "{\"distance\": "
 
 		fmt.Printf("Distance: ")
 		fmt.Scanf("%d\n", &distance)

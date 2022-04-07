@@ -52,12 +52,12 @@ static void initRadar()
 	SDL_QueryTexture(radarLine->texture, NULL, NULL, &radarLine->w, &radarLine->h);
 	radarLine->x = WINDOW_WIDTH / 2;
 	radarLine->y = WINDOW_HEIGHT - radarLine->h / 2;
-	radarLine->angle = -90.0;
+	radarLine->angle = -90;
 }
 
 void initStage()
 {
-	// Set the function pointer "delegates"
+	// Set the delegates
 	app.delegate.logic = logic;
 	app.delegate.draw = draw;
 
@@ -92,12 +92,12 @@ static void resetStage()
 
 
 
-// moves the line, add obstacles & sus, ...
+// Rotate the radar line and eventually add obstacles
 static void doRadar()
 {
 	Distance* d, * prev;
 
-	// rotate the radar line
+	// Rotate the radar line
 	if (radarLine->angle >= 360)
 		radarLine->angle = 0;
 	radarLine->angle += ANGLE_INCREMENT;
@@ -107,8 +107,10 @@ static void doRadar()
 
 	prev = &interaction.distanceHead;
 
+	// Scroll the linked list
 	for (d = interaction.distanceHead.next; d != NULL; d = d->next)
 	{
+		// Check if the angle of the detected obstacle equals the current radarLine angle
 		if (radarLine->angle == d->angle)
 		{
 			// show the obstacle only if it's between the bounds

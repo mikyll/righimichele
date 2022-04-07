@@ -40,8 +40,6 @@ void cleanup()
 	SDL_DestroyRenderer(app.renderer);
 	SDL_DestroyWindow(app.window);
 
-	SDLNet_FreeSocketSet(socketset);
-
 	SDLNet_Quit();
 	SDL_Quit();
 }
