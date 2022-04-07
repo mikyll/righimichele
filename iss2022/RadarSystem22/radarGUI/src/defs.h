@@ -70,3 +70,9 @@ enum Sounds
 	SND_SUS_DETECTED,
 	SND_MAX,
 };
+
+enum SockType
+{
+	SOCK_UDP,
+	SOCK_TCP,
+};

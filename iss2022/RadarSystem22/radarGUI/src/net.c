@@ -8,8 +8,11 @@ const int ACK_PORT = 4200;
 void initSDLNet(int port);
 void initInteraction();
 static void resetInteraction();
+
+static void acceptConnection();
 static void receiveDistance();
 static void receiveDistanceMock();
+static void receiveDistanceTCP();
 static void sendACK();
 static void sendACKMock();
 
@@ -19,7 +22,7 @@ static void getIPfromNetwork(IPaddress address, char* ip, int* port);
 static void getIPfromHost(IPaddress address, char* ip, int* port);
 
 
-void initSDLNet(int port)
+void initSDLNet()
 {
 	// Init SDL Net
 	if (SDLNet_Init() < 0)
@@ -29,13 +32,13 @@ void initSDLNet(int port)
 	}
 }
 
-void initInteraction()
+void initInteraction(int port)
 {
 	IPaddress* ipAddress;
 	int i, numused;
 
 	// 1. Set function pointers for receive and send
-	interaction.receive = receiveDistance;
+	interaction.receive = receiveDistanceTCP;
 	interaction.send = sendACKMock;
 
 	interaction.distanceTail = &interaction.distanceHead;
@@ -48,7 +51,7 @@ void initInteraction()
 	}
 
 	// 3. Create a socket set
-	if (!(interaction.socketset = SDLNet_AllocSocketSet(MAX_SOCKET)))
+	if (!(interaction.socketSet = SDLNet_AllocSocketSet(MAX_SOCKET)))
 	{
 		SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_CRITICAL, "SDLNet_AllocSocketSet failed: %s", SDLNet_GetError());
 		exit(1); //most of the time this is a major error, but do what you want.
@@ -57,23 +60,42 @@ void initInteraction()
 	// to-do: add 1 udp socket and N (N = MAX_SOCKET - 1) tcp socket, to the socket set
 	// 4. Open sockets and add them to the set
 	// 4.1 Open UDP socket #1
-	interaction.sockets[i] = SDLNet_UDP_Open(4000);
-	if (!interaction.sockets[i])
+	interaction.sockets[0] = SDLNet_UDP_Open(4000);
+	if (!interaction.sockets[0])
 	{
-		SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR, "SDLNet_UDP_Open[%d] failed: %s", 4000 + i, SDLNet_GetError());
+		SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR, "SDLNet_UDP_Open[%d] failed: %s", 4000, SDLNet_GetError());
 		exit(1);
 	}
-	SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, "Listening on 0.0.0.0:%hd", 4000 + i);
+	SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, "Listening on 0.0.0.0:%hd", 4000);
 
 	// 4.2 Add UDP socket #1 to the socket set
-	numused = SDLNet_UDP_AddSocket(interaction.socketset, interaction.sockets[i]);
+	numused = SDLNet_UDP_AddSocket(interaction.socketSet, interaction.sockets[0]);
 	if (numused == -1) {
 		printf("SDLNet_AddSocket: %s\n", SDLNet_GetError());
 		exit(1);
 	}
 	
+	// test TCP
+	interaction.serverSocket = SDLNet_TCP_Open(&interaction.ipAddress);
+	if (!interaction.serverSocket) {
+		printf("SDLNet_TCP_Open: %s\n", SDLNet_GetError());
+		exit(1);
+	}
+
+	numused = SDLNet_TCP_AddSocket(interaction.socketSet, interaction.serverSocket);
+	if (numused == -1) {
+		printf("SDLNet_AddSocket: %s\n", SDLNet_GetError());
+		exit(1);
+	}
+
+	for (i = 0; i < MAX_SOCKET; i++)
+	{
+		if (interaction.sockets[i] == NULL)
+			printf("%d) NULL\n", i);
+	}
+
 	// 4.3 Open & Add TCP sockets to the socket set
-	for (i = 1; i < MAX_SOCKET; i++)
+	/*for (i = 1; i < MAX_SOCKET; i++)
 	{
 		interaction.sockets[i] = SDLNet_TCP_Open(&interaction.ipAddress);
 		if (!interaction.sockets[i]) {
@@ -86,7 +108,7 @@ void initInteraction()
 			printf("SDLNet_AddSocket: %s\n", SDLNet_GetError());
 			exit(1);
 		}
-	}
+	}*/
 
 	// 4.3 Open ACK socket on first available port
 	/*if (!(ackSocket = SDLNet_UDP_Open(0)))
@@ -107,6 +129,8 @@ static void resetInteraction()
 		interaction.distanceHead.next = d->next;
 		free(d);
 	}
+
+	// reset socketset
 }
 
 
@@ -118,8 +142,8 @@ static void receiveDistance()
 	char buffer[64];
 	int numready, i;
 
-	// 1. Check if there are sockets with activity
-	numready = SDLNet_CheckSockets(interaction.socketset, 0);
+	// 1. Check if there are sockets with activity (also includes disconnections and other errors, which can be determined by a failed write/read attempt)
+	numready = SDLNet_CheckSockets(interaction.socketSet, 0);
 	if (numready == -1)
 	{
 		printf("SDLNet_CheckSockets: %s\n", SDLNet_GetError());
@@ -140,6 +164,18 @@ static void receiveDistance()
 			// 3. Check if the specific socket has packets ready
 			if (SDLNet_SocketReady(interaction.sockets[i]))
 			{
+				switch (interaction.socketType[i])
+				{
+				case SOCK_UDP:
+					// receiveUDP()
+					break;
+				case SOCK_TCP:
+					// receiveTCP()
+					break;
+				default:
+					break;
+				}
+
 				// 4. Receive a packet from the socket #i
 				if (SDLNet_UDP_Recv(interaction.sockets[i], p))
 				{
@@ -221,6 +257,104 @@ static void receiveDistanceMock()
 	}
 }
 
+// Checks if the server socket is ready: that means there is a connection ready to be accepted
+static void acceptConnection()
+{
+	// if the server socket is ready, we accept the connection, and add it to the socket set
+	if (SDLNet_SocketReady(interaction.serverSocket))
+	{
+		interaction.sockets[1] = SDLNet_TCP_Accept(interaction.serverSocket);
+		if (!interaction.sockets[1]) {
+			printf("SDLNet_TCP_Accept: %s\n", SDLNet_GetError());
+		}
+		else {
+			printf("Accepted connection 1\n");
+
+			if (!SDLNet_TCP_AddSocket(interaction.socketSet, interaction.sockets[1])) {
+				printf("SDLNet_AddSocket: %s\n", SDLNet_GetError());
+				exit(1);
+			}
+		}
+	}
+}
+
+static void receiveUDP()
+{
+
+}
+
+static void receiveTCP()
+{
+
+}
+
+static void receiveDistanceTCP()
+{
+	Distance* d;
+	int distance = 1, angle = 1;
+	int result, numready;
+	char msg[64];
+
+	numready = SDLNet_CheckSockets(interaction.socketSet, 0);
+	if (numready == -1) {
+		printf("SDLNet_CheckSockets: %s\n", SDLNet_GetError());
+		//most of the time this is a system error, where perror might help you.
+		perror("SDLNet_CheckSockets");
+	}
+	else if (numready) {
+		printf("There are %d sockets with activity!\n", numready);
+		// check all sockets with SDLNet_SocketReady and handle the active ones.
+
+		if (SDLNet_SocketReady(interaction.serverSocket))
+		{
+			interaction.sockets[1] = SDLNet_TCP_Accept(interaction.serverSocket);
+			if (!interaction.sockets[1]) {
+				printf("SDLNet_TCP_Accept: %s\n", SDLNet_GetError());
+			}
+			else {
+				printf("Accepted connection 1\n");
+
+				if (!SDLNet_TCP_AddSocket(interaction.socketSet, interaction.sockets[1])) {
+					printf("SDLNet_AddSocket: %s\n", SDLNet_GetError());
+					exit(1);
+				}
+			}
+		}
+		
+		if (SDLNet_SocketReady(interaction.sockets[1]))
+		{
+			if (SDLNet_TCP_Recv(interaction.sockets[1], msg, 64) > 0)
+			{
+				printf("Received: \"%s\"\n", msg);
+
+				sscanf(msg, "{\"distance\": %d, \"angle\" : %d}", &distance, &angle);
+
+				d = malloc(sizeof(Distance));
+				memset(d, 0, sizeof(Distance));
+
+				d->distance = distance;
+				d->angle = angle;
+
+				printf("%d, %d\n", distance, angle);
+
+				interaction.distanceTail->next = d;
+				interaction.distanceTail = d;
+			}
+			// If recv fails it means that an error may have occurred. Usually we can ignore it, but we should disconnect the socket anyway since it's likely invalid now
+			else {
+				SDLNet_TCP_Close(interaction.sockets[1]);
+				SDLNet_DelSocket(interaction.socketSet, interaction.sockets[1]);
+
+				printf("Connection 1 closed\n");
+				
+				// An error may have occured, but sometimes you can just ignore it
+				// It may be good to disconnect sock because it is likely invalid now.
+			}
+		}
+	}
+	
+}
+
 static void sendACKMock()
 {
 	//printf("Mock send ACK\n");
@@ -228,6 +362,8 @@ static void sendACKMock()
 
 void doReceive()
 {
+	// accept TCP connections
+
 	interaction.receive();
 
 	interaction.send();
