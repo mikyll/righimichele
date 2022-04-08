@@ -17,10 +17,12 @@
 #define MAX_D				200.0
 #define MIN_D				0.0
 
-#define DEFAULT_IP			"127.0.0.1"
-#define DEFAULT_PORT		4000
+#define UDP_SOCKET_PORT		4000
+#define SERVER_SOCKET_PORT	4001
 #define ACK_PORT_OFFSET		100
+
 #define MAX_PACKET_SIZE		512
+#define MAX_MSG_LENGTH		64
 
 #define MAX_SOCKET			4
 

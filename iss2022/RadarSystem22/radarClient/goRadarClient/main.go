@@ -5,7 +5,6 @@ import (
 	"net"
 	"os"
 	"strconv"
-	"time"
 )
 
 type Input struct {
@@ -32,14 +31,18 @@ func connection_handler() {
 	}
 
 	// test
-	i := 0
+	/*i, j := 0, 0
 	for {
 		i++
+		j++
 		if i > 100 {
 			i = 0
 		}
+		if j >= 360 {
+			j = 0
+		}
 		var msg = make([]byte, 64)
-		msg = []byte("{\"distance\": " + strconv.Itoa(i) + ", \"angle\": " + strconv.Itoa(i) + "}")
+		msg = []byte("{\"distance\": " + strconv.Itoa(i) + ", \"angle\": " + strconv.Itoa(j) + "}")
 
 		_, err = conn.Write(msg)
 		if err != nil {
@@ -48,7 +51,7 @@ func connection_handler() {
 		}
 
 		time.Sleep(time.Duration(time.Millisecond * 30))
-	}
+	}*/
 
 	defer conn.Close()
 	for !exit {
@@ -124,10 +127,6 @@ func input() {
 
 	done <- true
 }
-
-/*func receiver() {
-
-}*/
 
 func main() {
 	// strEcho := "{\"distance\": 40, \"angle\": 90\"}"

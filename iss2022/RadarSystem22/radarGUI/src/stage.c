@@ -6,8 +6,11 @@ static void draw();
 void initStage();
 static void resetStage();
 static void initRadar();
+
+static void doMessages();
 static void doRadar();
 static void doObstacles();
+static Distance* parseDistance(Message m);
 static void spawnObstacle(int x, int y);
 static void spawnSus(int x, int y);
 // draw
@@ -30,6 +33,8 @@ static SDL_Texture* coordinates[DIR_NUM];
 
 static void logic()
 {
+	doMessages();
+
 	doRadar();
 
 	doObstacles();
@@ -64,12 +69,15 @@ void initStage()
 	memset(&stage, 0, sizeof(Stage));
 	
 	stage.obstacleTail = &stage.obstacleHead;
+	stage.distanceTail = &stage.distanceHead;
 
 	// load textures
 	radarTexture = loadTexture("gfx/radar.png");
 	radarLineTexture = loadTexture("gfx/radar_line.png");
 	obstacleTexture = loadTexture("gfx/obstacle2.png");
+	SDL_SetTextureBlendMode(obstacleTexture, SDL_BLENDMODE_BLEND);
 	susTexture = loadTexture("gfx/sus.png");
+	SDL_SetTextureBlendMode(susTexture, SDL_BLENDMODE_BLEND);
 
 	resetStage();
 }
@@ -77,6 +85,7 @@ void initStage()
 static void resetStage()
 {
 	Entity* e;
+	Distance* d;
 	
 	while (stage.obstacleHead.next)
 	{
@@ -84,15 +93,42 @@ static void resetStage()
 		stage.obstacleHead.next = e->next;
 		free(e);
 	}
-	
+	while (stage.distanceHead.next)
+	{
+		d = stage.distanceHead.next;
+		stage.distanceHead.next = d->next;
+		free(d);
+	}
+
 	initRadar();
 
 	stage.fps = 0;
 }
 
+// Scroll trough the Message list and parse a Distance from each element, then free it
+static void doMessages()
+{
+	Distance* d;
+	Message* m, * prev;
 
+	prev = &interaction.messageHead;
+	for (m = interaction.messageHead.next; m != NULL; m = m->next)
+	{
+		d = parseDistance(*m);
 
-// Rotate the radar line and eventually add obstacles
+		stage.distanceTail->next = d;
+		stage.distanceTail = d;
+
+		if (m == interaction.messageTail)
+			interaction.messageTail = prev;
+
+		prev->next = m->next;
+		free(m);
+		m = prev;
+	}
+}
+
+// Rotate the radar line and eventually add obstacles (if the distance is in range, and parse angles)
 static void doRadar()
 {
 	Distance* d, * prev;
@@ -105,10 +141,10 @@ static void doRadar()
 	// scorre la lista di rilevazioni e se angle == radarLine->angle => chiama spawnObstacle()
 	// calcola x & y, dunque spawnObstacle(x, y, ENTITY_LIFE) & spawnText(x, y, ENTITY_LIFE);
 
-	prev = &interaction.distanceHead;
+	prev = &stage.distanceHead;
 
 	// Scroll the linked list
-	for (d = interaction.distanceHead.next; d != NULL; d = d->next)
+	for (d = stage.distanceHead.next; d != NULL; d = d->next)
 	{
 		// Check if the angle of the detected obstacle equals the current radarLine angle
 		if (radarLine->angle == d->angle)
@@ -128,8 +164,8 @@ static void doRadar()
 				app.soundEnabled ? playSound(SND_OBJ_DETECTED, CH_OBJ) : (void)0;
 			}
 
-			if (d == interaction.distanceTail)
-				interaction.distanceTail = prev;
+			if (d == stage.distanceTail)
+				stage.distanceTail = prev;
 
 			prev->next = d->next;
 			free(d);
@@ -170,6 +206,18 @@ static void doObstacles()
 	}
 }
 
+Distance* parseDistance(Message m)
+{
+	Distance* d;
+
+	d = malloc(sizeof(Distance));
+	memset(d, 0, sizeof(Distance));
+
+	sscanf(m.data, "{\"distance\": %d, \"angle\" : %d}", &(d->distance), &(d->angle));
+
+	return d;
+}
+
 static void spawnObstacle(int x, int y)
 {
 	Entity* o;
@@ -183,7 +231,6 @@ static void spawnObstacle(int x, int y)
 	o->x = x;
 	o->y = y;
 	o->texture = obstacleTexture;
-	SDL_SetTextureBlendMode(o->texture, SDL_BLENDMODE_BLEND);
 
 	o->alpha = SDL_ALPHA_OPAQUE;
 }
@@ -203,7 +250,6 @@ static void spawnSus(int x, int y)
 	s->y = y;
 
 	s->texture = susTexture;
-	SDL_SetTextureBlendMode(s->texture, SDL_BLENDMODE_BLEND);
 
 	s->alpha = SDL_ALPHA_OPAQUE;
 }

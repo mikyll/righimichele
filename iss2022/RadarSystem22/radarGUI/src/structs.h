@@ -1,7 +1,13 @@
 #include <SDL2/SDL_net.h>
 
 typedef struct Entity Entity;
+typedef struct Message Message;
 typedef struct Distance Distance;
+
+struct Message {
+	char data[MAX_MSG_LENGTH];
+	Message* next;
+};
 
 struct Distance {
 	int distance;
@@ -20,7 +26,7 @@ typedef struct {
 	Delegate delegate;
 	int susDetected;
 	int soundEnabled;
-}App;
+} App;
 
 struct Entity {
 	int x;
@@ -46,6 +52,7 @@ typedef struct {
 typedef struct {
 	int fps;
 	Entity obstacleHead, * obstacleTail;
+	Distance distanceHead, * distanceTail;
 }Stage;
 
 typedef struct {
@@ -55,5 +62,5 @@ typedef struct {
 	SDLNet_GenericSocket sockets[MAX_SOCKET];
 	int socketType[MAX_SOCKET];
 	void (*receive)(void);
-	Distance distanceHead, * distanceTail; // linked list containing each distance received from clients
+	Message messageHead, * messageTail; // linked list containing each distance received from clients
 } Interaction;
