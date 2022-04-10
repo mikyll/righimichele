@@ -1,3 +1,6 @@
+#ifndef _defs_h
+#define _defs_h
+
 #define WINDOW_TITLE		"Radar GUI"
 
 #define WINDOW_WIDTH		520
@@ -79,3 +82,5 @@ enum SockType
 	SOCK_TCP_SERVER,
 	SOCK_TCP,
 };
+
+#endif

@@ -1,3 +1,6 @@
+#ifndef _stage_h
+#define _stage_h
+
 #include "common.h"
 
 extern SDL_Texture* loadTexture(char* filename);
@@ -11,3 +14,5 @@ extern void drawScaledText(SDL_Texture* text, int x, int y, float sx, float sy);
 extern App app;
 extern Stage stage;
 extern Interaction interaction;
+
+#endif

@@ -5,7 +5,7 @@ static void initSounds();
 static Mix_Chunk* loadSound(char* filename);
 static Mix_Chunk* sounds[SND_MAX];
 
-void initSDLMixer()
+void initSDLmixer()
 {
     if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 1024) == -1)
     {

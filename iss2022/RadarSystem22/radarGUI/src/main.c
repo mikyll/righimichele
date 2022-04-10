@@ -37,9 +37,9 @@ int main(int argc, char** argv)
 
 	// Init SDL2 libraries
 	initSDL();
-	initSDLNet();
-	initSDLMixer();
-	initSDLTtf();
+	initSDLnet();
+	initSDLmixer();
+	initSDLttf();
 
 	atexit(cleanup);
 

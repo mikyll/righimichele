@@ -1,3 +1,6 @@
+#ifndef _structs_h
+#define _structs_h
+
 #include <SDL2/SDL_net.h>
 
 typedef struct Entity Entity;
@@ -64,3 +67,5 @@ typedef struct {
 	void (*receive)(void);
 	Message messageHead, * messageTail; // linked list containing messages received from each client
 } Interaction;
+
+#endif

@@ -1,3 +1,6 @@
+#ifndef _common_h
+#define _common_h
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -9,3 +12,5 @@
 
 #include "defs.h"
 #include "structs.h"
+
+#endif

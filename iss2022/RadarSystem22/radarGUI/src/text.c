@@ -7,7 +7,7 @@ void initFonts();
 TTF_Font* loadFont(char* filename);
 SDL_Texture* toTexture(SDL_Surface* surface, int destroySurface);
 
-void initSDLTtf()
+void initSDLttf()
 {
 	if (TTF_Init() < 0)
 	{
@@ -28,10 +28,11 @@ TTF_Font* loadFont(char* filename)
 
 	if(font = TTF_OpenFont(filename, FONT_SIZE))
 	{
-		SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, "Correctly loaded %s", filename);
+		SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, "Loaded texture %s", filename);
 	}
-	else {
-	SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR, "Couldn't find %s", filename);
+	else
+	{
+		SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR, "Couldn't find %s", filename);
 	}
 
 	return font;

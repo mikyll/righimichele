@@ -19,7 +19,7 @@ static void getIPfromNetwork(IPaddress address, char* ip, int* port);
 static void getIPfromHost(IPaddress address, char* ip, int* port);
 
 
-void initSDLNet()
+void initSDLnet()
 {
 	// Init SDL Net subsystem
 	if (SDLNet_Init() < 0)
