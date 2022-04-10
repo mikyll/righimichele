@@ -1,12 +1,13 @@
 #include "stage.h"
 
+static const DPC = SDL_ALPHA_OPAQUE / (FPS * CPS); // decrement to last for a complete cycle
+
 static void logic();
 static void draw();
 // logic
 void initStage();
 static void resetStage();
 static void initRadar();
-
 static void doMessages();
 static void doRadar();
 static void doObstacles();
@@ -18,8 +19,6 @@ static void drawRadar();
 static void drawRadarLine();
 static void drawObstacles();
 static void drawText();
-
-static const DPC = SDL_ALPHA_OPAQUE / (FPS * CPS); // decrement to lasts for a complete cycle
 
 static Entity* radar;
 Entity* radarLine;
@@ -42,7 +41,7 @@ static void logic()
 
 static void initRadar()
 {
-	// radar
+	// Init radar
 	radar = malloc(sizeof(Entity));
 	memset(radar, 0, sizeof(Entity));
 	radar->texture = radarTexture;
@@ -50,7 +49,7 @@ static void initRadar()
 	radar->x = WINDOW_WIDTH / 2;
 	radar->y = WINDOW_HEIGHT - radar->h / 2;
 
-	// radarLine
+	// Init radarLine
 	radarLine = malloc(sizeof(Entity));
 	memset(radarLine, 0, sizeof(Entity));
 	radarLine->texture = radarLineTexture;
@@ -71,7 +70,7 @@ void initStage()
 	stage.obstacleTail = &stage.obstacleHead;
 	stage.distanceTail = &stage.distanceHead;
 
-	// load textures
+	// Load textures
 	radarTexture = loadTexture("gfx/radar.png");
 	radarLineTexture = loadTexture("gfx/radar_line.png");
 	obstacleTexture = loadTexture("gfx/obstacle2.png");
@@ -161,7 +160,7 @@ static void doRadar()
 
 				spawnObstacle(x, y);
 				// spawnText(?)
-				app.soundEnabled ? playSound(SND_OBJ_DETECTED, CH_OBJ) : (void)0;
+				playSound(SND_OBJ_DETECTED, CH_OBJ);
 			}
 
 			if (d == stage.distanceTail)
@@ -179,7 +178,7 @@ static void doRadar()
 	if (app.susDetected && radarLine->angle == 360)
 	{
 		spawnSus(radar->x, radar->y);
-		app.soundEnabled ? playSound(SND_SUS_DETECTED, CH_SUS) : (void)0;
+		playSound(SND_SUS_DETECTED, CH_SUS);
 	}
 }
 

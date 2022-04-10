@@ -30,8 +30,8 @@ int main(int argc, char** argv)
 
 	memset(&app, 0, sizeof(App));
 
-	if (argc == 2 && strcmp(argv[1], "-s") == 0)
-		app.soundEnabled = 1;
+	if (argc == 2 && strcmp(argv[1], "-d") == 0)
+		app.debug = 1;
 
 	srand(time(NULL));
 
@@ -59,7 +59,6 @@ int main(int argc, char** argv)
 		doInput();
 
 		doReceive();
-		// NB: doReceive calls function pointer to Interaction (receive); that function is set by initNet();
 
 		app.delegate.logic();
 

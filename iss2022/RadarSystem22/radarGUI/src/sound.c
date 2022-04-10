@@ -10,7 +10,6 @@ void initSDLMixer()
     if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 1024) == -1)
     {
         printf("Couldn't initialize SDL Mixer: %s\n", Mix_GetError());
-        app.soundEnabled = 0;
         return;
     }
 

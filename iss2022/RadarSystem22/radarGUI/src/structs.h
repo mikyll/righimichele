@@ -25,7 +25,7 @@ typedef struct {
 	SDL_Renderer* renderer;
 	Delegate delegate;
 	int susDetected;
-	int soundEnabled;
+	int debug;
 } App;
 
 struct Entity {
@@ -62,5 +62,5 @@ typedef struct {
 	SDLNet_GenericSocket sockets[MAX_SOCKET];
 	int socketType[MAX_SOCKET];
 	void (*receive)(void);
-	Message messageHead, * messageTail; // linked list containing each distance received from clients
+	Message messageHead, * messageTail; // linked list containing messages received from each client
 } Interaction;

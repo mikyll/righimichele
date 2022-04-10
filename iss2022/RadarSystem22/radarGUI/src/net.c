@@ -4,23 +4,24 @@ void initSDLNet();
 void initInteraction();
 static void addUDPsocket(Uint16 port);
 static void addTCPserverSocket(Uint16 port);
-static void acceptTCPconnection(int nSock);
+static void acceptTCPconnection(int serverSocket);
+
+static void receiveMessage();
 static void receiveUDP(int nSock);
 static void receiveTCP(int nSock);
 static void receiveMock();
 
-static void receiveMessage();
-
 void doReceive();
 
 static void addMessage(char* data);
+
 static void getIPfromNetwork(IPaddress address, char* ip, int* port);
 static void getIPfromHost(IPaddress address, char* ip, int* port);
 
 
 void initSDLNet()
 {
-	// Init SDL Net
+	// Init SDL Net subsystem
 	if (SDLNet_Init() < 0)
 	{
 		SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_CRITICAL, "Couldn't initialize SDLNet:  %s", SDLNet_GetError());
@@ -30,9 +31,6 @@ void initSDLNet()
 
 void initInteraction()
 {
-	IPaddress* ipAddress;
-	int i, numused;
-
 	memset(&interaction, 0, sizeof(Interaction));
 	interaction.used = 0;
 
@@ -50,8 +48,8 @@ void initInteraction()
 	}
 
 	// 3. Create and add sockets to the set
-	addUDPsocket(4000);
-	addTCPserverSocket(4001);
+	addUDPsocket(UDP_SOCKET_PORT);
+	addTCPserverSocket(SERVER_SOCKET_PORT);
 
 	// 4 Open ACK socket on first available port
 	/*if (!(ackSocket = SDLNet_UDP_Open(0)))
@@ -79,7 +77,6 @@ static void receiveMessage()
 	else if (numReady)
 	{
 		// 2. There is at least 1 socket with activity
-
 		for (i = 0; i < interaction.used; i++)
 		{
 			// 3. Check if the specific socket has packets ready
@@ -110,8 +107,6 @@ static void receiveMessage()
 // Open a UDP socket and add it to the socket set
 static void addUDPsocket(Uint16 port)
 {
-	int i;
-
 	// 1. Check for available indexes in socket array
 	if (interaction.used == MAX_SOCKET)
 	{
@@ -120,26 +115,24 @@ static void addUDPsocket(Uint16 port)
 	}
 	else // There is at least an available index
 	{
-		i = interaction.used;
-
 		// 2. Open UDP socket #i
-		if ((interaction.sockets[i] = SDLNet_UDP_Open(port)) == NULL)
+		if ((interaction.sockets[interaction.used] = SDLNet_UDP_Open(port)) == NULL)
 		{
-			SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR, "SDLNet_UDP_Open[%d] on port %d failed: %s", i, port, SDLNet_GetError());
+			SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR, "SDLNet_UDP_Open[%d] on port %d failed: %s", interaction.used, port, SDLNet_GetError());
 			exit(1);
 		}
 		SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, "UDP socket created. Listening on 0.0.0.0:%hd...", port);
 
-		// 3. Add UDP socket #i to the socket set
-		interaction.used = SDLNet_UDP_AddSocket(interaction.socketSet, interaction.sockets[i]);
+		// 3. Save the type of the socket
+		interaction.socketType[interaction.used] = SOCK_UDP;
+
+		// 4. Add UDP socket #i to the socket set
+		interaction.used = SDLNet_UDP_AddSocket(interaction.socketSet, interaction.sockets[interaction.used]);
 		if (interaction.used == -1)
 		{
 			SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR, "SDLNet_UDP_AddSocket failed: %s", SDLNet_GetError());
 			exit(1);
 		}
-
-		// 4. Save the type of the socket
-		interaction.socketType[i] = SOCK_UDP;
 	}
 }
 
@@ -235,14 +228,7 @@ static void receiveUDP(int nSock)
 		getIPfromNetwork(p->address, &host, &port);
 
 		// Debug
-		printf("UDP Packet incoming.\n");
-		printf("\tChan: %d\n", p->channel);
-		printf("\tData: %s\n", (char*)p->data);
-		printf("\tLen: %d\n", p->len);
-		printf("\tMaxlen: %d\n", p->maxlen);
-		printf("\tStatus: %d\n", p->status);
-		printf("\tAddress: %x:%x", p->address.host, p->address.port);
-		printf(" (%s:%d)\n", host, port);
+		app.debug ? printf("UDP Packet incoming.\n\tChan: % d\n\tData: % s\n\tLen: % d\n\tMaxlen: % d\n\tStatus: % d\n\tAddress: % x : % x\n(% s: % d)\n", p->channel, (char*)p->data, p->len, p->maxlen, p->status, p->address.host, p->address.port, host, port) : (void)0;
 
 		// 3. Add Message to the linked list
 		addMessage(p->data);
@@ -276,7 +262,7 @@ static void receiveTCP(int nSock)
 	if (read > 0)
 	{
 		// Debug
-		printf("TCP message incoming. Received %d bytes: \"%s\"\n", read, msg);
+		app.debug ? printf("TCP message incoming. Received %d bytes: \"%s\"\n", read, msg) : (void)0;
 
 		// 2. Add Message to the linked list
 		addMessage(msg);
@@ -297,27 +283,26 @@ static void receiveTCP(int nSock)
 	}
 }
 
-void doReceive()
-{
-	interaction.receive();
-}
-
 static void receiveMock()
 {
-	int r, distance, angle;
+	char msg[MAX_MSG_LENGTH];
+	int r;
 
 	r = rand() % 1000;
 	if (r < 200)
 	{
-		distance = r;
-		angle = 180;
+		sprintf(msg, "{\"distance\" : %d, \"angle\" : %d}", r, 180);
 
-		printf("Mock TCP Packet incoming\n");
-		printf("\tData: {\"distance\" : %d, \"angle\" : %d}\n", distance, angle);
+		// Debug
+		app.debug ? printf("Mock TCP message incoming. Data: \"%s\"\n", msg) : (void)0;
 
-		addDistance(distance, angle);
-		printf("Mock | Distance: %d; Angle: %d\n", distance, angle);
+		addMessage(msg);
 	}
+}
+
+void doReceive()
+{
+	interaction.receive();
 }
 
 static void addMessage(char* data)
