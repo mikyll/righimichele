@@ -37,31 +37,6 @@
 #define MAX(a,b) (((a)>(b))?(a):(b))
 #define STRNCPY(dest, src, n) strncpy(dest, src, n); dest[n - 1] = '\0'
 
-enum Directions
-{
-	DIR_E,		// EAST
-	DIR_SE,		// SOUTH-EAST
-	DIR_S,		// SOUTH
-	DIR_SW,		// SOUTH-WEST
-	DIR_W,		// WEST
-	DIR_NW,		// NORTH-WEST
-	DIR_N,		// NORTH
-	DIR_NE,		// NORTH-EAST
-	DIR_NUM,	// DIRECTIONS_NUM
-};
-
-enum Degrees
-{
-	DEG_E = 360,	// EAST
-	DEG_SE = 45,	// SOUTH-EAST
-	DEG_S = 90,		// SOUTH
-	DEG_SW = 135,	// SOUTH-WEST
-	DEG_W = 180,	// WEST
-	DEG_NW = 225,	// NORTH-WEST
-	DEG_N = 270,	// NORTH
-	DEG_NE = 315,	// NORTH-EAST
-};
-
 enum Channels
 {
 	CH_ANY = -1,

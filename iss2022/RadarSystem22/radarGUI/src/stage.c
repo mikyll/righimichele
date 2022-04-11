@@ -16,19 +16,24 @@ static void spawnObstacle(int x, int y);
 static void spawnSus(int x, int y);
 // draw
 static void drawRadar();
+static void drawRadarCoordinates();
 static void drawRadarLine();
 static void drawObstacles();
 static void drawText();
 
+void getCoordsFromAngle(int angle, int radius, int* x, int* y);
+
+
 static Entity* radar;
 Entity* radarLine;
 static SDL_Texture* radarTexture;
+static SDL_Texture* radarCoordinateTexture;
 static SDL_Texture* radarLineTexture;
 static SDL_Texture* obstacleTexture;
 static SDL_Texture* susTexture;
 
 static SDL_Texture* textFPS;
-static SDL_Texture* coordinates[DIR_NUM];
+
 
 static void logic()
 {
@@ -69,9 +74,11 @@ void initStage()
 	
 	stage.obstacleTail = &stage.obstacleHead;
 	stage.distanceTail = &stage.distanceHead;
+	stage.obstacleCoordsTail = &stage.obstacleCoordsHead;
 
 	// Load textures
 	radarTexture = loadTexture("gfx/radar.png");
+	radarCoordinateTexture = loadTexture("gfx/coordinates.png");
 	radarLineTexture = loadTexture("gfx/radar_line.png");
 	obstacleTexture = loadTexture("gfx/obstacle2.png");
 	SDL_SetTextureBlendMode(obstacleTexture, SDL_BLENDMODE_BLEND);
@@ -85,6 +92,7 @@ static void resetStage()
 {
 	Entity* e;
 	Distance* d;
+	ObstacleCoord* oc;
 	
 	while (stage.obstacleHead.next)
 	{
@@ -97,6 +105,12 @@ static void resetStage()
 		d = stage.distanceHead.next;
 		stage.distanceHead.next = d->next;
 		free(d);
+	}
+	while (stage.obstacleCoordsHead.next)
+	{
+		oc = stage.obstacleCoordsHead.next;
+		stage.obstacleCoordsHead.next = oc->next;
+		free(oc);
 	}
 
 	initRadar();
@@ -131,6 +145,7 @@ static void doMessages()
 static void doRadar()
 {
 	Distance* d, * prev;
+	int x, y;
 
 	// Rotate the radar line
 	if (radarLine->angle >= 360)
@@ -151,14 +166,18 @@ static void doRadar()
 			// show the obstacle only if it's between the bounds
 			if (d->distance >= MIN_D && d->distance <= MAX_D)
 			{
-				int x, y, l;
+				int x2, y2, l;
 				double a;
 				l = radar->w / MAX_D;
 				a = radarLine->angle * (double)(PI / 180.0);
-				x = radar->x + (cos(a) * d->distance * l);
-				y = radar->y + (sin(a) * d->distance * l);
+				x2 = radar->x + (cos(a) * d->distance * l);
+				y2 = radar->y + (sin(a) * d->distance * l);
+				printf("l: %d, a: %f, x: %d, y: %d\n", l, a, x2, y2);
 
-				spawnObstacle(x, y);
+				getCoordsFromAngle(radarLine->angle, radar->w / MAX_D, &x, &y);
+
+				spawnObstacle(radar->x + x * d->distance, radar->y + y * d->distance);
+				printf("%d, %d\n", radar->x + x * d->distance, radar->y + y * d->distance); // Debug / Test
 				// spawnText(?)
 				playSound(SND_OBJ_DETECTED, CH_OBJ);
 			}
@@ -205,6 +224,15 @@ static void doObstacles()
 	}
 }
 
+static void doObstacleCoordinates()
+{
+	// MAX_OBS_COORDS_NUM = 5
+
+	// when the num is > MAX_OBS, start deleting the first element and scroll all the values up
+
+	// if health <= 0 => free
+}
+
 Distance* parseDistance(Message m)
 {
 	Distance* d;
@@ -217,6 +245,7 @@ Distance* parseDistance(Message m)
 	return d;
 }
 
+// Create the Obstacle
 static void spawnObstacle(int x, int y)
 {
 	Entity* o;
@@ -234,7 +263,7 @@ static void spawnObstacle(int x, int y)
 	o->alpha = SDL_ALPHA_OPAQUE;
 }
 
-// creates the Sus
+// Create the Sus
 static void spawnSus(int x, int y)
 {
 	Entity* s;
@@ -253,9 +282,30 @@ static void spawnSus(int x, int y)
 	s->alpha = SDL_ALPHA_OPAQUE;
 }
 
+static void spawnObsCoord(int x, int y)
+{
+	ObstacleCoord* oc;
+
+	oc = malloc(sizeof(ObstacleCoord));
+	memset(oc, 0, sizeof(ObstacleCoord));
+
+	stage.obstacleCoordsTail->next = oc;
+	stage.obstacleCoordsTail = oc;
+
+	// to-do
+	oc->health = SDL_ALPHA_OPAQUE;
+	/*oc->x = x;
+	oc->y = y;
+	oc->texture = obstacleTexture;
+
+	oc->alpha = SDL_ALPHA_OPAQUE;*/
+}
+
 static void draw()
 {
 	drawRadar();
+
+	drawRadarCoordinates();
 
 	drawRadarLine();
 
@@ -267,6 +317,11 @@ static void draw()
 static void drawRadar()
 {
 	blit(radarTexture, radar->x, radar->y, 1);
+}
+
+static void drawRadarCoordinates()
+{
+	blit(radarCoordinateTexture, radar->x, radar->y, 1);
 }
 
 static void drawRadarLine()
@@ -288,12 +343,33 @@ static void drawObstacles()
 
 static void drawText()
 {
+	Entity* o;
+	SDL_Texture* coordsText;
 	char buffer[32];
+	int x, y;
 	
-	// draw FPS text
+	// Draw FPS text
 	snprintf(buffer, 32, "FPS: %d", stage.fps);
-	SDL_Texture* textFPS = getTextTexture(buffer);
+	textFPS = getTextTexture(buffer);
 	drawNormalText(textFPS, WINDOW_WIDTH - 90, 0);
 
-	// to-do: for ...
+	// Draw obstacle coordinates
+	for (o = stage.obstacleHead.next; o != NULL; o = o->next)
+	{
+		x = (o->x - radar->x) / (radar->w / MAX_D);
+		y = -(o->y - radar->y);
+		snprintf(buffer, 32, "Obstacle { Distance: %d, Angle: %d }", x, y);
+		coordsText = getTextTexture(buffer);
+	}
+}
+
+void getCoordsFromAngle(int angle, int radius, int* x, int* y)
+{
+	double a;
+
+	a = angle * (double)(PI / 180.0);
+	*x = (int) (cos(a) * radius);
+	*y = (int) (sin(a) * radius);
+	
+	printf("l: %d, a: %f, x: %d, y: %d - angle: %d\n", radius, a, (*x), (*y), angle); // Debug / Test
 }

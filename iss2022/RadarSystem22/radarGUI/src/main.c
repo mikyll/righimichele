@@ -70,7 +70,7 @@ int main(int argc, char** argv)
 
 		end = SDL_GetPerformanceCounter();
 		elapsed = (end - start) / (float)SDL_GetPerformanceFrequency();
-		((int)radarLine->angle % (360 / DIR_NUM)) == 0 ? stage.fps = (int)1.0f / elapsed : stage.fps;
+		((int)radarLine->angle % (360 / 8)) == 0 ? stage.fps = (int)1.0f / elapsed : stage.fps;
 	}
 
 	return 0;
