@@ -12,8 +12,9 @@ static void doMessages();
 static void doRadar();
 static void doObstacles();
 static Distance* parseDistance(Message m);
-static void spawnObstacle(int x, int y);
+static void spawnObstacle(int distance, int angle);
 static void spawnSus(int x, int y);
+static void spawnObsCoord(int distance, int angle);
 // draw
 static void drawRadar();
 static void drawRadarCoordinates();
@@ -21,7 +22,7 @@ static void drawRadarLine();
 static void drawObstacles();
 static void drawText();
 
-void getCoordsFromAngle(int angle, int radius, int* x, int* y);
+void getCartesianFromPolarCoords(int radius, int angle, int* x, int* y);
 
 
 static Entity* radar;
@@ -166,6 +167,7 @@ static void doRadar()
 			// show the obstacle only if it's between the bounds
 			if (d->distance >= MIN_D && d->distance <= MAX_D)
 			{
+				// Debug / Test
 				int x2, y2, l;
 				double a;
 				l = radar->w / MAX_D;
@@ -174,9 +176,13 @@ static void doRadar()
 				y2 = radar->y + (sin(a) * d->distance * l);
 				printf("l: %d, a: %f, x: %d, y: %d\n", l, a, x2, y2);
 
-				getCoordsFromAngle(radarLine->angle, radar->w / MAX_D, &x, &y);
+				getCartesianFromPolarCoords(radarLine->angle, radar->w / MAX_D, &x, &y);
 
 				spawnObstacle(radar->x + x * d->distance, radar->y + y * d->distance);
+
+				//spawnObstacle(radar->w / MAX_D * d->distance, d->angle);
+				
+				
 				printf("%d, %d\n", radar->x + x * d->distance, radar->y + y * d->distance); // Debug / Test
 				// spawnText(?)
 				playSound(SND_OBJ_DETECTED, CH_OBJ);
@@ -226,11 +232,25 @@ static void doObstacles()
 
 static void doObstacleCoordinates()
 {
-	// MAX_OBS_COORDS_NUM = 5
+	ObstacleCoord* oc, * prev;
 
-	// when the num is > MAX_OBS, start deleting the first element and scroll all the values up
+	prev = &stage.obstacleCoordsHead;
 
-	// if health <= 0 => free
+	for (oc = stage.obstacleCoordsHead.next; oc != NULL; oc = oc->next)
+	{
+		oc->health -= DPC * 1.5;
+		if (oc->health <= 0)
+		{
+			if (oc == stage.obstacleCoordsTail)
+				stage.obstacleCoordsTail = prev;
+
+			prev->next = oc->next;
+			free(oc); // remove the obstacle from the linked list
+			oc = prev;
+		}
+
+		prev = oc;
+	}
 }
 
 Distance* parseDistance(Message m)
@@ -246,9 +266,12 @@ Distance* parseDistance(Message m)
 }
 
 // Create the Obstacle
-static void spawnObstacle(int x, int y)
+static void spawnObstacle(int distance, int angle)
 {
 	Entity* o;
+	int x, y;
+
+	getCartesianFromPolarCoords(distance, angle, &x, &y);
 
 	o = malloc(sizeof(Entity));
 	memset(o, 0, sizeof(Entity));
@@ -261,6 +284,9 @@ static void spawnObstacle(int x, int y)
 	o->texture = obstacleTexture;
 
 	o->alpha = SDL_ALPHA_OPAQUE;
+
+	// Coords
+	spawnObsCoord(distance, angle);
 }
 
 // Create the Sus
@@ -282,9 +308,25 @@ static void spawnSus(int x, int y)
 	s->alpha = SDL_ALPHA_OPAQUE;
 }
 
-static void spawnObsCoord(int x, int y)
+static void spawnObsCoord(int distance, int angle)
 {
-	ObstacleCoord* oc;
+	ObstacleCoord* oc, * prev;
+	char buffer[32];
+	int i = 0;
+
+	for (oc = stage.obstacleCoordsHead.next; oc != NULL; oc = oc->next)
+		i++;
+
+	prev = &stage.obstacleCoordsHead;
+	for (oc = stage.obstacleCoordsHead.next; i - MAX_NUM_COORDS > 0; i--)
+	{
+		if (oc == stage.obstacleCoordsTail)
+			stage.obstacleCoordsTail = prev;
+
+		prev->next = oc->next;
+		free(oc);
+		oc = prev;
+	}
 
 	oc = malloc(sizeof(ObstacleCoord));
 	memset(oc, 0, sizeof(ObstacleCoord));
@@ -292,13 +334,12 @@ static void spawnObsCoord(int x, int y)
 	stage.obstacleCoordsTail->next = oc;
 	stage.obstacleCoordsTail = oc;
 
-	// to-do
 	oc->health = SDL_ALPHA_OPAQUE;
-	/*oc->x = x;
-	oc->y = y;
-	oc->texture = obstacleTexture;
+	oc->distance = distance;
+	oc->angle = angle;
 
-	oc->alpha = SDL_ALPHA_OPAQUE;*/
+	snprintf(buffer, 32, "Obstacle { Distance: %d, Angle: %d }", distance, angle);
+	oc->text = getTextTexture(buffer);
 }
 
 static void draw()
@@ -346,7 +387,7 @@ static void drawText()
 	Entity* o;
 	SDL_Texture* coordsText;
 	char buffer[32];
-	int x, y;
+	int x, y, i;
 	
 	// Draw FPS text
 	snprintf(buffer, 32, "FPS: %d", stage.fps);
@@ -354,7 +395,7 @@ static void drawText()
 	drawNormalText(textFPS, WINDOW_WIDTH - 90, 0);
 
 	// Draw obstacle coordinates
-	for (o = stage.obstacleHead.next; o != NULL; o = o->next)
+	for (i = 0, o = stage.obstacleHead.next; o != NULL; o = o->next)
 	{
 		x = (o->x - radar->x) / (radar->w / MAX_D);
 		y = -(o->y - radar->y);
@@ -363,13 +404,13 @@ static void drawText()
 	}
 }
 
-void getCoordsFromAngle(int angle, int radius, int* x, int* y)
+void getCartesianFromPolarCoords(int distance, int angle, int* x, int* y)
 {
 	double a;
 
 	a = angle * (double)(PI / 180.0);
-	*x = (int) (cos(a) * radius);
-	*y = (int) (sin(a) * radius);
+	*x = (int) (cos(a) * distance);
+	*y = (int) (sin(a) * distance);
 	
-	printf("l: %d, a: %f, x: %d, y: %d - angle: %d\n", radius, a, (*x), (*y), angle); // Debug / Test
+	printf("l: %d, a: %f, x: %d, y: %d - angle: %d\n", distance, a, (*x), (*y), angle); // Debug / Test
 }

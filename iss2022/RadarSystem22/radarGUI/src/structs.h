@@ -20,8 +20,10 @@ struct Distance {
 };
 
 struct ObstacleCoord {
-	SDL_Texture* text;
+	int distance;
+	int angle;
 	int health;
+	SDL_Texture* text;
 	ObstacleCoord* next;
 };
 

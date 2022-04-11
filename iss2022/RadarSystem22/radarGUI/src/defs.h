@@ -17,8 +17,10 @@
 #define SPC1 2.25	// 1 Second Per Cycle
 #define SPC2 5		// 2 Seconds Per Cycle
 
-#define MAX_D				200.0
-#define MIN_D				0.0
+#define MAX_D				200
+#define MIN_D				0
+
+#define MAX_NUM_COORDS		5
 
 #define UDP_SOCKET_PORT		4000
 #define SERVER_SOCKET_PORT	4001
