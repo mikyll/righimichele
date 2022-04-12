@@ -66,6 +66,7 @@ typedef struct {
 	Entity obstacleHead, * obstacleTail;
 	Distance distanceHead, * distanceTail;
 	ObstacleCoord obstacleCoordsHead, * obstacleCoordsTail;
+	int nCoords;
 }Stage;
 
 typedef struct {

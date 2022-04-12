@@ -173,26 +173,11 @@ static void doRadar()
 		// Check if the angle of the detected obstacle equals the current radarLine angle
 		if (radarLine->angle == d->angle)
 		{
-			// Show the obstacle only if it's between the bounds
+			// Show (Spawn) the obstacle only if it's between the bounds
 			if (d->distance >= MIN_D && d->distance <= MAX_D)
 			{
-				// Debug / Test
-				/*int x2, y2, l;
-				double a;
-				l = radar->w / MAX_D;
-				a = radarLine->angle * (double)(PI / 180.0);
-				x2 = radar->x + (cos(a) * d->distance * l);
-				y2 = radar->y + (sin(a) * d->distance * l);
-				printf("l: %d, a: %f, x: %d, y: %d\n", l, a, x2, y2);
+				spawnObstacle(((radar->w / 2) / MAX_D) * d->distance, d->angle);
 
-				getCartesianFromPolarCoords(radarLine->angle, radar->w / MAX_D, &x, &y);
-
-				spawnObstacle(radar->x + x * d->distance, radar->y + y * d->distance);*/
-
-				spawnObstacle(radar->w / MAX_D * d->distance, d->angle);
-				
-				//printf("%d, %d\n", radar->x + x * d->distance, radar->y + y * d->distance); // Debug / Test
-				// spawnText(?)
 				playSound(SND_OBJ_DETECTED, CH_OBJ);
 			}
 
@@ -317,12 +302,19 @@ static void spawnSus(int x, int y)
 
 static void spawnObsCoord(int distance, int angle)
 {
-	ObstacleCoord* oc, * prev;
+	/*ObstacleCoord* oc, * prev;
 	char buffer[32];
-	int i = 0;
 
-	for (oc = stage.obstacleCoordsHead.next; oc != NULL; oc = oc->next)
-		i++;
+	if (stage.nCoords == MAX_NUM_COORDS)
+	{
+		prev = &stage.obstacleCoordsHead;
+		oc = stage.obstacleCoordsHead.next->next;
+		free(stage.obstacleCoordsHead.next);
+
+		// remove the head element
+	}
+
+	// add the new element
 
 	prev = &stage.obstacleCoordsHead;
 	for (oc = stage.obstacleCoordsHead.next; i - MAX_NUM_COORDS > 0; i--)
@@ -346,7 +338,7 @@ static void spawnObsCoord(int distance, int angle)
 	oc->angle = angle;
 
 	snprintf(buffer, 32, "Obstacle { Distance: %d, Angle: %d }", distance, angle);
-	oc->text = getTextTexture(buffer);
+	oc->text = getTextTexture(buffer);*/
 }
 
 static void draw()
