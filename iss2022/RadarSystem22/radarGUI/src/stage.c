@@ -26,6 +26,7 @@ void getCartesianFromPolarCoords(int radius, int angle, int* x, int* y);
 
 
 static Entity* radar;
+static Entity* radarCoordinates;
 Entity* radarLine;
 static SDL_Texture* radarTexture;
 static SDL_Texture* radarCoordinateTexture;
@@ -53,7 +54,15 @@ static void initRadar()
 	radar->texture = radarTexture;
 	SDL_QueryTexture(radar->texture, NULL, NULL, &radar->w, &radar->h);
 	radar->x = WINDOW_WIDTH / 2;
-	radar->y = WINDOW_HEIGHT - radar->h / 2;
+	radar->y = WINDOW_HEIGHT - BOTTOM_OFFSET - radar->h / 2;
+
+	// Init radarCoordinates
+	radarCoordinates = malloc(sizeof(Entity));
+	memset(radarCoordinates, 0, sizeof(Entity));
+	radarCoordinates->texture = radarCoordinateTexture;
+	SDL_QueryTexture(radarCoordinates->texture, NULL, NULL, &radarCoordinates->w, &radarCoordinates->h);
+	radarCoordinates->x = WINDOW_WIDTH / 2;
+	radarCoordinates->y = WINDOW_HEIGHT - BOTTOM_OFFSET - radar->h / 2;
 
 	// Init radarLine
 	radarLine = malloc(sizeof(Entity));
@@ -61,8 +70,8 @@ static void initRadar()
 	radarLine->texture = radarLineTexture;
 	SDL_QueryTexture(radarLine->texture, NULL, NULL, &radarLine->w, &radarLine->h);
 	radarLine->x = WINDOW_WIDTH / 2;
-	radarLine->y = WINDOW_HEIGHT - radarLine->h / 2;
-	radarLine->angle = -90;
+	radarLine->y = WINDOW_HEIGHT - BOTTOM_OFFSET - radarLine->h / 2;
+	//radarLine->angle = 0;
 }
 
 void initStage()
@@ -79,7 +88,7 @@ void initStage()
 
 	// Load textures
 	radarTexture = loadTexture("gfx/radar.png");
-	radarCoordinateTexture = loadTexture("gfx/coordinates.png");
+	radarCoordinateTexture = loadTexture("gfx/coordinates2.png");
 	radarLineTexture = loadTexture("gfx/radar_line.png");
 	obstacleTexture = loadTexture("gfx/obstacle2.png");
 	SDL_SetTextureBlendMode(obstacleTexture, SDL_BLENDMODE_BLEND);
@@ -164,11 +173,11 @@ static void doRadar()
 		// Check if the angle of the detected obstacle equals the current radarLine angle
 		if (radarLine->angle == d->angle)
 		{
-			// show the obstacle only if it's between the bounds
+			// Show the obstacle only if it's between the bounds
 			if (d->distance >= MIN_D && d->distance <= MAX_D)
 			{
 				// Debug / Test
-				int x2, y2, l;
+				/*int x2, y2, l;
 				double a;
 				l = radar->w / MAX_D;
 				a = radarLine->angle * (double)(PI / 180.0);
@@ -178,12 +187,11 @@ static void doRadar()
 
 				getCartesianFromPolarCoords(radarLine->angle, radar->w / MAX_D, &x, &y);
 
-				spawnObstacle(radar->x + x * d->distance, radar->y + y * d->distance);
+				spawnObstacle(radar->x + x * d->distance, radar->y + y * d->distance);*/
 
-				//spawnObstacle(radar->w / MAX_D * d->distance, d->angle);
+				spawnObstacle(radar->w / MAX_D * d->distance, d->angle);
 				
-				
-				printf("%d, %d\n", radar->x + x * d->distance, radar->y + y * d->distance); // Debug / Test
+				//printf("%d, %d\n", radar->x + x * d->distance, radar->y + y * d->distance); // Debug / Test
 				// spawnText(?)
 				playSound(SND_OBJ_DETECTED, CH_OBJ);
 			}
@@ -199,10 +207,9 @@ static void doRadar()
 		prev = d;
 	}
 	
-	
-	if (app.susDetected && radarLine->angle == 360)
+	if (app.susDetected && radarLine->angle == 90)
 	{
-		spawnSus(radar->x, radar->y);
+		spawnSus(radar->x + radar->w / 4, radar->y);
 		playSound(SND_SUS_DETECTED, CH_SUS);
 	}
 }
@@ -279,8 +286,8 @@ static void spawnObstacle(int distance, int angle)
 	stage.obstacleTail->next = o;
 	stage.obstacleTail = o;
 
-	o->x = x;
-	o->y = y;
+	o->x = x + radar->x;
+	o->y = y + radar->y;
 	o->texture = obstacleTexture;
 
 	o->alpha = SDL_ALPHA_OPAQUE;
@@ -300,7 +307,7 @@ static void spawnSus(int x, int y)
 	stage.obstacleTail->next = s;
 	stage.obstacleTail = s;
 
-	s->x = x + radar->w / 4;
+	s->x = x;
 	s->y = y;
 
 	s->texture = susTexture;
@@ -357,17 +364,17 @@ static void draw()
 
 static void drawRadar()
 {
-	blit(radarTexture, radar->x, radar->y, 1);
+	blit(radar->texture, radar->x, radar->y, 1);
 }
 
 static void drawRadarCoordinates()
 {
-	blit(radarCoordinateTexture, radar->x, radar->y, 1);
+	blit(radarCoordinates->texture, radarCoordinates->x, radarCoordinates->y, 1);
 }
 
 static void drawRadarLine()
 {
-	blitRotated(radarLineTexture, radarLine->x, radarLine->y, 1, radarLine->angle);
+	blitRotated(radarLine->texture, radarLine->x, radarLine->y, 1, radarLine->angle);
 }
 
 static void drawObstacles()
@@ -404,13 +411,11 @@ static void drawText()
 	}
 }
 
-void getCartesianFromPolarCoords(int distance, int angle, int* x, int* y)
+void getCartesianFromPolarCoords(int radius, int angle, int* x, int* y)
 {
 	double a;
 
-	a = angle * (double)(PI / 180.0);
-	*x = (int) (cos(a) * distance);
-	*y = (int) (sin(a) * distance);
-	
-	printf("l: %d, a: %f, x: %d, y: %d - angle: %d\n", distance, a, (*x), (*y), angle); // Debug / Test
+	a = (angle - 90) * (double)(PI / 180.0);
+	*x = (cos(a) * radius);
+	*y = (sin(a) * radius);
 }

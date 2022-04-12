@@ -5,7 +5,6 @@ import (
 	"net"
 	"os"
 	"strconv"
-	"time"
 )
 
 type Input struct {
@@ -32,7 +31,7 @@ func connection_handler() {
 	}
 
 	// test
-	i, j := 0, 0
+	/*i, j := 0, 0
 	for {
 		i++
 		j++
@@ -52,7 +51,7 @@ func connection_handler() {
 		}
 
 		time.Sleep(time.Duration(time.Millisecond * 30))
-	}
+	}*/
 
 	defer conn.Close()
 	for !exit {

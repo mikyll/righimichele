@@ -3,8 +3,9 @@
 
 #define WINDOW_TITLE		"Radar GUI"
 
-#define WINDOW_WIDTH		520
-#define WINDOW_HEIGHT		600
+#define WINDOW_WIDTH		600
+#define WINDOW_HEIGHT		650
+#define BOTTOM_OFFSET		20
 
 #define FPS					60
 
