@@ -1,31 +1,82 @@
+#ifndef _structs_h
+#define _structs_h
+
+#include <SDL2/SDL_net.h>
+
+typedef struct Entity Entity;
+typedef struct Message Message;
+typedef struct Distance Distance;
+typedef struct ObstacleCoord ObstacleCoord;
+
+struct Message {
+	char data[MAX_MSG_LENGTH];
+	Message* next;
+};
+
+struct Distance {
+	int distance;
+	int angle;
+	Distance* next;
+};
+
+struct ObstacleCoord {
+	int distance;
+	int angle;
+	int health;
+	SDL_Texture* text;
+	ObstacleCoord* next;
+};
+
+typedef struct {
+	void (*logic)(void);
+	void (*draw)(void);
+} Delegate;
+
 typedef struct {
 	SDL_Window* window;
 	SDL_Renderer* renderer;
-	int soundEnabled;
-	int objDetected[DIR_NUM];
+	Delegate delegate;
 	int susDetected;
-}App;
+	int debug;
+} App;
+
+struct Entity {
+	int x;
+	int y;
+	int w;
+	int h;
+	int angle;
+	int alpha;
+	Entity* next;
+	SDL_Texture* texture;
+};
 
 typedef struct {
 	int x;
 	int y;
 	int w;
 	int h;
-	int l;
+	int radius;
 	float angle;
 	SDL_Texture* texture;
 }Radar;
 
 typedef struct {
-	int x;
-	int y;
-	int w;
-	int h;
-	int detected;
-	SDL_Texture* texture;
-}Entity;
+	int fps;
+	Entity obstacleHead, * obstacleTail;
+	Distance distanceHead, * distanceTail;
+	ObstacleCoord obstacleCoordsHead, * obstacleCoordsTail;
+	int nCoords;
+}Stage;
 
 typedef struct {
-	int timestamp;
-	int distance; // -1 non valido, [0, 200]mm valido
-}Packet; // NB: a seconda del canale su cui viene inviato, rappresenta il lato del radar
+	IPaddress* ipAddress;
+	int used;
+	SDLNet_SocketSet socketSet;
+	SDLNet_GenericSocket sockets[MAX_SOCKET];
+	int socketType[MAX_SOCKET];
+	void (*receive)(void);
+	Message messageHead, * messageTail; // linked list containing messages received from each client
+} Interaction;
+
+#endif

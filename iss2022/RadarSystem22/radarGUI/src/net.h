@@ -1,17 +1,18 @@
+#ifndef _net_h
+#define _net_h
+
 #include "common.h"
 
 #include "SDL2/SDL_net.h"
 
 #define ACK_IP "192.168.1.4"
 
-float receiveDistanceFromSocket(int nSock);
+void initInteraction();
+void doReceive();
 
 extern App app;
 extern Radar radar;
-extern Entity objects[DIR_NUM];
 
-IPaddress* ipAddress;
-Uint16 ports[DIR_NUM];
-UDPsocket sock;
-SDLNet_SocketSet socketset;
-UDPsocket udpSockets[DIR_NUM];
+Interaction interaction;
+
+#endif

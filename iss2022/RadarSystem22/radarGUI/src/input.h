@@ -1,6 +1,8 @@
+#ifndef _input_h
+#define _input_h
+
 #include "common.h"
 
 extern App app;
-extern Radar radar;
-extern Entity objects[DIR_NUM];
-extern Entity sus;
+
+#endif

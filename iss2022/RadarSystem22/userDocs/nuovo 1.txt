@@ -1,0 +1,48 @@
+La differenza principale riguarda l'utilizzo del protocollo di comunicazione UDP, invece di TCP.
+
+
+Immagine che mostra le 8 direzioni.
+
+Sfrutta il meccanismo della select per realizzare un meccanismo di comunicazione che permette di controllare la presenza di messaggi su socket diverse, in modo non bloccante e senza attese attive.
+
+Tabella con differenze?
+
+
+
+it.unibo.comm2022 / net.c, net.h
+
+8 socket su 8 porte diverse. Si parte da una porta impostata (es: 4000) e per i = 0...7 (8 volte) si apre una socket sulla porta 4000+i.
+
+Queste socket vengono aggiunte ad una struttura chiamata socket_set, che ci permette di controllare se sono presenti messaggi su una qualunque delle socket di tale set.
+
+void initNetworking();
+void receiveFromSocket();
+void sendACK();
+
+ciascuna porta corrisponde ad una direzione diversa (Nord, Nord-Est, ..., Nord-Ovest).
+
+ad ogni frame dell'applicazione, se l'angolo corrente della linea del radar è divisibile per 45 senza resto (ovvero se angolo % 45 appartiene a
+
+
+
+
+
+
+typedef struct {
+	void(*init)(void);
+	float(*receive)(void);
+	void(*send)(void);
+}Networking;
+
+void initUDPserver()
+{
+
+}
+void receiveDistanceUDP()
+{
+
+}
+void sendAckUDP()
+{
+	
+}
