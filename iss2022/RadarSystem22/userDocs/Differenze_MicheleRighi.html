@@ -1,0 +1,431 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <!--
+<link rel="stylesheet" type="text/css" href="../css/issStyle1.css">
+<script type="text/javascript" src="../css/issStyle.js"></script>
+-->
+<style type="text/css">
+body
+{
+    margin-left:  30px;
+    margin-right: 30px;
+};
+
+P
+{
+    font-family: Tahoma;
+    font-size: 10pt;
+};
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+	font-size: 93%;
+}
+
+a:hover {
+    background-color: #cccccc;
+}
+
+
+hr {
+    clear: both;
+    height: 1px;
+    color: #242424;
+    background-color: transparent;
+}
+
+h1, h2, h3 {
+    color: #242424;
+    clear: left;
+    font: 100% Tahoma, Helvetica, Arial, sans-serif;
+    margin-bottom: 0.5em;
+    padding-top: 0.5em;
+	border-radius: 10px;
+	padding: 5px;
+}
+
+top {
+	width: 100%;
+}
+
+
+#i {
+    color: #ff1010;
+}
+tt{
+	font-family: "Arial";
+    font-size: 90%;
+	color: #006600;
+}
+em{
+	font-family: "Arial";
+    font-size: 80%;
+	font-weight: bold;
+	border-style:solid;
+	border-color: #abe876;
+    color: #1632cc;
+}
+bc{
+	font-family: "Arial";
+	font-size: 90%;
+	font-weight: bold;
+    color: #990000;
+	background-color: #fcf8c7;
+}
+ks{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #0000CD	;
+	font-size: 90%;
+}
+kc{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #008000	;
+	font-size: 90%;
+}
+pre{
+	font-family: "Consolas";
+	font-size: 85%;
+	background-color: #f5f5f5;
+	border: 1.5px solid silver;
+	padding: 5px;
+	white-space: pre-wrap;
+}
+m{
+	font-family: "Helvetica";
+	line-height: 100%;
+ 	font-size: 75%;
+}
+div.body{
+	 
+    font-size: 18px;
+}
+k{
+    color: #990000;
+	font-weight: bold;
+	font-size: 90%;
+}
+h1 {
+    font-size: 150%;
+    background-color: #b2c0ff;
+	padding: 10px;
+}
+
+h2 {
+    background-color: #9ed8ff;
+    font-size: 130%;
+}
+
+h3 {
+	background-color: #e6ccff;
+    font-size: 100%;
+}
+h4 {
+    background-color: #ccffcc;
+    font-size: 100%;
+	width: 95%;
+	border-radius: 5px;
+	padding: 2px;
+}
+h5 {
+    background-color: #d5ffb0;
+    font-size: 100%;
+
+}
+div.req{
+	background-color: #d9ffb3;
+    font-size: 18px;
+	width: 700px;
+    border: 3px solid green;
+    padding: 15px;
+    margin: 10px;
+}
+div.remark{
+	background-color: #E3F2FD;
+    border: 1.5px solid #d5f2ed;
+    padding: 15px;
+    margin: 10px;
+	border-radius: 25px;
+}
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+ol, ul, li {
+  margin: 0;
+  margin-left: 10px;
+  padding: 0;
+  padding-bottom: 5px;
+}
+
+table, th, td {
+	border: 1px solid black;
+}
+td {
+	padding: 10px;
+}
+.jstfy {
+	text-align: justify;
+	text-justify: inter-word;
+}
+
+img {
+	border: 1.5px solid #d5f2ed
+
+}
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+}
+
+div.wrapdesc{
+	width: 90%;
+	margin: auto;
+}
+
+div.imagedesc{
+	width: 85%;
+	margin: auto;
+}
+</style>
+    
+<head>
+   
+<title>RadarSystem22</title></head>
+    
+<body>
+<div id="top">
+<h1>LABORATORIO DI INGEGNERIA DEI SISTEMI SOFTWARE <font size="5"></font> </h1>
+</div>  
+
+<div class="body"> 
+<h2>Introduction</h2>
+ 
+ 
+<h2>Requirements</h2>
+
+
+<h2>Problem analysis</h2>
+ 
+
+<h2>Test plans</h2> 
+
+
+<h2>Project</h2>
+
+<div>
+Il modulo relativo alla comunicazione in RadarSystem22/radarGUI è <a href="https://github.com/mikyll/righimichele/blob/master/iss2022/RadarSystem22/radarGUI/src/net.c">net.c</a>/<a href="https://github.com/mikyll/righimichele/blob/master/iss2022/RadarSystem22/radarGUI/src/net.h">net.h</a>. Quando questo modulo viene inizializzato, crea 8 socket UDP, una per ciascuna direzione, su cui è possibile inviare le rilevazioni dei sonar.
+<br/>
+<pre>
+for (i = 0; i < DIR_NUM; i++)
+{
+  // 4.1. Open socket #i
+  udpSockets[i] = SDLNet_UDP_Open(port + i);
+  if (!udpSockets[i])
+  {
+    SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR, "SDLNet_UDP_Open[%d] failed: %s", port + i, SDLNet_GetError());
+    exit(1);
+  }
+  SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, "Listening on 0.0.0.0:%hd", port + i);
+
+  // 4.2 Add socket #i to the socket set
+  numused = SDLNet_UDP_AddSocket(socketset, udpSockets[i]);
+  if (numused == -1) {
+    printf("SDLNet_AddSocket: %s\n", SDLNet_GetError());
+    exit(1);
+  }
+}
+</pre>
+Tale modulo fornisce anche una funzione che permette di ricevere un valore da una socket specifica: <code>receiveDistanceFromSocket()</code>. Tale funzione controlla se sulla socket è presente un messaggio e, in caso affermativo, restituisce la distanza letta; altrimenti, restituisce -1. Per sincronizzare il server col client, dopo la ricezione della distanza il server invia un ACK di conferma al client.
+<pre>
+float receiveDistanceFromSocket(int dir)
+{
+  UDPpacket* p;
+  char buffer[64];
+  float distance = -1;
+
+  if (!(p = SDLNet_AllocPacket(MAX_PACKET_SIZE)))
+  {
+    SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR, "Could not allocate packet: %s", SDLNet_GetError());
+    exit(1);
+  }
+
+  // 1. Receive a packet from the specific socket
+  if (SDLNet_UDP_Recv(udpSockets[dir], p))
+  {
+    sscanf(p->data, "%f", &distance);
+
+    char host[16];
+    int port;
+    getIPfromNetwork(p->address, &host, &port);
+
+    port = DEFAULT_PORT + ACK_PORT_OFFSET + dir;
+
+    // 2. Resolve ACK IP
+    if (SDLNet_ResolveHost(&ackAddress, host, port) == -1)
+    {
+      fprintf(stderr, "ERROR: SDLNet_ResolveHost: %s\n", SDLNet_GetError());
+      exit(1);
+    }
+    p->address = ackAddress;
+
+    // 3. Send ACK
+    if (!SDLNet_UDP_Send(ackSocket, -1, p))
+    {
+      printf("ERROR: SDLNet_UDP_Send: %s\n\n", SDLNet_GetError());
+    }
+  }
+
+  return distance;
+}
+</pre>
+Il codice applicativo (<a href="https://github.com/mikyll/righimichele/blob/master/iss2022/RadarSystem22/radarGUI/src/main.c">main.c</a>) chiama tale funzione <b>8 volte ad ogni giro completo</b>, una per ciascuna direzione, ovvero ad ogni giro del radar controlla se sono presenti messaggi su ciascuna socket. Questo comportamento è realizzato tramite la funzione <code>doReceive()</code>, che controlla se l'angolo corrente della linea del radar è divisibile per 45.
+<pre>
+void doReceive()
+{
+  float distance;
+
+  if ((int)radar.angle % 45 == 0)
+  {
+    // [...]
+
+    distance = receiveDistanceFromSocket(dir);
+    detectObj(dir, distance);
+		
+    // [...]
+  }
+}
+</pre>
+Se viene inviato un messaggio su una socket, l'applicazione lo legge solo quando la linea del radar passa sulla direzione che vi corrisponde, dopodiché l'ostacolo viene mostrato sulla GUI.
+<br/><br/>
+<table>
+	<tr align="center">
+		<td><a href="img/[Legend] Radar.png"><img width="99%" src="img/[Legend] Radar.png"/></a></td>
+		<td><a href="img/[Test] radarClient.gif"><img width="90%" src="img/Radar Directions.gif"/></a></a></td>
+	</tr>
+	<tr align="center">
+		<td>Direzioni e schema delle porte</td>
+		<td>Varie direzioni, con PORT = 4000</td>
+	</tr>
+</table>
+
+<h3>Demo</h3>
+In seguito è mostrata una demo con 2 client che inviano la propria distanza su socket differenti, corrispondenti alla direzione Est e Sud-Ovest.
+<br/><br/>
+<table>
+	<tr align="center">
+		<td><a href="img/[Test] radarClient.gif"><img width="93%" src="img/[Test] radarClient.gif"/></a></td>
+		<td><a href="img/[Test] radarClient.gif"><img width="99%" src="img/[Test] radarServer.gif"/></a></a></td>
+	</tr>
+	<tr align="center">
+		<td>Radar Client (Sonar)</td>
+		<td>Radar Server (GUI)</td>
+	</tr>
+</table>
+
+<h3>Differenze con <a href="https://github.com/anatali/issLab2022/tree/main/it.unibo.comm2022">it.unibo.comm2022</a></h3>
+<table style="width: 100%;">
+	<tr align="center">
+		<td>Nome Modulo</td>
+		<td width=40%><b>it.unibo.comm2022</b></td>
+		<td width=40%><b>net.c/net.h</b></td>
+	</tr>
+	<tr align="center">
+		<td>Linguaggio di Programmazione</td>
+		<td>Java (Object-Oriented)</td>
+		<td>C (Function-Oriented)</td>
+	</tr>
+	<tr align="center">
+		<td>Protocollo di Comunicazione</td>
+		<td><ins>TCP</ins>: il client stabilisce una connessione col server</td>
+		<td><ins>UDP</ins>: non viene stabilita una connessione tra gli endpoint</td>
+	</tr>
+	<tr align="center">
+		<td>Numero Processi/Thread</td>
+		<td>Un thread per l'operazione di listening delle nuove connessioni, ed <ins>uno per ciascuna connessione</ins>: per ciascuna connessione il server crea un thread, dedicato alla comunicazione con quel particolare client.</td>
+		<td><ins>Un solo processo</ins>: il server gestisce un set di socket, una per ciascuna direzione del radar. Ad ogni ciclo dell'applicazione, se la posizione della linea del radar coincide con una delle 8 direzioni, si controlla se è presente un messaggio sulla socket relativa a tale direzione e, in caso affermativo, lo legge.</td>
+	</tr>
+	<tr align="center">
+		<td>Supporto alla Comunicazione (Server)</td>
+		<td>Le operazioni di comunicazione sono fornite dai metodi della classe TcpConnection, che implementa <a href="https://github.com/anatali/issLab2022/blob/main/it.unibo.comm2022/src/it/unibo/comm2022/interfaces/Interaction2021.java">Interaction2021</a>.</td>
+		<td>Le operazioni di comunicazione sono fornite da un modulo <a href="https://github.com/mikyll/righimichele/blob/master/iss2022/RadarSystem22/radarGUI/src/net.c">net.c</a>/net.h.</td>
+	</tr>
+	<tr align="center">
+		<td>Logica di Business</td>
+		<td>La classe TcpServer non contiene logica applicativa, la quale è delegata ad un'opportuna classe che implementa <a href="https://github.com/anatali/issLab2022/blob/main/it.unibo.comm2022/src/it/unibo/comm2022/interfaces/IApplMsgHandler.java">IApplMsgHandler</a>.<br/>TcpServer svolge solo le operazioni relative al Server: creazione socket, attesa e accettazione delle connessioni. Quando arriva una richiesta di connessione, il Server mette in esecuzione un thread IApplMsgHandler che si occuperà di ricevere i messaggi su tale connessione.</td>
+		<td>La logica applicativa è posta nel file <a href="https://github.com/mikyll/righimichele/blob/master/iss2022/RadarSystem22/radarGUI/src/main.c">main.c</a>, il quale contiene il ciclo dell'applicazione. Ad ogni ciclo: si pulisce il Renderer dalla scena del frame precedente, si accumulano gli input, si aggiornano le strutture dati/svolgono i calcoli, si disegnano le varie entità e si presenta la nuova scena.<br/>
+		Rispetto alla soluzione di it.unibo.comm2022 vi è meno separazione delle competenze.</td>
+	</tr>
+	<tr align="center">
+		<td>Ricezione messaggi</td>
+		<td><a href="">RadarApplHandler</a> si pone in attesa di messaggi sulla propria connessione e, non appena ne arriva uno, effettua una chiamata alla callback <code>elaborate()</code>, la quale estrapola le informazioni (distanza e angolo) dal messaggio ricevuto, e chiama a sua volta il metodo <code>update()</code> di <a href="https://github.com/anatali/issLab2022/blob/main/it.unibo.radarSystem22.domain/src/it/unibo/radarSystem22/domain/interfaces/IRadarDisplay.java">IRadarDisplay</a>.</td>
+		<td>La funzione <code>doReceive()</code> di <a href="https://github.com/mikyll/righimichele/blob/master/iss2022/RadarSystem22/radarGUI/src/main.c">main.c</a> controlla se l'angolo della linea del radar corrisponde ad una delle 8 direzioni (ovvero se l'angolo è divisibile per 45). In caso affermativo, controlla se sulla socket corrispondente a tale direzione sono presenti messaggi ed in tal caso effettua una ricezione. Dopodiché chiama <code>detectObject()</code> passandogli direzione e distanza ricevuta.</td>
+	</tr>
+	<tr align="center">
+		<td>Aggiornamento GUI</td>
+		<td>L'aggiornamento della GUI avviene tramite il metodo <code>update()</code> di IRadarDisplay, che accetta come parametri la distanza e l'angolo. Poiché il metodo <code>update()</code> viene chiamato subito alla ricezione di un messaggio, l'ostacolo viene mostrato subito sul radar, <ins>indipendentemente dalla posizione della linea</ins>.</td>
+		<td>L'aggiornamento della GUI avviene tramite la funzione <code>drawObject()</code> di <a href="https://github.com/mikyll/righimichele/blob/master/iss2022/RadarSystem22/radarGUI/src/main.c">main.c</a>, che accetta come parametro la direzione. Tale funzione viene chiamata solo in seguito alla chiamata di <code>detectObj()</code>, la quale imposta che l'oggetto sia stato rilevato (e ne aggiorna le coordinate). L'ostacolo rilevato viene dunque mostrato nella GUI solo quando la linea del radar lo interseca, e rimane visibile fino al completamento di un giro intero.</td>
+	</tr>
+	<tr align="center">
+		<td>Supporto alla Comunicazione (Client)</td>
+		<td>La classe TcpClientSupport fornisce un metodo <code>connect()</code>, che dati dei parametri (host e porta) crea una socket TCP e si connette al server, restituendo un oggetto che implementa Interaction2021. Questo verrà usato dal client per comunicare col server.</td>
+		<td>Attualmente non ho creato supporti per il client, ma solo un <a href="https://github.com/mikyll/righimichele/blob/master/iss2022/RadarSystem22/radarClient/src/radarClient.c">client di test</a> impostabile tramite degli argomenti passati da linea di comando.</td>
+	</tr>
+</table>
+
+<h3>Considerazioni</h3>
+<div class="remark">
+Rispetto alla soluzione it.unibo.comm2022, c'è meno separazione delle competenze. Inoltre, nella mia soluzione nel messaggio viene scritta solo la distanza, poiché l'angolo dipende dalla socket su cui è stato inviato e corrisponde alla direzione in cui punta il sonar.
+<br/>
+Tuttavia:
+<ol>
+	<li>tale soluzione permette di ricevere rilevazioni rispetto a 8 direzioni diverse, nonostante sia monoprocesso;</li>
+	<li>l'ostacolo viene mostrato sul radar solo quando la linea passa sopra la sua posizione, e non si muove fino alla successiva rilevazione, emulando il comportamento di un radar reale.</li>
+<ol>
+
+<h4>Possibili miglioramenti</h4>
+<ul>
+	<li>maggiore separazione delle competenze;</li>
+	<li>realizzare un meccanismo simile al concetto delle interfacce per separare le competenze relative alla comunicazione, e permettere di utilzizare implementazioni differenti (UDP/TCP) semplicemente cambiando una riga di codice, o utilizzando un file di configurazione;</li>
+	<li>aggiungere le animazioni (fading dell'ostacolo dopo la rilevazione, senza dover aspettare un giro intero del radar);</li>
+	<li>creare un supporto TCP;</li>
+	<li>realizzare un "contratto" che vincoli il client ad un certo tipo di comunicazione (invio distanza e ACK ricezione per UDP).</li>
+</ul>
+
+<h4>TO-DO</h4>
+<ul>
+	<li>effettuare un refactoring utilizzando i puntatori a funzione per poter assegnare a send e receive implementazioni diverse (ad esempio per TCP);</li>
+	<li>ristrutturare il codice del main, creando un modulo stage.c/stage.h in cui inserire logica applicativa e parti relative alla grafica.</li>
+</div>
+
+
+<h2>Testing</h2>
+ 
+
+<h2>Deployment</h2>
+
+ 
+<h2>Maintenance</h2>
+</div>  
+
+<div float="left" style="width: 80%; background-color: rgba(86, 56, 253, 0.9); color:white; font-family: Tahoma;">
+	<span style="float: left; width: 60%; padding: 10px">
+		By <b>Michele Righi</b><br/><br/>
+		<span><b>ISS repo: <a id="issRepo" style="color:white" href="https://github.com/mikyll/righimichele/tree/master/iss2022">mikyll/righimichele/iss2022/</a></b></span><br/><br/>
+		Contacts:<br/>
+		e-mail: michele.righi5@studio.unibo.it<br/>
+		GitHub: <a id="github" style="color:white" href="https://github.com/mikyll">mikyll</a><br/>
+		LinkedIn: <a id="issRepo" style="color:white" href="https://www.linkedin.com/in/michele-righi/">Michele Righi</a><br/>
+	</span>
+	<img src="./img/Michele Righi avatar.png" alt="Michele Avatar" width="30%" height="30%"/>
+</div>
+<img  style="float: right; border: none; padding-bottom: 10px; padding-right: 10px" src="./img/NoWarUkraineDoveColored.png" alt="No War Ukraine" width="10%" height="10%"/>
+
+</body>
+</html>
