@@ -9,9 +9,9 @@
 
 #define FPS					60
 
-#define CPS					2	// Cycle Per Second
+#define SCP					2	// Cycle Per Second
 
-#define ANGLE_INCREMENT		(360 / FPS / CPS)
+#define ANGLE_INCREMENT		(360 / FPS / SCP)
 
 #define PI					3.14159
 

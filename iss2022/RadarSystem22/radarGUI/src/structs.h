@@ -6,7 +6,7 @@
 typedef struct Entity Entity;
 typedef struct Message Message;
 typedef struct Distance Distance;
-typedef struct ObstacleCoord ObstacleCoord;
+typedef struct ObstacleCoordinate ObstacleCoordinate;
 
 struct Message {
 	char data[MAX_MSG_LENGTH];
@@ -19,13 +19,20 @@ struct Distance {
 	Distance* next;
 };
 
-struct ObstacleCoord {
+struct ObstacleCoordinate {
 	int distance;
 	int angle;
 	int health;
 	SDL_Texture* text;
-	ObstacleCoord* next;
+	ObstacleCoordinate* next;
 };
+
+typedef struct {
+	ObstacleCoordinate* first;
+	ObstacleCoordinate* last;
+	int length;
+	int capacity;
+} ObstacleCoordinateQueue;
 
 typedef struct {
 	void (*logic)(void);
@@ -65,8 +72,7 @@ typedef struct {
 	int fps;
 	Entity obstacleHead, * obstacleTail;
 	Distance distanceHead, * distanceTail;
-	ObstacleCoord obstacleCoordsHead, * obstacleCoordsTail;
-	int nCoords;
+	ObstacleCoordinateQueue* obsCoordQ;
 }Stage;
 
 typedef struct {

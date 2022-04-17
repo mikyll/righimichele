@@ -1,17 +1,5 @@
 #include "main.h"
 
-/*void doReceive();
-void detectSus(int x, int y);
-void detectObj(int nSock, float distance);
-
-void drawRadar();
-void drawRadarLine();
-void drawObject(int dir);
-void drawSus();
-void drawObjectText(int dir, int objN, int offset);
-void drawSusText(int offset);
-void drawFPStext(int fps);*/
-
 static void capFrameRate(long* then, float* remainder);
 
 static int t = 1000 / FPS;
