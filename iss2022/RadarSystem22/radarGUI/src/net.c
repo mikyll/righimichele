@@ -110,7 +110,7 @@ static void addUDPsocket(Uint16 port)
 	// 1. Check for available indexes in socket array
 	if (interaction.used == MAX_SOCKET)
 	{
-		SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR, "The socket set is full (%d)", interaction.used);
+		SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR, "The socket set is full (%d/%d)", interaction.used, MAX_SOCKET);
 		return;
 	}
 	else // There is at least an available index
@@ -142,7 +142,7 @@ static void addTCPserverSocket(Uint16 port)
 	// 1. Check for available indexes in socket array
 	if (interaction.used == MAX_SOCKET)
 	{
-		SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR, "The socket set is full (%d)", interaction.used);
+		SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR, "The socket set is full (%d/%d)", interaction.used, MAX_SOCKET);
 		return;
 	}
 	else // There is at least an available index
@@ -181,7 +181,8 @@ static void acceptTCPconnection(int serverSocket)
 	// 1. Check for available indexes in socket array
 	if (interaction.used == MAX_SOCKET)
 	{
-		SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR, "The socket set is full");
+		SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR, "The socket set is full (%d/%d)", interaction.used, MAX_SOCKET);
+		// handle connection request
 		return;
 	}
 	else // There is at least an available index
