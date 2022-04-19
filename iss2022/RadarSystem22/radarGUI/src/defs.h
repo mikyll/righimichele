@@ -27,7 +27,7 @@
 #define MAX_PACKET_SIZE			512
 #define MAX_MSG_LENGTH			64
 
-#define MAX_SOCKET				4
+#define MAX_SOCKET				2
 
 #define MAX_SND_CHANNELS		8
 
@@ -37,6 +37,15 @@
 #define MIN(a,b) (((a)<(b))?(a):(b))
 #define MAX(a,b) (((a)>(b))?(a):(b))
 #define STRNCPY(dest, src, n) strncpy(dest, src, n); dest[n - 1] = '\0'
+
+enum ArgumentFlags
+{
+	FLAG_SOUNDS,
+	FLAG_DEBUG,
+	FLAG_UDP,
+	FLAG_TCP,
+	FLAG_MAX,
+};
 
 enum Channels
 {
