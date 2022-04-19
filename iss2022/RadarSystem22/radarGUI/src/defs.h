@@ -15,9 +15,6 @@
 
 #define PI						3.14159
 
-#define SPC1					2.25	// 1 Second Per Cycle
-#define SPC2					5		// 2 Seconds Per Cycle
-
 #define MAX_D					200
 #define MIN_D					0
 
