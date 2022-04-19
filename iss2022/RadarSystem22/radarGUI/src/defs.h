@@ -15,16 +15,16 @@
 
 #define PI					3.14159
 
-#define SPC1 2.25	// 1 Second Per Cycle
-#define SPC2 5		// 2 Seconds Per Cycle
+#define SPC1				2.25	// 1 Second Per Cycle
+#define SPC2				5		// 2 Seconds Per Cycle
 
 #define MAX_D				200.0
 #define MIN_D				0.0
 
 #define MAX_NUM_COORDS		5
 
-#define UDP_SOCKET_PORT		4000
-#define SERVER_SOCKET_PORT	4001
+#define UDP_DEFAULT_PORT	4000
+#define SERVER_DEFAULT_PORT	4001
 #define ACK_PORT_OFFSET		100
 
 #define MAX_PACKET_SIZE		512
