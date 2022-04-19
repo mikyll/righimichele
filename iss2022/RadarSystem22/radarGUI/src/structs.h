@@ -8,6 +8,19 @@ typedef struct Message Message;
 typedef struct Distance Distance;
 typedef struct ObstacleCoordinate ObstacleCoordinate;
 
+typedef struct {
+	void (*logic)(void);
+	void (*draw)(void);
+} Delegate;
+
+typedef struct {
+	SDL_Window* window;
+	SDL_Renderer* renderer;
+	Delegate delegate;
+	int susDetected;
+	int debug;
+} App;
+
 struct Message {
 	char data[MAX_MSG_LENGTH];
 	Message* next;
@@ -34,19 +47,6 @@ typedef struct {
 	int capacity;
 } ObstacleCoordinateQueue;
 
-typedef struct {
-	void (*logic)(void);
-	void (*draw)(void);
-} Delegate;
-
-typedef struct {
-	SDL_Window* window;
-	SDL_Renderer* renderer;
-	Delegate delegate;
-	int susDetected;
-	int debug;
-} App;
-
 struct Entity {
 	int x;
 	int y;
@@ -59,21 +59,11 @@ struct Entity {
 };
 
 typedef struct {
-	int x;
-	int y;
-	int w;
-	int h;
-	int radius;
-	float angle;
-	SDL_Texture* texture;
-}Radar;
-
-typedef struct {
 	int fps;
 	Entity obstacleHead, * obstacleTail;
 	Distance distanceHead, * distanceTail;
 	ObstacleCoordinateQueue* obsCoordQ;
-}Stage;
+} Stage;
 
 typedef struct {
 	IPaddress* ipAddress;
