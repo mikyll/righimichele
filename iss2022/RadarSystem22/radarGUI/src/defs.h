@@ -37,13 +37,15 @@
 #define MIN(a,b) (((a)<(b))?(a):(b))
 #define MAX(a,b) (((a)>(b))?(a):(b))
 #define STRNCPY(dest, src, n) strncpy(dest, src, n); dest[n - 1] = '\0'
+#define STRCMP(a, R, b) (strcmp(a, b) R 0)
 
 enum ArgumentFlags
 {
 	FLAG_SOUNDS,
 	FLAG_DEBUG,
-	FLAG_UDP,
-	FLAG_TCP,
+	FLAG_UDP_PORT,
+	FLAG_TCP_SERVER_PORT,
+	FLAG_ERR,
 	FLAG_MAX,
 };
 

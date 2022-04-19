@@ -9,11 +9,20 @@ typedef struct Distance Distance;
 typedef struct ObstacleCoordinate ObstacleCoordinate;
 
 typedef struct {
+	int flags[FLAG_MAX];
+	int debug;
+	int sounds;
+	int UDPport;
+	int TCPport;
+} Arguments;
+
+typedef struct {
 	void (*logic)(void);
 	void (*draw)(void);
 } Delegate;
 
 typedef struct {
+	Arguments args;
 	SDL_Window* window;
 	SDL_Renderer* renderer;
 	Delegate delegate;
