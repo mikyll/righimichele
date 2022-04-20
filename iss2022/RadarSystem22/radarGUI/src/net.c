@@ -229,7 +229,10 @@ static void receiveUDP(int nSock)
 		getIPfromNetwork(p->address, &host, &port);
 
 		// Debug
-		app.debug ? printf("UDP Packet incoming.\n\tChan: % d\n\tData: % s\n\tLen: % d\n\tMaxlen: % d\n\tStatus: % d\n\tAddress: % x : % x\n(% s: % d)\n", p->channel, (char*)p->data, p->len, p->maxlen, p->status, p->address.host, p->address.port, host, port) : (void)0;
+		if (app.args.debug)
+		{
+			printf("UDP Packet incoming.\n\tChan: % d\n\tData: % s\n\tLen: % d\n\tMaxlen: % d\n\tStatus: % d\n\tAddress: % x : % x\n(% s: % d)\n", p->channel, (char*)p->data, p->len, p->maxlen, p->status, p->address.host, p->address.port, host, port);
+		}
 
 		// 3. Add Message to the linked list
 		addMessage(p->data);
@@ -263,7 +266,10 @@ static void receiveTCP(int nSock)
 	if (read > 0)
 	{
 		// Debug
-		app.debug ? printf("TCP message incoming. Received %d bytes: \"%s\"\n", read, msg) : (void)0;
+		if (app.args.debug)
+		{
+			printf("TCP message incoming. Received %d bytes: \"%s\"\n", read, msg);
+		}
 
 		// 2. Add Message to the linked list
 		addMessage(msg);
@@ -295,7 +301,10 @@ static void receiveMock()
 		sprintf(msg, "{\"distance\" : %d, \"angle\" : %d}", r, 180);
 
 		// Debug
-		app.debug ? printf("Mock TCP message incoming. Data: \"%s\"\n", msg) : (void)0;
+		if (app.args.debug)
+		{
+			printf("Mock TCP message incoming. Data: \"%s\"\n", msg);
+		}
 
 		addMessage(msg);
 	}
