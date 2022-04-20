@@ -98,9 +98,9 @@ void initStage()
 
 	// Load textures
 	radarTexture = loadTexture("gfx/radar.png");
-	radarCoordinateTexture = loadTexture("gfx/coordinates2.png");
+	radarCoordinateTexture = loadTexture("gfx/radar_coordinates.png");
 	radarLineTexture = loadTexture("gfx/radar_line.png");
-	obstacleTexture = loadTexture("gfx/obstacle2.png");
+	obstacleTexture = loadTexture("gfx/obstacle.png");
 	SDL_SetTextureBlendMode(obstacleTexture, SDL_BLENDMODE_BLEND);
 	susTexture = loadTexture("gfx/sus.png");
 	SDL_SetTextureBlendMode(susTexture, SDL_BLENDMODE_BLEND);
