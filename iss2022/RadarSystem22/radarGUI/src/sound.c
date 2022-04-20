@@ -22,8 +22,8 @@ static void initSounds()
 {
     memset(sounds, 0, sizeof(Mix_Chunk*) * SND_MAX);
 
-    sounds[SND_OBJ_DETECTED] = loadSound("sound/sonar_ping.mp3");
-    sounds[SND_SUS_DETECTED] = loadSound("sound/sus.mp3");
+    sounds[SND_OBJ_DETECTED] = loadSound("sound/sonar_ping.ogg");
+    sounds[SND_SUS_DETECTED] = loadSound("sound/sus.ogg");
 }
 
 void playSound(int id, int channel)
