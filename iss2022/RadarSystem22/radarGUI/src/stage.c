@@ -25,6 +25,7 @@ static void drawFPStext();
 static void drawObstacleCoordinatesText();
 
 void getCartesianFromPolarCoords(int radius, int angle, int* x, int* y);
+void getPolarFromCartesianCoords(int x, int y, int* radius, int* angle);
 
 static Entity* radar;
 static Entity* radarCoordinates;
@@ -158,7 +159,7 @@ static void doMessages()
 static void doRadar()
 {
 	Distance* d, * prev;
-	int x, y;
+	int x, y, radius, angle;
 
 	// Rotate the radar line
 	if (radarLine->angle >= 360)
@@ -176,7 +177,9 @@ static void doRadar()
 			// Show (Spawn) the obstacle only if it's between the bounds
 			if (d->distance >= MIN_D && d->distance <= MAX_D)
 			{
-				spawnObstacle(((radar->w / 2) / (double)MAX_D) * d->distance, d->angle);
+				getCartesianFromPolarCoords(((radar->w / 2) / (double)MAX_D) * d->distance, d->angle - 90, &x, &y);
+
+				spawnObstacle(x + radar->x, y + radar->y);
 				spawnObstacleCoordinatesText(d->distance, d->angle);
 
 				playSound(SND_OBJ_DETECTED, CH_OBJ);
@@ -199,6 +202,19 @@ static void doRadar()
 		spawnObstacleCoordinatesText(100, 90);
 
 		playSound(SND_SUS_DETECTED, CH_SUS);
+	}
+
+	if (app.mouse.button[SDL_BUTTON_LEFT])
+	{
+		getPolarFromCartesianCoords(app.mouse.x - radar->x, -(app.mouse.y - radar->y), &radius, &angle);
+
+		d = malloc(sizeof(Distance));
+		memset(d, 0, sizeof(Distance));
+		d->distance = radius / ((radar->w / 2) / (double)MAX_D);
+		d->angle = app.mouse.x - radar->x >= 0 ? 90 - angle : 270 - angle;
+
+		stage.distanceTail->next = d;
+		stage.distanceTail = d;
 	}
 }
 
@@ -267,12 +283,28 @@ Distance* parseDistance(Message m)
 }
 
 // Create the Obstacle
-static void spawnObstacle(int distance, int angle)
+static void spawnObstacle(int x, int y)
+{
+	Entity* o;
+
+	o = malloc(sizeof(Entity));
+	memset(o, 0, sizeof(Entity));
+
+	stage.obstacleTail->next = o;
+	stage.obstacleTail = o;
+
+	o->x = x;
+	o->y = y;
+	o->texture = obstacleTexture;
+
+	o->alpha = SDL_ALPHA_OPAQUE;
+}
+/*static void spawnObstacle(int distance, int angle)
 {
 	Entity* o;
 	int x, y;
 
-	getCartesianFromPolarCoords(distance, angle, &x, &y);
+	getCartesianFromPolarCoords(distance, angle - 90, &x, &y);
 
 	o = malloc(sizeof(Entity));
 	memset(o, 0, sizeof(Entity));
@@ -285,7 +317,7 @@ static void spawnObstacle(int distance, int angle)
 	o->texture = obstacleTexture;
 
 	o->alpha = SDL_ALPHA_OPAQUE;
-}
+}*/
 
 // Create the Sus
 static void spawnSus(int x, int y)
@@ -417,7 +449,18 @@ void getCartesianFromPolarCoords(int radius, int angle, int* x, int* y)
 {
 	double a;
 
-	a = (angle - 90) * (double)(PI / 180.0);
+	a = angle * (double)(PI / 180.0);
 	*x = (cos(a) * radius);
 	*y = (sin(a) * radius);
+}
+
+void getPolarFromCartesianCoords(int x, int y, int* radius, int* angle)
+{
+	double theta;
+
+	*radius = sqrt(x * x + y * y);
+
+	theta = atan((double) y / (double) (x != 0 ? x : 1)); // division by 0 is impossible
+	theta *= (180.0 / PI);
+	*angle = theta;
 }

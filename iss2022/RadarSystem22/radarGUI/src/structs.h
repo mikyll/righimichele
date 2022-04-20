@@ -17,6 +17,12 @@ typedef struct {
 } Arguments;
 
 typedef struct {
+	int x;
+	int y;
+	int button[MAX_MOUSE_BUTTONS];
+} Mouse;
+
+typedef struct {
 	void (*logic)(void);
 	void (*draw)(void);
 } Delegate;
@@ -26,8 +32,8 @@ typedef struct {
 	SDL_Window* window;
 	SDL_Renderer* renderer;
 	Delegate delegate;
+	Mouse mouse;
 	int susDetected;
-	int debug;
 } App;
 
 struct Message {

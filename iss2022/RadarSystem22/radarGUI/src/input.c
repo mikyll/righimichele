@@ -22,6 +22,16 @@ void doKeyDown(SDL_KeyboardEvent* event)
 	}
 }
 
+void doMouseButtonUp(SDL_MouseButtonEvent* event)
+{
+	app.mouse.button[event->button] = 0;
+}
+
+void doMouseButtonDown(SDL_MouseButtonEvent* event)
+{
+	app.mouse.button[event->button] = 1;
+}
+
 void doInput()
 {
 	SDL_Event event;
@@ -42,8 +52,18 @@ void doInput()
 			doKeyUp(&event.key);
 			break;
 
+		case SDL_MOUSEBUTTONDOWN:
+			doMouseButtonDown(&event.button);
+			break;
+
+		case SDL_MOUSEBUTTONUP:
+			doMouseButtonUp(&event.button);
+			break;
+
 		default:
 			break;
 		}
 	}
+
+	SDL_GetMouseState(&app.mouse.x, &app.mouse.y);
 }

@@ -7,6 +7,8 @@
 #define WINDOW_HEIGHT			650
 #define BOTTOM_OFFSET			20
 
+#define MAX_MOUSE_BUTTONS		6
+
 #define FPS						60
 
 #define SCP						2	// Cycle Per Second
@@ -27,7 +29,7 @@
 #define MAX_PACKET_SIZE			512
 #define MAX_MSG_LENGTH			64
 
-#define MAX_SOCKET				2
+#define MAX_SOCKET				8
 
 #define MAX_SND_CHANNELS		8
 
