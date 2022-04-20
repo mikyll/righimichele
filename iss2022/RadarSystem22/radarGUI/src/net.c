@@ -43,7 +43,7 @@ void initInteraction()
 	// 2. Create a socket set
 	if ((interaction.socketSet = SDLNet_AllocSocketSet(MAX_SOCKET)) == NULL)
 	{
-		SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_CRITICAL, "SDLNet_AllocSocketSet failed: %s", SDLNet_GetError());
+		SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR, "SDLNet_AllocSocketSet failed: %s", SDLNet_GetError());
 		exit(1); // most of the time this is a major error
 	}
 
@@ -110,7 +110,7 @@ static void addUDPsocket(Uint16 port)
 	// 1. Check for available indexes in socket array
 	if (interaction.used == MAX_SOCKET)
 	{
-		SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR, "The socket set is full (%d/%d)", interaction.used, MAX_SOCKET);
+		SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_WARN, "The socket set is full (%d/%d)", interaction.used, MAX_SOCKET);
 		return;
 	}
 	else // There is at least an available index
@@ -142,7 +142,7 @@ static void addTCPserverSocket(Uint16 port)
 	// 1. Check for available indexes in socket array
 	if (interaction.used == MAX_SOCKET)
 	{
-		SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR, "The socket set is full (%d/%d)", interaction.used, MAX_SOCKET);
+		SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_WARN, "The socket set is full (%d/%d)", interaction.used, MAX_SOCKET);
 		return;
 	}
 	else // There is at least an available index
@@ -181,7 +181,7 @@ static void acceptTCPconnection(int serverSocket)
 	// 1. Check for available indexes in socket array
 	if (interaction.used == MAX_SOCKET)
 	{
-		SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR, "The socket set is full (%d/%d)", interaction.used, MAX_SOCKET);
+		SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_WARN, "The socket set is full (%d/%d)", interaction.used, MAX_SOCKET);
 		// handle connection request
 		return;
 	}
@@ -191,7 +191,7 @@ static void acceptTCPconnection(int serverSocket)
 		interaction.sockets[interaction.used] = SDLNet_TCP_Accept(interaction.sockets[serverSocket]);
 		if (interaction.sockets[interaction.used] == NULL)
 		{
-			SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR, "SDLNet_TCP_Accept: %s", SDL_GetError());
+			SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_WARN, "SDLNet_TCP_Accept: %s", SDL_GetError());
 			return;
 		}
 		SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, "TCP socket #%d connected. Listening...", interaction.used);

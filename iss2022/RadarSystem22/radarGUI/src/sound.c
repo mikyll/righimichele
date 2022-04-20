@@ -9,8 +9,8 @@ void initSDLmixer()
 {
     if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 1024) == -1)
     {
-        printf("Couldn't initialize SDL Mixer: %s\n", Mix_GetError());
-        return;
+        SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_WARN, "Couldn't initialize SDL Mixer: %s\n", Mix_GetError());
+        return; // NB: that's a non critical error (the app doesn't need the sound module to work)
     }
 
     Mix_AllocateChannels(MAX_SND_CHANNELS);
@@ -37,7 +37,8 @@ static Mix_Chunk* loadSound(char* filename)
 
     if(!(sound = Mix_LoadWAV(filename)))
     {
-        SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, "Loading of sound '%s' failed", filename);
+        SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_WARN, "Loading of sound '%s' failed", filename);
+        return NULL;
     }
     SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, "Loaded sound '%s'", filename);
 

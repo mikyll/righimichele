@@ -11,7 +11,7 @@ void initSDLttf()
 {
 	if (TTF_Init() < 0)
 	{
-		printf("Couldn't initialize SDL TTF: %s\n", SDL_GetError());
+		SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_CRITICAL, "Couldn't initialize SDL TTF: %s\n", SDL_GetError());
 		exit(1);
 	}
 	initFonts();
@@ -26,14 +26,12 @@ TTF_Font* loadFont(char* filename)
 {
 	TTF_Font* font;
 
-	if(font = TTF_OpenFont(filename, FONT_SIZE))
+	if(!(font = TTF_OpenFont(filename, FONT_SIZE)))
 	{
-		SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, "Loaded texture %s", filename);
+		SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_WARN, "Loading of font '%s' failed", filename);
+		return NULL;
 	}
-	else
-	{
-		SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR, "Couldn't find %s", filename);
-	}
+	SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, "Loaded font '%s'", filename);
 
 	return font;
 }
