@@ -21,6 +21,8 @@ typedef struct {
 typedef struct {
 	int x;
 	int y;
+	int prevX;
+	int prevY;
 	int button[MAX_MOUSE_BUTTONS];
 } Mouse;
 

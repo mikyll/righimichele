@@ -38,6 +38,7 @@ static SDL_Texture* susTexture;
 
 static SDL_Texture* textFPS;
 
+static int prevMouseX, prevMouseY;
 
 static void logic()
 {
@@ -204,8 +205,10 @@ static void doRadar()
 		playSound(SND_SUS_DETECTED, CH_SUS);
 	}
 
-	if (app.mouse.button[SDL_BUTTON_LEFT])
+	if (app.mouse.button[SDL_BUTTON_LEFT] && app.mouse.prevX != app.mouse.x && app.mouse.prevY != app.mouse.y)
 	{
+		app.mouse.prevX = app.mouse.x;
+		app.mouse.prevY = app.mouse.y;
 		getPolarFromCartesianCoords(app.mouse.x - radar->x, -(app.mouse.y - radar->y), &radius, &angle);
 
 		d = malloc(sizeof(Distance));
@@ -376,7 +379,6 @@ static void spawnObstacleCoordinatesText(int distance, int angle)
 		newNode->text = getTextTexture(buffer);
 
 		newNode->next = NULL;
-
 		if (stage.obsCoordQ->length == 0)
 			stage.obsCoordQ->first = newNode;
 		else
