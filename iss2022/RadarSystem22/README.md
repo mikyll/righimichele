@@ -18,9 +18,36 @@ Radar simulation, using a test client, which sends random inputs to the server.
 ### Usage
 
 #### radarClient
+
 #### radarGUI
 
-### Setup Visual Studio Project
+```bash
+USAGE
+        ./radarGUI [OPTION]...
+
+OPTIONS
+         -c, --max-coordinates-text <num>
+                specify the maximum number of coordinates that can be shown on screen for the detected obstacles
+
+         -d, --debug
+                specifies that program is running in debug mode, and prints useful information
+
+         -f, --fps
+                show the FPS
+
+         -m, --mute
+                disable the audio for the program
+
+         -t, --tcp-port <port>
+                set the port to be used to receive TCP connections (default is 4001)
+
+         -u, --udp-port <port>
+                set the port to be used to receive UDP packets (default is 4000)
+```
+
+### Setup Windows
+
+#### Setup Visual Studio Project
 1. Download **Simple Directmedia Layer** (**SDL 2.0**) <ins>development libraries</ins> for Visual C++:
 	1. [SDL2](https://www.libsdl.org/release/SDL2-devel-2.0.20-VC.zip);
 	2. [SDL_image 2.0](https://www.libsdl.org/projects/SDL_image/release/SDL2_image-devel-2.0.5-VC.zip);
@@ -39,24 +66,19 @@ Radar simulation, using a test client, which sends random inputs to the server.
 	4. Select "**Configuration properties > C/C++ > Preprocessor > Preprocessor definitions**" and add \_CRT_SECURE_NO_WARNINGS
 8. Add all the **.dll** to the source files directory (they can be found in ".\lib\x64\").
 
-### Compile with MinGW
+#### Compile with MinGW
 ```gcc -std=c17 ".\prova.c" -I<path\to\include> -L<path\to\lib> -Wall -lmingw32 -lSDL2main -lSDL2 -o main```
 
-### Setup Linux
-1. ```sudo apt-get install libsdl2-*```
 
-### Roadmap (to-do list)
-- [ ] add TCP communication
-- [ ] Sync communication (use timestamp OR use sync semantic of the receive: client waits for the server ACK). NB: in this case TCP would be better, since with UDP tha packet could go lost
-- [ ] Send & Receive a Struct (DetectPacket) instead of a char*
-- [ ] Substitute the radar line with a rectangle/texture(?)
-- [ ] Refactor client app (and add makefile)
-- [ ] Docker(?)
-- [ ] Object animation (transition/disapperance)
-- [ ] Use 2 sonar(?): one for the x axis, the other for the y one.
-- [ ] Make single modules more general purpose
-- [ ] Client: add passing port as argument by specifying the direction (e.g. North/N -> DEFAULT_PORT + i)
-- [ ] GitHub action to dynamically generate pdf from HTML userdocs and commit it
+### Setup Linux
+
+#### Solve Dependencies
+Install SDL2 libraries: ```sudo apt-get install libsdl2-*```
+
+#### Compile with Makefile
+1. ```cd``` in [radarGUI/](https://github.com/mikyll/righimichele/tree/master/iss2022/RadarSystem22/radarGUI)
+2. Run ```make```
+3. Run ```./radarGUI```
 
 ### References
 - [SDL_net Homepage](https://www.libsdl.org/projects/SDL_net/)
