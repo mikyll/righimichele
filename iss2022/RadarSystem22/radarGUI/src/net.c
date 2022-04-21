@@ -48,8 +48,8 @@ void initInteraction()
 	}
 
 	// 3. Create and add sockets to the set
-	addUDPsocket(DEFAULT_UDP_PORT);
-	addTCPserverSocket(DEFAULT_TCP_SERVER_PORT);
+	addUDPsocket(app.args.UDPport);
+	addTCPserverSocket(app.args.TCPport);
 
 	// 4 Open ACK socket on first available port
 	/*if (!(ackSocket = SDLNet_UDP_Open(0)))

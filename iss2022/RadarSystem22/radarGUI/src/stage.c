@@ -79,7 +79,7 @@ static void initRadar()
 
 	// Init ObsCoordinates Text queue
 	stage.obsCoordQ = (ObstacleCoordinateQueue*)malloc(sizeof(ObstacleCoordinateQueue));
-	stage.obsCoordQ->capacity = MAX_NUM_COORDS;
+	stage.obsCoordQ->capacity = app.args.maxCoordinatesText;
 	stage.obsCoordQ->length = 0;
 	stage.obsCoordQ->first = NULL;
 	stage.obsCoordQ->last = NULL;
@@ -215,6 +215,12 @@ static void doRadar()
 
 		stage.distanceTail->next = d;
 		stage.distanceTail = d;
+
+		// Debug
+		if (app.args.debug)
+		{
+			printf("Mouse click - distance: %d, angle: %d\n", d->distance, d->angle);
+		}
 	}
 }
 
@@ -393,7 +399,8 @@ static void draw()
 
 	drawObstacleCoordinatesText();
 
-	drawFPStext();
+	if(app.args.fps)
+		drawFPStext();
 }
 
 static void drawRadar()

@@ -10,10 +10,12 @@ typedef struct ObstacleCoordinate ObstacleCoordinate;
 
 typedef struct {
 	int flags[FLAG_MAX];
+	int maxCoordinatesText;
 	int debug;
-	int sounds;
-	int UDPport;
+	int fps;
+	int mute;
 	int TCPport;
+	int UDPport;
 } Arguments;
 
 typedef struct {
