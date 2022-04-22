@@ -11,16 +11,17 @@
 
 #define FPS						60
 
-#define SCP						2	// Cycle Per Second
+#define MAX_SND_CHANNELS		8
 
+#define FONT_SIZE				28
+
+#define DEFAULT_MAX_COORDS_TEXT	5
+
+#define SCP						2	// Seconds Per Cycle
 #define ANGLE_INCREMENT			(360 / FPS / SCP)
-
-#define PI						3.14159
 
 #define MAX_D					200
 #define MIN_D					0
-
-#define DEFAULT_MAX_COORDS_TEXT	5
 
 #define DEFAULT_UDP_PORT		4000
 #define DEFAULT_TCP_SERVER_PORT	4001
@@ -30,10 +31,6 @@
 #define MAX_MSG_LENGTH			64
 
 #define MAX_SOCKET				8
-
-#define MAX_SND_CHANNELS		8
-
-#define FONT_SIZE				28
 
 
 #define MIN(a,b) (((a)<(b))?(a):(b))

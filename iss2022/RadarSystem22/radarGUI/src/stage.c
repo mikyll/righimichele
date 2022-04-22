@@ -458,7 +458,7 @@ void getCartesianFromPolarCoords(int radius, int angle, int* x, int* y)
 {
 	double a;
 
-	a = angle * (double)(PI / 180.0);
+	a = angle * (double)(M_PI / 180.0);
 	*x = (cos(a) * radius);
 	*y = (sin(a) * radius);
 }
@@ -470,6 +470,6 @@ void getPolarFromCartesianCoords(int x, int y, int* radius, int* angle)
 	*radius = sqrt(x * x + y * y);
 
 	theta = atan((double) y / (double) (x != 0 ? x : 1)); // division by 0 is impossible
-	theta *= (180.0 / PI);
+	theta *= (180.0 / M_PI);
 	*angle = theta;
 }
