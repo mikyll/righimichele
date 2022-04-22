@@ -3,7 +3,7 @@
 Implementation of a Radar System, written in C using the SDL2 library. The system consists of a **client**, which runs on the Raspberry Pi and gets the input from SR-HC04 sonar, and a **server** which shows a radar on GUI ad gets the coordinates of the detected objects from the client.
 
 ### Demo
-Radar simulation, using a test client, which sends random inputs to the server.
+Radar simulation, using a dummy test client, which sends random inputs to the server.
 <table>
 	<tr align="center">
 		<td width="53%"><a href="https://github.com/mikyll/righimichele/tree/master/iss2022/RadarSystem22/radarClient"><img alt="Client" src="https://github.com/mikyll/righimichele/blob/master/iss2022/RadarSystem22/userDocs/img/radarTestClient.gif"/></a></td>
