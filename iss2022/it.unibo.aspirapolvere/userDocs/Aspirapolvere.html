@@ -1,0 +1,330 @@
+DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<!--
+<link rel="stylesheet" type="text/css" href="../css/issStyle1.css">
+<script type="text/javascript" src="../css/issStyle.js"></script>
+-->
+<style type="text/css">
+body
+{
+    margin-left:  30px;
+    margin-right: 30px;
+};
+
+P
+{
+    font-family: Tahoma;
+    font-size: 10pt;
+};
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+	font-size: 93%;
+}
+
+a:hover {
+    background-color: #cccccc;
+}
+
+
+hr {
+    clear: both;
+    height: 1px;
+    color: #242424;
+    background-color: transparent;
+}
+
+h1, h2, h3 {
+    color: #242424;
+    clear: left;
+    font: 100% Tahoma, Helvetica, Arial, sans-serif;
+    margin-bottom: 0.5em;
+    padding-top: 0.5em;
+	border-radius: 10px;
+	padding: 5px;
+}
+
+top {
+	width: 100%;
+}
+
+
+#i {
+    color: #ff1010;
+}
+tt{
+	font-family: "Arial";
+    font-size: 90%;
+	color: #006600;
+}
+em{
+	font-family: "Arial";
+    font-size: 80%;
+	font-weight: bold;
+	border-style:solid;
+	border-color: #abe876;
+    color: #1632cc;
+}
+bc{
+	font-family: "Arial";
+	font-size: 90%;
+	font-weight: bold;
+    color: #990000;
+	background-color: #fcf8c7;
+}
+ks{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #0000CD	;
+	font-size: 90%;
+}
+kc{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #008000	;
+	font-size: 90%;
+}
+pre{
+	font-family: "Consolas";
+	font-size: 85%;
+	background-color: #f5f5f5;
+	border: 1.5px solid silver;
+	padding: 5px;
+}
+m{
+	font-family: "Helvetica";
+	line-height: 100%;
+ 	font-size: 75%;
+}
+div.body{
+	 
+    font-size: 18px;
+}
+k{
+    color: #990000;
+	font-weight: bold;
+	font-size: 90%;
+}
+h1 {
+    font-size: 150%;
+    background-color: #b2c0ff;
+	padding: 10px;
+}
+
+h2 {
+    background-color: #9ed8ff;
+    font-size: 130%;
+}
+
+h3 {
+	background-color: #e6ccff;
+    font-size: 100%;
+}
+h4 {
+    background-color: #ccffcc;
+    font-size: 100%;
+	width: 95%;
+	border-radius: 5px;
+	padding: 2px;
+}
+h5 {
+    background-color: #d5ffb0;
+    font-size: 100%;
+
+}
+div.req{
+	background-color: #d9ffb3;
+    font-size: 18px;
+	width: 700px;
+    border: 3px solid green;
+    padding: 15px;
+    margin: 10px;
+}
+div.remark{
+	background-color: #E3F2FD;
+    border: 1.5px solid #d5f2ed;
+    padding: 15px;
+    margin: 10px;
+	border-radius: 25px;
+}
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+ol, ul, li {
+  margin: 0;
+  margin-left: 10px;
+  padding: 0;
+  padding-bottom: 5px;
+}
+
+table, th, td {
+	border: 1px solid black;
+}
+
+img {
+	border: 1.5px solid #d5f2ed
+
+}
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+}
+
+div.wrapdesc{
+	width: 90%;
+	margin: auto;
+}
+
+div.imagedesc{
+	width: 85%;
+	margin: auto;
+}
+</style>
+    
+<head>
+   
+<title>Aspirapolvere</title></head>
+    
+<body>
+<div id="top">
+<h1>Aspirapolvere - ISS M 2022<font size="5"></font> </h1>
+</div>
+
+<div class="body"> 
+
+<h2>Introduction</h2>
+<div class="remark">
+Homework for 25/04/2022.<br/><br/>
+Carry out the requirement analysis, project analysis and test plan of a software that manages the movements of an automatic vacuum cleaner.<br/>
+The vacuum cleaner is represented by a virtual robot that receives messages over HTTP or websocket and move/behave accordingly to those. The space in which the robot can move is surrounded by 4 walls that makes the room rectangular, and there might be static obstacles with which the robot collides.
+</div>
+ 
+<h2>Requirements</h2>
+<div class="remark">
+Make a software application that gives a specific sequence of moves to a robot, so that it moves covering the whole surface of a rectangular room (i.e. the robot must travel accross every piece of the room).<br/>
+The room is surrounded by 4 walls, and the robot has sensors to detect when a collision with an obstacle occurs.
+</div>
+
+
+<h2>Requirement analysis</h2>
+<div class="remark">
+The customer wants a software application which, communicating via HTTP or websocket with a module provided by him (Virtual Environment - WEnv), sends a sequence of commands that the robot must perform in order to "clean the room completely".<br/>
+By "cleaning the room completely" the customer means that the robot must travel through the whole surface of the room, which is surrounded by 4 static walls.<br/>
+<br/>
+Therefore, it is necessary to create a <ins>VacuumCleaner</ins> component which sends a sequence of commands to the WEnv, which makes the robot move according to those specific instructions, by covering the whole area of the room.
+<br/><br/>
+
+<ul>
+	<!--<li>Natura delle entità: POJO?</li>-->
+	<li>The application and the virtual robot can run on different devices, but initially it's sufficient to work locally on a single machine.</li>
+	<li>There are not technologic constraint but it's possible to use libs provided by the customer/company (unibolibs) that can be useful to complete the task (e.g. the communication module).</li>
+	<li>In order to being able to implement the communication properly, it is necessary to respect the interaction model with which the WEnv is able to communicate, as described in <a href="unibo.issLabStart/userDocs/Dispense/html/VirtualRobot.html">this document</a>.</li>
+</ul>
+</div>
+
+<h3>Use Case</h3>
+<img src="img/use_case.png"/>
+
+<h3>User Story</h3>
+<div class="remark">
+<table>
+	<tr>
+		<td width="50%" style="padding: 5pt">
+			The user places the robot in a fixed and well known spot (home position, e.g. the upper-left corner), then he runs the VacuumCleaner application.<br/>
+			The application will communicate with the WEnv or the real robot, making it move following a certain pattern that we are sure is effective for cleaning the whole room, without leaving dirty (blank) spots.
+		</td>
+		<td width="50%" style="padding: 5pt">
+			<img width="99%" src="img/PercorsoAspirapolvere.png"/>
+		</td>
+	</tr>
+</table>
+
+</div>
+
+
+
+
+
+
+-----
+
+fare analisi del problema e progettazione
+
+non ci chiede ancora niente ma dovremmo pensarci: analisi del problema (che problema ha da risolvere l'aspirapolvere, che problematiche pone:
+-distanze)
+
+dopo che ha finito devo esser certo che non sia rimasto nulla da pulire
+
+prima cosa da fare:
+raccogliere requisiti
+
+e terminare l'analisi con un test plan
+
+poi fare progetto.
+
+
+
+poi ci darà un ulteriore commissione: un comando per interrompere e farlo tornare a casa, e un tasto resume per ritornare nella posizione salvata.
+
+
+è meglio partire con sincrono o asincrono?
+</div>
+
+<h2>Problem analysis</h2>
+[...]
+definire/chiarire le problematiche implicate dai requisiti.
+
+fornire informazioni utili sui costi/tempi/risorse necessari.
+
+L’analisi del problema NON IMPLICA ancora alcuna progettazione, ma mira a fornire un quadro delle possibili soluzioni tecnologighe individuando quelle più utili per il superamento delle problematiche poste dai requisiti. La scelta finale sarà fatta dal progettista (che potrebbe anche ampliare lo spettro della indagine - ricordiamo che siamo in un processo iterativo a spirale ).
+
+L’analisi del problema serve per capire quali sono le maggiori problematiche da affrontare, le tecnologie da usare e le risorse (umane e temporali) necessarie. Inoltre gettano le basi per impostare il primo sprint di sviluppo e quindi per costruire un primo ‘prototipo’ funzionante del sistema da estendere poi in modo incrementale con gli sprint succesivi dopo una opportuna sprint-review con il committente
+
+<h2>Test plans</h2> 
+[...]
+
+<h2>Project</h2> 
+ 
+
+<h2>Testing</h2> 
+ 
+
+<h2>Deployment</h2> 
+
+ 
+<h2>Maintenance</h2> 
+ 
+<!-- USEFUL
+<table style="width:100%" border="1">
+<tr>
+<td style="width:50%">
+</td>
+<td></td>
+</tr>
+</table>
+-->
+	      	
+<br/><br/> 	
+</div>  
+
+<div float="left" style="width: 80%; background-color: rgba(86, 56, 253, 0.9); color:white; font-family: Tahoma;">
+	<span style="float: left; width: 60%; padding: 10px">
+		By <b>Michele Righi</b><br/><br/>
+		<span><b>ISS repo: <a id="issRepo" style="color:white" href="https://github.com/mikyll/righimichele/tree/master/iss2022">mikyll/righimichele/iss2022/</a></b></span><br/><br/>
+		Contacts:<br/>
+		e-mail: michele.righi5@studio.unibo.it<br/>
+		GitHub: <a id="github" style="color:white" href="https://github.com/mikyll">mikyll</a><br/>
+		LinkedIn: <a id="issRepo" style="color:white" href="https://www.linkedin.com/in/michele-righi/">Michele Righi</a><br/>
+	</span>
+	<img src="./img/Michele Righi avatar.png" alt="Michele Avatar" width="30%" height="30%"/>
+</div>
+<img  style="float: right; border: none; padding-bottom: 10px; padding-right: 10px" src="./img/NoWarUkraineDoveColored.png" alt="No War Ukraine" width="10%" height="10%"/>
+
+</body>
+</html>
