@@ -188,12 +188,21 @@ div.imagedesc{
 </style>
     
 <head>
-   
-<title>Aspirapolvere</title></head>
+	<title>VacuumCleaner</title>
+</head>
     
 <body>
+<!--<tt>tt</tt><br/>
+<em>em</em><br/>
+<bc>bc</bc><br/>
+<ks>ks</ks><br/>
+<kc>kc</kc><br/>
+<m>m</m><br/>
+<k>k</k><br/>
+<br/>
+<br/>-->
 <div id="top">
-<h1>Aspirapolvere - ISS M 2022<font size="5"></font> </h1>
+<h1>VacuumCleaner - ISS M 2022<font size="5"></font> </h1>
 </div>
 
 <div class="body"> 
@@ -221,7 +230,7 @@ Therefore, it is necessary to create a <em><b>VacuumCleaner</b></em> component w
 <br/><br/>
 
 <ul>
-	<li>The entity involved might be an <ks>actor</ks>, since it is logically active (has an autonomous flow of control), is capable of sending messages to another actor (the WEnv/real robot), ...</li>
+	<li>The entity involved for the moment has no nature, and so we consider it to be a <ks>generic entity</ks>. <!--, since it is logically active (has an autonomous flow of control), is capable of sending messages to another actor (the WEnv/real robot), ...--></li>
 	<li>The application and the virtual robot can run on different devices, but initially it's sufficient to work locally on a single machine.</li>
 	<li>There are not technologic constraint but it's possible to use libs provided by the customer/company (<ks>unibolibs</ks>) that can be useful to complete the task (e.g. the communication module).</li>
 	<li>In order to being able to implement the communication properly, it is necessary to respect the interaction model with which the WEnv is able to communicate, as described in <a href="unibo.issLabStart/userDocs/Dispense/html/VirtualRobot.html">this document</a>.</li>
@@ -249,16 +258,7 @@ Therefore, it is necessary to create a <em><b>VacuumCleaner</b></em> component w
 
 
 <h2>Problem analysis</h2>
-
-<tt>tt</tt><br/>
-<em>em</em><br/>
-<bc>bc</bc><br/>
-<ks>ks</ks><br/>
-<kc>kc</kc><br/>
-<m>m</m><br/>
-<k>k</k><br/>
-<br/>
-<br/>
+<div class="remark">
 The requirements locate several <bc>potential issues</bc>:
 <ol>
 <li>
@@ -289,7 +289,7 @@ The requirements locate several <bc>potential issues</bc>:
 		A tal proposito si può sfruttare il meccanismo del robot di rilevazione delle collisioni, per sapere quando è stato colpito un muro, e ruotare il robot di conseguenza.
 	</li>-->
 	<li>
-		<kc>STATE</kc>: we must ensure that the robot doesn't leave blank spots. It is possible to dynamically build a data structure, such as a map, marking the spots where the robot has already passed. Assuming that the room can be represented in a Cartesian plane, we can think that each space is identifiable by 2 coordinates X and Y, and is equal to the dimensions of the robot (length and width). As the robot progresses, we insert a particular element in the map that indicates the status of the box, for example a different character wheter it has already been visited or is still to be visited. When the robot hits the first bottom wall, the we know the map row number.<br/>
+		<kc>STATE</kc>: we must ensure that the robot doesn't leave blank spots. It is possible to dynamically build a data structure, such as a <b>map</b>, marking the spots where the robot has already passed. Assuming that the room can be represented in a Cartesian plane, we can think that each space is identifiable by 2 coordinates X and Y, and is equal to the dimensions of the robot (length and width). As the robot progresses, we insert a particular element in the map that indicates the status of the box, for example a different character wheter it has already been visited or is still to be visited. When the robot hits the first bottom wall, the we know the map row number.<br/>
 		Once the map is completed, we can simply check if each element of the map is filled with the "visited" character, to test the correctness of the solution.
 	</li>
 	<!--<li>
@@ -297,51 +297,48 @@ The requirements locate several <bc>potential issues</bc>:
 		Once the map is completed, we can simply check if each element of the map is filled with the "visited" character.
 	</li>-->
 	<li>
-		<kc>DISTANZA</kc>: è necessario ricavare la distanza da percorrere per ciascun passo. 
+		<kc>DISTANCE</kc>: it is necessary to calculate the distance to be covered by the robot for each step. This way we can make the robot move for an amount of time which corresponds exactly to the robot length.
 	</li>
 </ol>
+</div>
 
-dopo che ha finito devo esser certo che non sia rimasto nulla da pulire
+<h3>Logical Architecture</h3>
+<div class="remark">
+<table>
+	<tr>
+		<td style="padding: 15pt">Legend</td>
+		<td><img width="99%" src="img/legenda.png"/></td>
+	</tr>
+	<tr>
+		<td width="50%" style="padding: 5pt">
+			We must design and build a distributed system with 2 software macro-components:
+			<ol>
+				<li>the Virtual Robot, given by the customer</li>
+				<li>the <em><b>vacuumCleaner</b></em> application that interacts with the robot</li>
+			</ol>
+			A first scheme of the logical architecture of the systems can be defined as shown in the figure.
+		</td>
+		<td width="50%" style="padding: 5pt">
+			<img width="99%" src="img/architettura_logica.png"/>
+		</td>
+	</tr>
+</table>
+</div>
 
-[...]
-
-
-in previsione di un futuro meccanismo di stop/resume, manteniamo lo stato corrente del robot, creando una sorta di mappatura della stanza, con le aree già pulite, e quelle ancora da esplorare.
-
-Problema: come mi assicuro che il robot pulisca tutto senza lasciare buchi? È necessario scegliere un pattern di movimento che garantisca questo vincolo, ad esempio muovendosi a 
-
-Supponendo che la stanza sia rappresentabile su un piano cartesiano, il robot potrebbe ad esempio muoversi avanti e indietro lungo l'asse X, avanzando lungo l'asse Y, di una distanza pari alla lunghezza del robot, ad ogni completamento della distanza di un lato
-
-
-
-
-
-
-
-Problema: se ci sono ostacoli?
-
-- come comunicare col robot -> facilmente risolvibile sfruttando il modulo fornito dal customer;
-- come 
-- scelte tecnologiche
-
-
-- 
-
-definire/chiarire le problematiche implicate dai requisiti.
+<!--definire/chiarire le problematiche implicate dai requisiti.
 
 fornire informazioni utili sui costi/tempi/risorse necessari.
 
 
-fornire un quadro delle possibili soluzioni tecnologiche: + utili per il superamento delle problematiche
-L’analisi del problema NON IMPLICA ancora alcuna progettazione, ma mira a fornire un quadro delle possibili soluzioni tecnologighe individuando quelle più utili per il superamento delle problematiche poste dai requisiti. La scelta finale sarà fatta dal progettista (che potrebbe anche ampliare lo spettro della indagine - ricordiamo che siamo in un processo iterativo a spirale ).
-
-L’analisi del problema serve per capire quali sono le maggiori problematiche da affrontare, le tecnologie da usare e le risorse (umane e temporali) necessarie. Inoltre gettano le basi per impostare il primo sprint di sviluppo e quindi per costruire un primo ‘prototipo’ funzionante del sistema da estendere poi in modo incrementale con gli sprint succesivi dopo una opportuna sprint-review con il committente
-
-<h3>risorse umane e temporali necessarie</h3>
+<h3>risorse umane e temporali necessarie</h3>-->
 
 
 <h2>Test plans</h2> 
-[...]
+Per verificare il corretto funzionamento dell'applicazione, è necessario predisporre un piano di test che permetta di loggare i movimenti effettuati dal robot.
+
+In particolare dobbiamo assicurarci che:
+- non vengano lasciati spazi vuoti;
+- 
 
 <h2>Project</h2> 
  
