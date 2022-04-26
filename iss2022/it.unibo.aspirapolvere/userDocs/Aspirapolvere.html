@@ -207,24 +207,25 @@ The vacuum cleaner is represented by a virtual robot that receives messages over
  
 <h2>Requirements</h2>
 <div class="remark">
-Make a software application that gives a specific sequence of moves to a robot, so that it moves covering the whole surface of a rectangular room (i.e. the robot must travel accross every piece of the room).<br/>
+Make a <ks>software application</ks> that gives a specific sequence of moves to a robot, so that it moves covering the whole surface of a rectangular room (i.e. the robot must travel accross every piece of the room).<br/>
 The room is surrounded by 4 walls, and the robot has sensors to detect when a collision with an obstacle occurs.
 </div>
 
 
 <h2>Requirement analysis</h2>
 <div class="remark">
-The customer wants a software application which, communicating via HTTP or websocket with a module provided by him (Virtual Environment - WEnv), sends a sequence of commands that the robot must perform in order to "clean the room completely".<br/>
+The customer wants a software application which, communicating via HTTP or websocket with a module provided by him (Virtual Environment - <ks>WEnv</ks>), sends a sequence of commands that the robot must perform in order to "clean the room completely".<br/>
 By "cleaning the room completely" the customer means that the robot must travel through the whole surface of the room, which is surrounded by 4 static walls.<br/>
 <br/>
-Therefore, it is necessary to create a <ins>VacuumCleaner</ins> component which sends a sequence of commands to the WEnv, which makes the robot move according to those specific instructions, by covering the whole area of the room.
+Therefore, it is necessary to create a <em><b>VacuumCleaner</b></em> component which sends a sequence of commands to the WEnv, which makes the robot move according to those specific instructions, by covering the whole area of the room.
 <br/><br/>
 
 <ul>
-	<!--<li>Natura delle entità: POJO?</li>-->
+	<li>The entity involved might be an <ks>actor</ks>, since it is logically active (has an autonomous flow of control), is capable of sending messages to another actor (the WEnv/real robot), ...</li>
 	<li>The application and the virtual robot can run on different devices, but initially it's sufficient to work locally on a single machine.</li>
-	<li>There are not technologic constraint but it's possible to use libs provided by the customer/company (unibolibs) that can be useful to complete the task (e.g. the communication module).</li>
+	<li>There are not technologic constraint but it's possible to use libs provided by the customer/company (<ks>unibolibs</ks>) that can be useful to complete the task (e.g. the communication module).</li>
 	<li>In order to being able to implement the communication properly, it is necessary to respect the interaction model with which the WEnv is able to communicate, as described in <a href="unibo.issLabStart/userDocs/Dispense/html/VirtualRobot.html">this document</a>.</li>
+	<!--<li>In the future there could be an additional commission: a command to pause and resume the robot task, making it "go home" and returning back to its place.</li>-->
 </ul>
 </div>
 
@@ -244,47 +245,100 @@ Therefore, it is necessary to create a <ins>VacuumCleaner</ins> component which 
 		</td>
 	</tr>
 </table>
-
 </div>
 
 
+<h2>Problem analysis</h2>
 
-
-
-
------
-
-fare analisi del problema e progettazione
-
-non ci chiede ancora niente ma dovremmo pensarci: analisi del problema (che problema ha da risolvere l'aspirapolvere, che problematiche pone:
--distanze)
+<tt>tt</tt><br/>
+<em>em</em><br/>
+<bc>bc</bc><br/>
+<ks>ks</ks><br/>
+<kc>kc</kc><br/>
+<m>m</m><br/>
+<k>k</k><br/>
+<br/>
+<br/>
+The requirements locate several <bc>potential issues</bc>:
+<ol>
+<li>
+		<kc>COMMUNICATION</kc>: according to <a href="unibo.issLabStart/userDocs/Dispense/html/VirtualRobot.html">VirtualRobot2021</a>, provided by the customer, the robot can receive move commands in two different ways:
+		<ul>
+			<li>by sending <ks>HTTP POST</ks> requests on port 8090;</li>
+			<li>by sending messages on a <ks>websocket</ks> on port 8091.</li>
+		</ul>
+		
+		Which one should we use? For simplicity, we initially choose to <b>communicate synchronously</b>, since we expect a response to each message sent to the robot (to check if a collision occurred). If in the future the customer will ask for an additional stop/resume mechanism, we would then be bound to use an asynchronous communication, since we will want to be able to stop the robot at any time.
+	</li>
+	<!--<li>
+		<kc>COMUNICAZIONE</kc>: secondo <a href="unibo.issLabStart/userDocs/Dispense/html/VirtualRobot.html">VirtualRobot2021</a>, fornito dal customer, il robot può ricevere comandi di movimento in due modi differenti:
+		<ul>
+			<li>Via messaggi <ks>HTTP POST</ks> sulla porta 8090;</li>
+			<li>via messaggi su <ks>websocket</ks> sulla porta 8091.</li>
+		</ul>
+		
+		È meglio la comunicazione sincrona o asincrona? Per semplicità, inizialmente scegliamo di comunicare in modo sincrono, in quanto prevediamo una risposta a ciascun messaggio inviato al robot (per controllare se c'è stata la collisione). Se in futuro prevedessimo un meccanismo di stop/resume, saremmo allora vincolati all'utilizzo di una comunicazione asincrona.
+	</li>-->
+	<li>
+		<kc>PATH AND ALGORITHM</kc>: the choice of the path the robot must follow. For simplicity, for the moment we take for granted that there are no obstacles inside the room, except the 4 walls that surround it. Moreover, let's suppose that the robot starting position is fixed and well known, for example the upper-left corner, which we can call "<tt>den</tt>". In this way, the path choice becomes trivial, as it is possible to adopt a "<b>zig-zag pattern</b>": the robot moves forward until it encounters an obstacle (i.e. the wall), then rotates by 90° in order to face the area of the room yet to be explored (in our example that direction is the right). Then the robot should move by a step, and rotate again by 90° in the opposite direction. Then it can start moving forward again until it collides with a wall and so on.<br/>
+		In this regard, we can exploit the robot collision detection mechanism, to know when a wall has been collided with, and rotate the robot accordingly.
+	</li>
+	<!--<li>
+		<kc>PERCORSO</kc>: la scelta del percorso da effettuare. Per semplicità, per il momento consideriamo il caso in cui non ci siano ostacoli all'interno della stanza. Supponiamo in oltre, che il robot parta da una posizione nota, che chiamiamo "home", ovvero l'angolo in alto a sinistra della stanza. In questo modo, la scelta del percorso diventa banale, in quanto è possibile  seguire un pattern "a zig-zag": il robot si muove in avanti finché non incontra un ostacolo (i.e. il muro), dopodiché ruota di 90° in modo da essere rivolto verso la direzione ancora non esplorata (nel nostro esempio è a destra).
+		
+		A tal proposito si può sfruttare il meccanismo del robot di rilevazione delle collisioni, per sapere quando è stato colpito un muro, e ruotare il robot di conseguenza.
+	</li>-->
+	<li>
+		<kc>STATE</kc>: we must ensure that the robot doesn't leave blank spots. It is possible to dynamically build a data structure, such as a map, marking the spots where the robot has already passed. Assuming that the room can be represented in a Cartesian plane, we can think that each space is identifiable by 2 coordinates X and Y, and is equal to the dimensions of the robot (length and width). As the robot progresses, we insert a particular element in the map that indicates the status of the box, for example a different character wheter it has already been visited or is still to be visited. When the robot hits the first bottom wall, the we know the map row number.<br/>
+		Once the map is completed, we can simply check if each element of the map is filled with the "visited" character, to test the correctness of the solution.
+	</li>
+	<!--<li>
+		<kc>STATO</kc>: è necessario assicurarsi che il robot non lasci spazi vuoti. È possibile creare una mappatura dinamica della stanza, segnando gli spazi in cui il robot è già passato. Supponendo che la stanza sia rappresentabile in un piano cartesiano, possiamo pensare che ciascuno spazio sia individuabile da due coordinate X e Y, e sia pari alle dimensioni del robot (lunghezza e larghezza). Man mano che il robot procede, inseriamo nella mappa un carattere che indica lo stato della casella, ad esempio se è stata già visitata o è ancora da visitare. When the robot hits the first bottom wall, the we know the map .
+		Once the map is completed, we can simply check if each element of the map is filled with the "visited" character.
+	</li>-->
+	<li>
+		<kc>DISTANZA</kc>: è necessario ricavare la distanza da percorrere per ciascun passo. 
+	</li>
+</ol>
 
 dopo che ha finito devo esser certo che non sia rimasto nulla da pulire
 
-prima cosa da fare:
-raccogliere requisiti
-
-e terminare l'analisi con un test plan
-
-poi fare progetto.
-
-
-
-poi ci darà un ulteriore commissione: un comando per interrompere e farlo tornare a casa, e un tasto resume per ritornare nella posizione salvata.
-
-
-è meglio partire con sincrono o asincrono?
-</div>
-
-<h2>Problem analysis</h2>
 [...]
+
+
+in previsione di un futuro meccanismo di stop/resume, manteniamo lo stato corrente del robot, creando una sorta di mappatura della stanza, con le aree già pulite, e quelle ancora da esplorare.
+
+Problema: come mi assicuro che il robot pulisca tutto senza lasciare buchi? È necessario scegliere un pattern di movimento che garantisca questo vincolo, ad esempio muovendosi a 
+
+Supponendo che la stanza sia rappresentabile su un piano cartesiano, il robot potrebbe ad esempio muoversi avanti e indietro lungo l'asse X, avanzando lungo l'asse Y, di una distanza pari alla lunghezza del robot, ad ogni completamento della distanza di un lato
+
+
+
+
+
+
+
+Problema: se ci sono ostacoli?
+
+- come comunicare col robot -> facilmente risolvibile sfruttando il modulo fornito dal customer;
+- come 
+- scelte tecnologiche
+
+
+- 
+
 definire/chiarire le problematiche implicate dai requisiti.
 
 fornire informazioni utili sui costi/tempi/risorse necessari.
 
+
+fornire un quadro delle possibili soluzioni tecnologiche: + utili per il superamento delle problematiche
 L’analisi del problema NON IMPLICA ancora alcuna progettazione, ma mira a fornire un quadro delle possibili soluzioni tecnologighe individuando quelle più utili per il superamento delle problematiche poste dai requisiti. La scelta finale sarà fatta dal progettista (che potrebbe anche ampliare lo spettro della indagine - ricordiamo che siamo in un processo iterativo a spirale ).
 
 L’analisi del problema serve per capire quali sono le maggiori problematiche da affrontare, le tecnologie da usare e le risorse (umane e temporali) necessarie. Inoltre gettano le basi per impostare il primo sprint di sviluppo e quindi per costruire un primo ‘prototipo’ funzionante del sistema da estendere poi in modo incrementale con gli sprint succesivi dopo una opportuna sprint-review con il committente
+
+<h3>risorse umane e temporali necessarie</h3>
+
 
 <h2>Test plans</h2> 
 [...]
