@@ -9,6 +9,7 @@ import org.junit.Test;
 import unibo.actor22comm.http.HttpConnection;
 import unibo.actor22comm.interfaces.Interaction2021;
 import unibo.actor22comm.utils.ColorsOut;
+import unibo.actor22comm.utils.CommUtils;
 
 import java.util.ArrayList;
 
@@ -44,9 +45,10 @@ public class TestVacuumCleaner {
         {
             while(!obstacle)
             {
-                answer = conn.request( "{\"robotmove\":\"moveForward\", \"time\":50}");
+                answer = conn.request( "{\"robotmove\":\"moveForward\", \"time\":500}");
                 obstacle = answer.contains("collision");
                 cleaned += obstacle ? "f" : "";
+                CommUtils.delay(500);
             }
             obstacle = false;
             if(heading == DOWN)
@@ -54,17 +56,21 @@ public class TestVacuumCleaner {
                 // rotate left by 90°
                 conn.request( "{\"robotmove\":\"turnLeft\", \"time\":300}");
                 cleaned += "l";
+                CommUtils.delay(300);
 
                 // step forward
-                answer = conn.request( "{\"robotmove\":\"moveForward\", \"time\":50}");
+                answer = conn.request( "{\"robotmove\":\"moveForward\", \"time\":500}");
                 if(answer.contains("collision"))
                     break;
                 else cleaned += "f";
+                CommUtils.delay(500);
 
                 // rotate right by 90°
-                conn.request( "{\"robotmove\":\"turnRight\", \"time\":300}");
-                cleaned += "r";
+                conn.request( "{\"robotmove\":\"turnLeft\", \"time\":300}");
+                cleaned += "l";
+                CommUtils.delay(300);
 
+                heading = UP;
                 continue;
             }
             if(heading == UP)
@@ -72,22 +78,51 @@ public class TestVacuumCleaner {
                 // rotate right by 90°
                 conn.request( "{\"robotmove\":\"turnRight\", \"time\":300}");
                 cleaned += "r";
+                CommUtils.delay(300);
 
                 // step forward
-                answer = conn.request( "{\"robotmove\":\"moveForward\", \"time\":50}");
+                answer = conn.request( "{\"robotmove\":\"moveForward\", \"time\":500}");
                 if(answer.contains("collision"))
                     break;
                 else cleaned += "f";
+                CommUtils.delay(500);
+
+                // rotate left by 90°
+                conn.request( "{\"robotmove\":\"turnRight\", \"time\":300}");
+                cleaned += "r";
+                CommUtils.delay(300);
+
+                heading = DOWN;
+                continue;
+            }
+        }
+        while(!obstacle)
+        {
+            if (heading == DOWN)
+            {
+                // rotate left by 90°
+                conn.request( "{\"robotmove\":\"turnLeft\", \"time\":300}");
+                CommUtils.delay(300);
 
                 // rotate left by 90°
                 conn.request( "{\"robotmove\":\"turnLeft\", \"time\":300}");
-                cleaned += "l";
-
-                continue;
+                CommUtils.delay(300);
             }
+            heading = UP;
 
+            answer = conn.request( "{\"robotmove\":\"moveForward\", \"time\":500}");
+            obstacle = answer.contains("collision");
+            CommUtils.delay(500);
         }
-
+        while(!obstacle)
+        {
+            answer = conn.request( "{\"robotmove\":\"moveForward\", \"time\":500}");
+            obstacle = answer.contains("collision");
+            CommUtils.delay(500);
+        }
+        // rotate left by 90°
+        conn.request( "{\"robotmove\":\"turnLeft\", \"time\":300}");
+        CommUtils.delay(300);
     }
 
     @After
