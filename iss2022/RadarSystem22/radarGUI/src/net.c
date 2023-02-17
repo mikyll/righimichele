@@ -1,6 +1,6 @@
 #include "net.h"
 
-void initSDLNet();
+void initSDLnet();
 void initInteraction();
 static void addUDPsocket(Uint16 port);
 static void addTCPserverSocket(Uint16 port);
@@ -320,12 +320,15 @@ static void addMessage(char* data)
 	Message* m;
 
 	m = malloc(sizeof(Message));
-	memset(m, 0, sizeof(Message));
+	if (m)
+	{
+		memset(m, 0, sizeof(Message));
 
-	STRNCPY(m->data, data, MAX_MSG_LENGTH);
+		STRNCPY(m->data, data, MAX_MSG_LENGTH);
 
-	interaction.messageTail->next = m;
-	interaction.messageTail = m;
+		interaction.messageTail->next = m;
+		interaction.messageTail = m;
+	}
 }
 
 // Big Endian (network order)
