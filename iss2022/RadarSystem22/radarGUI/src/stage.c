@@ -1,7 +1,5 @@
 #include "stage.h"
 
-static const DPC = SDL_ALPHA_OPAQUE / (FPS * SCP); // decrement to last for a complete cycle
-
 static void logic();
 static void draw();
 // logic
@@ -163,17 +161,18 @@ static void doRadar()
 	int x, y, radius, angle;
 
 	// Rotate the radar line
+	radarLine->prevAngle = radarLine->angle;
 	if (radarLine->angle >= 360)
 		radarLine->angle = 0;
-	radarLine->angle += ANGLE_INCREMENT;
+	radarLine->angle += (360 / SCP) * app.deltaTime;
 
 	prev = &stage.distanceHead;
 
 	// Scroll the linked list
 	for (d = stage.distanceHead.next; d != NULL; d = d->next)
 	{
-		// Check if the angle of the detected obstacle equals the current radarLine angle
-		if (radarLine->angle <= d->angle && radarLine->angle >= d->angle - ANGLE_INCREMENT)
+		// Check if the angle of the detected obstacle is between the current and the previous angle
+		if (radarLine->prevAngle < d->angle && d->angle <= radarLine->angle)
 		{
 			// Show (Spawn) the obstacle only if it's between the bounds
 			if (d->distance >= MIN_D && d->distance <= MAX_D)
@@ -235,7 +234,7 @@ static void doObstacles()
 
 	for (o = stage.obstacleHead.next; o != NULL; o = o->next)
 	{
-		o->alpha -= DPC * 1.5;
+		o->alpha -= (SDL_ALPHA_OPAQUE / (1.5 * SCP)) * app.deltaTime;
 		if (o->alpha <= 0)
 		{
 			if (o == stage.obstacleTail)
@@ -257,7 +256,7 @@ static void doObstacleCoordinates()
 	oc = stage.obsCoordQ->first;
 	while (oc != NULL)
 	{
-		oc->health -= DPC * 1.5;
+		oc->health -= (SDL_ALPHA_OPAQUE / (1.5 * SCP)) * app.deltaTime;
 		if (oc->health <= 0)
 		{
 			// extract the first element of the queue

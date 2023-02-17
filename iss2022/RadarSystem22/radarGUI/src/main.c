@@ -1,23 +1,15 @@
 #include "main.h"
 
 static void doArguments(int argc, char** argv);
-static void capFrameRate(long* then, float* remainder);
+static void updateDeltaTime();
 
-static long t = 1000 / FPS;
-static int r;
+static Uint32 mTicksCount; // Number of ticks since start of game
 
 int main(int argc, char** argv)
 {
-	long then;
-	float remainder;
-	Uint64 start, end;
-	float elapsed;
-
 	memset(&app, 0, sizeof(App));
 
 	doArguments(argc, argv);
-
-	r = (1000 / FPS) - (float)t;
 
 	srand(time(NULL));
 
@@ -25,7 +17,7 @@ int main(int argc, char** argv)
 	initSDL();
 	initSDLnet();
 	initSDLttf();
-	if(!app.args.mute)
+	if (!app.args.mute)
 		initSDLmixer();
 
 	atexit(cleanup);
@@ -34,18 +26,15 @@ int main(int argc, char** argv)
 
 	initInteraction();
 
-	then = SDL_GetTicks();
-	remainder = 0;
-
 	while (1)
 	{
-		start = SDL_GetPerformanceCounter();
-
 		prepareScene();
 
 		doInput();
 
 		doReceive();
+
+		updateDeltaTime();
 
 		app.delegate.logic();
 
@@ -53,11 +42,10 @@ int main(int argc, char** argv)
 
 		presentScene();
 
-		capFrameRate(&then, &remainder);
-
-		end = SDL_GetPerformanceCounter();
-		elapsed = (end - start) / (float)SDL_GetPerformanceFrequency();
-		((int)radarLine->angle % (360 / 8)) == 0 ? stage.fps = (int)1.0f / elapsed : stage.fps;
+		if ((int)radarLine->angle % (360 / 8) == 0)
+		{
+			stage.fps = (int) (1.0f / app.deltaTime);
+		}
 	}
 
 	return 0;
@@ -190,52 +178,21 @@ static void doArguments(int argc, char** argv)
 		app.args.UDPport = DEFAULT_UDP_PORT;
 }
 
-static void capFrameRate(long* then, float* remainder)
+static void updateDeltaTime()
 {
-	long wait, frameTime;
+	// Frame limiting: wait until 16ms has elapsed since last frame
+	while (!SDL_TICKS_PASSED(SDL_GetTicks(), mTicksCount + 16));
 
-	wait = t + *remainder;
+	// Delta time is the difference in ticks from last frame
+	// (converted to seconds)
+	app.deltaTime = (SDL_GetTicks() - mTicksCount) / 1000.0f;
 
-	*remainder -= (int)*remainder;
-
-	frameTime = SDL_GetTicks() - *then;
-
-	wait -= frameTime;
-
-	if (wait < 1)
+	// Clamp maximum delta time value
+	if (app.deltaTime > 0.05f)
 	{
-		wait = 1;
+		app.deltaTime = 0.05f;
 	}
 
-	SDL_Delay(wait);
-
-	*remainder += r;
-
-	*then = SDL_GetTicks();
+	// Update tick counts (for next frame)
+	mTicksCount = SDL_GetTicks();
 }
-
-/*static void capFrameRate(long* then, float* remainder)
-{
-	long wait, frameTime;
-
-	wait = *remainder;
-
-	*remainder -= (int)*remainder;
-
-	frameTime = SDL_GetTicks() - *then;
-
-	wait -= frameTime;
-
-	if (wait < 1)
-	{
-		wait = 1;
-	}
-
-	SDL_Delay(wait);
-
-	*remainder += 16.667; // caps FPS to ~60 (remainder: 1000 / 60 = 16.66667)
-	//*remainder += 5; // a complete radar cycle in ~2 sec
-	//*remainder += 2.25; // a complete radar cycle in ~1 sec
-
-	*then = SDL_GetTicks();
-}*/

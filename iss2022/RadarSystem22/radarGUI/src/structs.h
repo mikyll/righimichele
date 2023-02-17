@@ -38,6 +38,7 @@ typedef struct {
 	Delegate delegate;
 	Mouse mouse;
 	int susDetected;
+	float deltaTime;
 } App;
 
 struct Message {
@@ -72,6 +73,7 @@ struct Entity {
 	int w;
 	int h;
 	int angle;
+	int prevAngle;
 	int alpha;
 	Entity* next;
 	SDL_Texture* texture;

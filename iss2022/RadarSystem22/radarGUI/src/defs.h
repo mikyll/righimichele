@@ -9,8 +9,6 @@
 
 #define MAX_MOUSE_BUTTONS		6
 
-#define FPS						60
-
 #define MAX_SND_CHANNELS		8
 
 #define FONT_SIZE				28
@@ -18,7 +16,6 @@
 #define DEFAULT_MAX_COORDS_TEXT	5
 
 #define SCP						2	// Seconds Per Cycle
-#define ANGLE_INCREMENT			(360 / FPS / SCP)
 
 #define MAX_D					200
 #define MIN_D					0
