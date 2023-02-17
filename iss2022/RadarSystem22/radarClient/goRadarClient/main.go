@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
 	"net"
 	"os"
 	"strconv"
@@ -31,8 +32,8 @@ func connection_handler() {
 		os.Exit(1)
 	}
 
-	// test
-	i, j := 0, 0
+	// test fixed
+	/*i, j := 0, 0
 	for {
 		i++
 		j++
@@ -52,6 +53,22 @@ func connection_handler() {
 		}
 
 		time.Sleep(time.Duration(time.Millisecond * 30))
+	}*/
+	// test random
+	i, j := 0, 0
+	for {
+		i = rand.Intn(210-30) + 30
+		j = rand.Intn(359)
+		var msg = make([]byte, 64)
+		msg = []byte("{\"distance\": " + strconv.Itoa(i) + ", \"angle\": " + strconv.Itoa(j) + "}")
+
+		_, err = conn.Write(msg)
+		if err != nil {
+			println("Write to server failed:", err.Error())
+			os.Exit(1)
+		}
+
+		time.Sleep(time.Duration(rand.Intn(2000-300)+300) * time.Millisecond)
 	}
 
 	defer conn.Close()
